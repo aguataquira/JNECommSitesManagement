@@ -1,0 +1,50 @@
+﻿@model IEnumerable<JneCommSitesDataLayer.vwUserData>
+
+@{
+    ViewBag.Title = "UsersIndex";
+    Layout = "~/Views/Shared/_LayoutJneCommSites.cshtml";
+}
+
+<h2>UsersIndex</h2>
+
+<p>
+    @Html.ActionLink("Create New User", "CreateUser")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayName("UserName")
+        </th>
+        <th>
+            @Html.DisplayName("FirstName")
+        </th>
+        <th>
+            @Html.DisplayName("LastName")
+        </th>
+        <th>
+            @Html.DisplayName("Is Lockout")
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.UserName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UserFirstName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UserLastName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LockoutEnabled)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "EditUser", new {  userName=item.UserName })
+        </td>
+    </tr>
+}
+
+</table>
