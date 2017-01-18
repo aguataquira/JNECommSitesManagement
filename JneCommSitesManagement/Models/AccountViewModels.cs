@@ -49,8 +49,8 @@ namespace JneCommSitesManagement.Models
     public class LoginViewModel
     {
         [Required]
-        [Display(Name = "Email")]
-        [EmailAddress]
+        [Display(Name = "UserName")]
+        //[EmailAddress]
         public string Email { get; set; }
 
         [Required]

@@ -33,5 +33,8 @@ namespace JneCommSitesDataLayer
         public virtual DbSet<T_UsersData> T_UsersData { get; set; }
         public virtual DbSet<vwUserData> vwUserData { get; set; }
         public virtual DbSet<T_Operations> T_Operations { get; set; }
+        public virtual DbSet<T_Certifications> T_Certifications { get; set; }
+        public virtual DbSet<T_CrewRoles> T_CrewRoles { get; set; }
+        public virtual DbSet<T_PaymentPeriod> T_PaymentPeriod { get; set; }
     }
 }

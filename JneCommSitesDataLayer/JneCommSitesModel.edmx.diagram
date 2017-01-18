@@ -13,11 +13,14 @@
         <AssociationConnector Association="JneCommSitesDataBaseModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" ManuallyRouted="false" />
         <AssociationConnector Association="JneCommSitesDataBaseModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" ManuallyRouted="false" />
         <AssociationConnector Association="JneCommSitesDataBaseModel.AspNetUserRoles" ManuallyRouted="false" />
-        <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_UsersData" Width="1.625" PointX="5.25" PointY="10" />
+        <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_UsersData" Width="1.625" PointX="5.25" PointY="10.875" />
         <AssociationConnector Association="JneCommSitesDataBaseModel.FK_T_UsersData_AspNetUsers" />
         <EntityTypeShape EntityType="JneCommSitesDataBaseModel.vwUserData" Width="1.5" PointX="7.375" PointY="0.75" />
         <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_Operations" Width="1.5" PointX="3" PointY="7" />
         <AssociationConnector Association="JneCommSitesDataBaseModel.T_Rol_Operations" />
+        <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_Certifications" Width="1.5" PointX="5.375" PointY="7.625" />
+        <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_CrewRoles" Width="1.5" PointX="5.375" PointY="6" />
+        <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_PaymentPeriod" Width="1.5" PointX="5.375" PointY="9.125" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

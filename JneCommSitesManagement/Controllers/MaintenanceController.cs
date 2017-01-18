@@ -9,13 +9,19 @@ using System.Web.Security;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.AspNet.Identity.EntityFramework;
+using JneCommSitesManagement.App_Start;
 
 namespace JneCommSitesManagement.Controllers
 {
     public class MaintenanceController : Controller
     {
         private ApplicationUserManager _userManager;
+
+        #region Users 
+
         //Get List of users register in the system
+        [Authorize]
+        [AuthorizeFilter]
         public ActionResult UsersIndex(string userID)
         {
             if (string.IsNullOrEmpty(userID))
@@ -31,6 +37,7 @@ namespace JneCommSitesManagement.Controllers
 
 
         //Method to create user
+        [AuthorizeFilter]
         public ActionResult CreateUser()
         {
             ViewBag.Message = TempData["Message"];
@@ -45,6 +52,7 @@ namespace JneCommSitesManagement.Controllers
 
         // Post method to create user
         [HttpPost]
+        [AuthorizeFilter]
         public async Task<ActionResult> CreateUser(Models.CreateUserModel model)
         {
             if (ModelState.IsValid)
@@ -61,31 +69,22 @@ namespace JneCommSitesManagement.Controllers
                     }
 
                     MembershipCreateStatus createStatusResult = MembershipCreateStatus.ProviderError;
-                    //MembershipUser sysUser = Membership.CreateUser(model.UserName, model.Password, model.Email, passwordQuestion: null, passwordAnswer: null, isApproved: true, providerUserKey: null, status: out createStatusResult);
-
-                    //if (createStatusResult != MembershipCreateStatus.Success)
-                    //{
-                    //    throw new Exception(ErrorCodeToString(createStatusResult));
-                    //}
-
-                    var userProfile = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                  
+                    var userProfile = new ApplicationUser { UserName = model.UserName, Email = model.Email };
                     var result = await UserManager.CreateAsync(userProfile, model.Password);
 
                     if (!result.Succeeded)
                     {
-                        throw new Exception(ErrorCodeToString(createStatusResult));
+                        throw new Exception(result.Errors.FirstOrDefault().ToString());
                     }
                     else
                     {
                         JneCommSitesDataLayer.T_UsersData newUserData = new JneCommSitesDataLayer.T_UsersData();
 
                         JneCommSitesDataLayer.AspNetUsers user = _dbContext.AspNetUsers
-                                            .Where(p => p.UserName == model.Email)
+                                            .Where(p => p.UserName == model.UserName)
                                             .FirstOrDefault();
-
-                        user.UserName = model.UserName;
-                        _dbContext.SaveChanges();
-
+                        
                         if (null == user)
                             throw new Exception("User was not created, please try again.");
 
@@ -101,26 +100,20 @@ namespace JneCommSitesManagement.Controllers
                         newUserData.ForcePassChange = model.forcePassChange;
 
                         user.T_UsersData.Add(newUserData);
-                        user.AspNetRoles.Add(new JneCommSitesDataLayer.AspNetRoles
-                        {
-                            Id = queryRol.Id,
-                            Name = queryRol.Name
-                        });
-                        //_dbContext.AddToaspnet_UsersInRoles(newUserInRol);
-
-                        //user.AspNetRoles.LastPasswordChangedDate = DateTime.Now;
-
+                        user.AspNetRoles.Add(queryRol);
                         user.LockoutEnabled = model.lockedOutUser;
+
                         _dbContext.SaveChanges();
                         _dbContext.Dispose();
+
                         TempData["Message"] = "User was created successfully";
-                        model._UserGroup = Helper.Helper.GetRoles();
-                        return RedirectToAction("Index", "User");
+                        return RedirectToAction("UsersList", "Maintenance");
                     }
 
                 }
                 catch (Exception err)
                 {
+                    model._UserGroup = Helper.Helper.GetRoles();
                     ModelState.AddModelError("", err.Message);
                 }
             }
@@ -147,7 +140,7 @@ namespace JneCommSitesManagement.Controllers
             var userInf = (from p in _dbContext.T_UsersData
                            where p.UserId == aspNetUserQuery.Id
                            select p).First();
-
+            
             Models.CreateUserModel model = new Models.CreateUserModel();
 
             model._UserGroup = Helper.Helper.GetRoles();
@@ -162,7 +155,48 @@ namespace JneCommSitesManagement.Controllers
             return View(model);
         }
 
+        [HttpPost]
+        public async Task<ActionResult> EditUser(Models.CreateUserModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
 
+                var aspNetUserQuery = (from p in _dbContext.AspNetUsers
+                                       where p.UserName == model.UserName
+                                       select p).FirstOrDefault();
+
+                var actualRol = (from p in _dbContext.AspNetRoles
+                                 where p.Name == model.UserGroup
+                                 select p).FirstOrDefault();
+
+                aspNetUserQuery.AspNetRoles.Clear();
+
+                aspNetUserQuery.AspNetRoles.Add(actualRol);
+                if(!string.IsNullOrEmpty(model.Password))
+                { 
+                var token = await UserManager.GeneratePasswordResetTokenAsync(aspNetUserQuery.Id);
+                var result = await UserManager.ResetPasswordAsync(aspNetUserQuery.Id, token, model.Password);
+                }
+                var userInf = (from p in _dbContext.T_UsersData
+                               where p.UserId == aspNetUserQuery.Id
+                               select p).First();
+
+                userInf.UserFirstName = model.firstName;
+                userInf.UserLastName = model.LastName;
+                userInf.NumDaysForPassChange = model.daysChangePass;
+
+                _dbContext.SaveChanges();
+
+                return RedirectToAction("UsersIndex", "Maintenance");
+            }
+            return View(model);
+        }
+
+        #endregion
+
+
+        #region Roles
         //Method for List of roles
         public ActionResult RolesIndex(string roleName)
         {
@@ -177,13 +211,12 @@ namespace JneCommSitesManagement.Controllers
                               select p);
             return View(queryRoles);
         }
-
-
+        
         //Method to create Rol
         public ActionResult CreateRol()
         {
             Models.RolModel rolModel = new RolModel();
-            rolModel.OperationsList = Helper.Helper.GetOperations();
+            rolModel.OperationsList = Helper.Helper.GetOperations("");
             return View(rolModel);
         }
 
@@ -227,6 +260,164 @@ namespace JneCommSitesManagement.Controllers
 
             return View(model);
         }
+
+        //Method to edit Roles
+        public ActionResult EditRol(string rolName)
+        {
+            if (string.IsNullOrEmpty(rolName))
+              return  RedirectToAction("RolesIndex","Maintenance");
+            
+            JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
+
+            var rolInfQuery = (from p in _dbContext.AspNetRoles
+                               where p.Name == rolName
+                               select p).FirstOrDefault();
+
+            Models.RolModel rolModel = new RolModel();
+            rolModel.nameGroup = rolInfQuery.Name;
+            rolModel.OperationsList = Helper.Helper.GetOperations(rolName);
+            return View(rolModel);
+        }
+
+        [HttpPost]
+        public ActionResult EditRol(Models.RolModel rolModel, string[] roles)
+        {
+            if (ModelState.IsValid)
+            {
+                JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
+
+                var rolInfQuery = (from p in _dbContext.AspNetRoles
+                                   where p.Name == rolModel.nameGroup
+                                   select p).FirstOrDefault();
+
+                //rolInfQuery.Description = rolModel.GroupDescription;
+
+                var operationByRol = (from p in _dbContext.AspNetRoles
+                                      from d in _dbContext.T_Operations
+                                      where p.Name == rolModel.nameGroup
+                                      select p).FirstOrDefault();
+
+                operationByRol.T_Operations.Clear();
+
+                if (roles != null)
+                {
+                    foreach (string permisson in roles)
+                    {
+                        int operationID = Convert.ToInt32(permisson);
+                        var queryOperationsId = (from p in _dbContext.T_Operations
+                                                 where p.biOperationsId == operationID
+                                                 select p).First();
+                        rolInfQuery.T_Operations.Add(queryOperationsId);
+                        _dbContext.SaveChanges();
+                    }
+                }
+                _dbContext.SaveChanges();
+                TempData["Message"] = "Changes Saved";
+                return RedirectToAction("RolesIndex", "Maintenance");
+            }
+
+           
+            
+            rolModel.nameGroup = rolModel.nameGroup;
+            rolModel.OperationsList = Helper.Helper.GetOperations(rolModel.nameGroup);
+            return View(rolModel);
+        }
+        #endregion
+
+        #region Certifications
+        public ActionResult CertificationsList()
+        {
+            JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
+            var certificationsQuery = (from p in _dbContext.T_Certifications
+                                       orderby p.vCertificationName descending
+                                       select p);
+            return View(certificationsQuery);
+        }
+
+        public ActionResult CreateCertification()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult CreateCertification(Models.CertificationModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
+                    var existCertification = (from p in _dbContext.T_Certifications
+                                              where p.vCertificationName == model.certificationName
+                                              select p).FirstOrDefault();
+                    if (existCertification != null)
+                    {
+                        ModelState.AddModelError(string.Empty, "The certification already exist");
+                        return View();
+                    }
+                    JneCommSitesDataLayer.T_Certifications newCertification = new JneCommSitesDataLayer.T_Certifications();
+                    newCertification.vCertificationName = model.certificationName;
+                    newCertification.vCertificationDescription = model.certificationpDescription;
+                    _dbContext.T_Certifications.Add(newCertification);
+                    _dbContext.SaveChanges();
+                    RedirectToAction("CertificationsList", "Maintenance");
+                }
+                catch (Exception error)
+                {
+                    ModelState.AddModelError(string.Empty, error.Message);
+                    return View();
+                }
+            }
+            return View();
+        }
+
+        public ActionResult EditCertification(string certificationName)
+        {
+            JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
+            Models.CertificationModel newCertificationModel = new CertificationModel();
+            var queryCetification = (from p in _dbContext.T_Certifications
+                                     where p.vCertificationName == certificationName
+                                     select p).FirstOrDefault();
+            if (queryCetification == null)
+                RedirectToAction("CertificationsList", "Maintenance");
+            return View(newCertificationModel);
+        }
+
+        [HttpPost]
+        public ActionResult EditCertification(Models.CertificationModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
+
+                    var queryCetification = (from p in _dbContext.T_Certifications
+                                             where p.vCertificationName == model.certificationName
+                                             select p).FirstOrDefault();
+
+                    queryCetification.vCertificationDescription = model.certificationpDescription;
+
+                    _dbContext.SaveChanges();
+                    RedirectToAction("CertificationsList", "Maintenance");
+                }
+                catch (Exception error)
+                {
+                    ModelState.AddModelError(string.Empty, error.Message);
+                    return View();
+                }
+            }
+            return View();
+        }
+        #endregion
+
+
+
+
+
+
+
+
 
         public ApplicationUserManager UserManager
         {

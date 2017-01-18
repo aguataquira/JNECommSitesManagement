@@ -66,6 +66,20 @@
           <Property Name="AccessFailedCount" Type="int" Nullable="false" />
           <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
         </EntityType>
+        <EntityType Name="T_Certifications">
+          <Key>
+            <PropertyRef Name="vCertificationName" />
+          </Key>
+          <Property Name="vCertificationName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="vCertificationDescription" Type="varchar(max)" />
+        </EntityType>
+        <EntityType Name="T_CrewRoles">
+          <Key>
+            <PropertyRef Name="vCrewRoleName" />
+          </Key>
+          <Property Name="vCrewRoleName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="vCrewRoleDescription" Type="varchar(max)" />
+        </EntityType>
         <EntityType Name="T_Operations">
           <Key>
             <PropertyRef Name="biOperationsId" />
@@ -78,6 +92,18 @@
           <Property Name="bIsVisible" Type="bit" Nullable="false" />
           <Property Name="bIsActive" Type="bit" Nullable="false" />
           <Property Name="bRequieresPermission" Type="bit" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'JneCommSitesManagementDB.dbo.T_PaymentPeriod' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="T_PaymentPeriod">
+          <Key>
+            <PropertyRef Name="siPaymentPeriodId" />
+            <PropertyRef Name="dStartCutOffDate" />
+            <PropertyRef Name="siDaysForPaymentPeriod" />
+          </Key>
+          <Property Name="siPaymentPeriodId" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="dStartCutOffDate" Type="date" Nullable="false" />
+          <Property Name="siDaysForPaymentPeriod" Type="smallint" Nullable="false" />
         </EntityType>
         <EntityType Name="T_Rol_Operations">
           <Key>
@@ -219,9 +245,18 @@ warning 6002: The table/view 'JneCommSitesManagementDB.dbo.vwUserData' does not 
           <EntitySet Name="AspNetUserLogins" EntityType="Self.AspNetUserLogins" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetUserRoles" EntityType="Self.AspNetUserRoles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_Certifications" EntityType="Self.T_Certifications" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_CrewRoles" EntityType="Self.T_CrewRoles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_Operations" EntityType="Self.T_Operations" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_Rol_Operations" EntityType="Self.T_Rol_Operations" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_UsersData" EntityType="Self.T_UsersData" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_PaymentPeriod" EntityType="Self.T_PaymentPeriod" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [T_PaymentPeriod].[siPaymentPeriodId] AS [siPaymentPeriodId], 
+    [T_PaymentPeriod].[dStartCutOffDate] AS [dStartCutOffDate], 
+    [T_PaymentPeriod].[siDaysForPaymentPeriod] AS [siDaysForPaymentPeriod]
+    FROM [dbo].[T_PaymentPeriod] AS [T_PaymentPeriod]</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="vwUserData" EntityType="Self.vwUserData" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [vwUserData].[Expr1] AS [Expr1], 
@@ -391,6 +426,9 @@ warning 6002: The table/view 'JneCommSitesManagementDB.dbo.vwUserData' does not 
             <End Role="AspNetRoles" EntitySet="AspNetRoles" />
             <End Role="T_Operations" EntitySet="T_Operations" />
           </AssociationSet>
+          <EntitySet Name="T_Certifications" EntityType="JneCommSitesDataBaseModel.T_Certifications" />
+          <EntitySet Name="T_CrewRoles" EntityType="JneCommSitesDataBaseModel.T_CrewRoles" />
+          <EntitySet Name="T_PaymentPeriod" EntityType="JneCommSitesDataBaseModel.T_PaymentPeriod" />
         </EntityContainer>
         <EntityType Name="T_UsersData">
           <Key>
@@ -454,6 +492,30 @@ warning 6002: The table/view 'JneCommSitesManagementDB.dbo.vwUserData' does not 
           <End Type="JneCommSitesDataBaseModel.AspNetRoles" Role="AspNetRoles" Multiplicity="*" />
           <End Type="JneCommSitesDataBaseModel.T_Operations" Role="T_Operations" Multiplicity="*" />
         </Association>
+        <EntityType Name="T_Certifications">
+          <Key>
+            <PropertyRef Name="vCertificationName" />
+          </Key>
+          <Property Name="vCertificationName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="vCertificationDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="T_CrewRoles">
+          <Key>
+            <PropertyRef Name="vCrewRoleName" />
+          </Key>
+          <Property Name="vCrewRoleName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="vCrewRoleDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="T_PaymentPeriod">
+          <Key>
+            <PropertyRef Name="siPaymentPeriodId" />
+            <PropertyRef Name="dStartCutOffDate" />
+            <PropertyRef Name="siDaysForPaymentPeriod" />
+          </Key>
+          <Property Name="siPaymentPeriodId" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="dStartCutOffDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="siDaysForPaymentPeriod" Type="Int16" Nullable="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -576,6 +638,31 @@ warning 6002: The table/view 'JneCommSitesManagementDB.dbo.vwUserData' does not 
               <ScalarProperty Name="Id" ColumnName="vRoleId" />
             </EndProperty>
           </AssociationSetMapping>
+          <EntitySetMapping Name="T_Certifications">
+            <EntityTypeMapping TypeName="JneCommSitesDataBaseModel.T_Certifications">
+              <MappingFragment StoreEntitySet="T_Certifications">
+                <ScalarProperty Name="vCertificationDescription" ColumnName="vCertificationDescription" />
+                <ScalarProperty Name="vCertificationName" ColumnName="vCertificationName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_CrewRoles">
+            <EntityTypeMapping TypeName="JneCommSitesDataBaseModel.T_CrewRoles">
+              <MappingFragment StoreEntitySet="T_CrewRoles">
+                <ScalarProperty Name="vCrewRoleDescription" ColumnName="vCrewRoleDescription" />
+                <ScalarProperty Name="vCrewRoleName" ColumnName="vCrewRoleName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_PaymentPeriod">
+            <EntityTypeMapping TypeName="JneCommSitesDataBaseModel.T_PaymentPeriod">
+              <MappingFragment StoreEntitySet="T_PaymentPeriod">
+                <ScalarProperty Name="siDaysForPaymentPeriod" ColumnName="siDaysForPaymentPeriod" />
+                <ScalarProperty Name="dStartCutOffDate" ColumnName="dStartCutOffDate" />
+                <ScalarProperty Name="siPaymentPeriodId" ColumnName="siPaymentPeriodId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

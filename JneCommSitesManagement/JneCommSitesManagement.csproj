@@ -162,6 +162,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\AuthorizeFilter.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
@@ -176,6 +177,7 @@
     </Compile>
     <Compile Include="Helper\Helper.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\CertificationModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\RolModel.cs" />
@@ -193,6 +195,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <None Include="Properties\PublishProfiles\JeCommSites.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -247,6 +250,10 @@
     <Content Include="Views\Maintenance\EditUser.cshtml" />
     <Content Include="Views\Maintenance\RolesIndex.cshtml" />
     <Content Include="Views\Maintenance\CreateRol.cshtml" />
+    <Content Include="Views\Maintenance\EditRol.cshtml" />
+    <Content Include="Views\Maintenance\CertificationsList.cshtml" />
+    <Content Include="Views\Maintenance\CreateCertification.cshtml" />
+    <Content Include="Views\Maintenance\EditCertification.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

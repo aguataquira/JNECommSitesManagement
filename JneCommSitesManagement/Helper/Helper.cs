@@ -25,17 +25,29 @@ namespace JneCommSitesManagement.Helper
             return items;
         }
 
-        public static List<ListBoxHelper> GetOperations()
+        public static List<ListBoxHelper> GetOperations(string rolName)
         {
             JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
             List<JneCommSitesDataLayer.T_Operations> itemList = (from p in _dbContext.T_Operations
                                                                 select p).ToList();
+            
             List<ListBoxHelper> listPermission = new List<ListBoxHelper>();
+
             foreach (JneCommSitesDataLayer.T_Operations item in itemList)
             {
+                bool selected = false;
+                var operationByRol = (from p in _dbContext.T_Operations
+                                      from d in p.AspNetRoles
+                                      where d.Name == rolName
+                                      select p);
+                foreach (var itemOperation in operationByRol)
+                {
+                    if (itemOperation.biOperationsId == item.biOperationsId)
+                        selected = true;
+                }
                 listPermission.Add(new ListBoxHelper
                 {
-                    Selected = false,
+                    Selected = selected,
                     isChildren = false,
                     Text = item.vDisplayTittle,
                     Value = item.biOperationsId.ToString(),

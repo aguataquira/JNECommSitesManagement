@@ -10,7 +10,7 @@
 <p>
     @Html.ActionLink("Create New Role", "CreateRol")
 </p>
-<table class="table">
+<table class="table table-striped">
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.Name)
@@ -24,7 +24,7 @@
             @Html.DisplayFor(modelItem => item.Name)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) 
+            @Html.ActionLink("Edit", "EditRol", new { rolName = item.Name }) 
         </td>
     </tr>
 }
