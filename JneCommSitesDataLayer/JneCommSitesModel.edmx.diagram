@@ -21,6 +21,12 @@
         <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_Certifications" Width="1.5" PointX="5.375" PointY="7.625" />
         <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_CrewRoles" Width="1.5" PointX="5.375" PointY="6" />
         <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_PaymentPeriod" Width="1.5" PointX="5.375" PointY="9.125" />
+        <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_TechEvolutionCodes" Width="1.5" PointX="7.375" PointY="4.75" />
+        <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_ContactsByCustomer" Width="1.5" PointX="11.875" PointY="8" />
+        <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_Customer" Width="1.5" PointX="9.625" PointY="8" />
+        <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_USAStates" Width="1.5" PointX="7.375" PointY="8.375" />
+        <AssociationConnector Association="JneCommSitesDataBaseModel.FK_T_ContactsByCustomer_T_ContactsByCustomer" />
+        <AssociationConnector Association="JneCommSitesDataBaseModel.FK_T_Customer_T_USAStates" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

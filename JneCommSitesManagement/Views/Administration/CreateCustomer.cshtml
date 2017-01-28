@@ -1,0 +1,248 @@
+﻿@model JneCommSitesManagement.Models.CustomerModels
+
+@{
+    ViewBag.Title = "CreateCustomer";
+    Layout = "~/Views/Shared/_LayoutJneCommSites.cshtml";
+}
+
+
+<h3>Create Customer</h3>
+<label class="text-danger" id="lbError"></label>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Customer Information</h3>
+    </div>
+    <div class="panel-body">
+        @using (Html.BeginForm("CreateCustomer", "Administration", FormMethod.Post, new { id = "formCreateCustomer" }))
+    {
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.custumerName, htmlAttributes: new { @class = "col-md-8" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.custumerName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.custumerName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.customerAddress, htmlAttributes: new { @class = "col-md-8" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.customerAddress, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.customerAddress, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.states, htmlAttributes: new { @class = "col-md-8" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.states, new SelectList(Model._StatesList, "ID", "Description"), "--State--", new { style = "width: 300px; height: 30px;", @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.states, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.customerCity, htmlAttributes: new { @class = "col-md-8" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.customerCity, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.customerCity, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <label class="label-info">Press the Save button after the add contacts.</label>
+    <div class="form-group">
+        <div class="col-md-offset-0 col-md-10">
+            <input type="submit" value="Save" class="btn btn-primary" />
+        </div>
+    </div>
+    }
+    </div>
+
+
+    <div class="panel-heading">
+        <h3 class="panel-title">Add Contact to Customer</h3>
+    </div>
+    <div class="panel-body">
+        <table class="table table-striped .table-bordered">
+            <tr>
+                <th>
+                    Contact Name
+                </th>
+                <th>
+                    Contact Phone
+                </th>
+                <th>
+                    Email address
+                </th>
+                <th>
+                    Area
+                </th>
+                <th>
+                    Action
+                </th>
+            </tr>
+            <tr ng-repeat="item in contacts">
+                <td>
+                    {{item.contactName}}
+                </td>
+                <td>
+                    {{item.contactPhone}}
+                </td>
+                <td>
+                    {{item.contactEmail}}
+                </td>
+                <td>
+                    {{item.contactArea}}
+                </td>
+                <td>
+                    <input type="button" value="Remove" class="btn btn-primary" ng-click="removeRow(item.name)" />
+                </td>
+            </tr>
+        </table>
+
+        <form class="form-horizontal" ng-submit="addRow()">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="col-md-8">Contact Name</label>
+                        <div class="col-md-10">
+                            <input type="text" class="form-control" name="contactName" ng-model="contactName" required/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="col-md-8">Contact Phone</label>
+                        <div class="col-md-10">
+                            <input type="text" class="form-control" name="contactPhone" ng-model="contactPhone" required/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="col-md-8">Email</label>
+                        <div class="col-md-10">
+                            <input type="email" class="form-control" name="contactEmail" ng-model="contactEmail" required/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="col-md-12">Area</label>
+                        <div class="col-md-10">
+                            <input type="text" class="form-control" name="contactArea" ng-model="contactArea" required/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-6 col-md-12">
+                    <input type="submit" value="Add Contact" class="btn btn-info" />
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+
+    <div>
+        @Html.ActionLink("Back to List", "CustomersIndex")
+    </div>
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+        @Scripts.Render("~/Scripts/angular.js")
+        @Scripts.Render("~/Scripts/Json.js")
+
+        <script>
+            var batch = new Array();
+
+            var helloApp = angular.module("JeCommAPP", []);
+            helloApp.controller("JeCommController", function ($scope) {
+                $scope.contacts = [];
+                $scope.addRow = function () {
+                      $scope.addRow = function () {
+                            batch.push({ 'contactName': $scope.contactName, 'contactPhone': $scope.contactPhone, 'contactEmail': $scope.contactEmail, 'contactArea': $scope.contactArea });
+                            $scope.contacts.push({ 'contactName': $scope.contactName, 'contactPhone': $scope.contactPhone, 'contactEmail': $scope.contactEmail, 'contactArea': $scope.contactArea });
+                            $scope.contactName = '';
+                            $scope.contactPhone = '';
+                            $scope.contactEmail = '';
+                            $scope.contactArea = '';
+                        };
+                }
+
+                $scope.removeRow = function (name) {
+                    var index = -1;
+                    var comArr = eval($scope.contacts);
+                    for (var i = 0; i < comArr.length; i++) {
+                        if (comArr[i].name === name) {
+                            index = i;
+                            break;
+                        }
+                    }
+                    if (index === -1) {
+                        alert("Something gone wrong");
+                    }
+                    $scope.contacts.splice(index, 1);
+                    batch.splice(index, 1);
+                };
+
+            });
+
+
+            $('#formCreateCustomer').submit(function (event) {x
+                if ($('#formCreateCustomer').valid()) {
+                    event.preventDefault();
+
+                    var transaction =
+                    {
+                        "_ListContacts": batch,
+                        "custumerName": $("#custumerName").val(),
+                        "customerAddress": $("#customerAddress").val(),
+                        "states": $("#states").val(),
+                        "customerCity": $("#customerCity").val()
+                    }
+
+                    var json = JSON.stringify(transaction);
+
+                    $.ajax({
+                        type: 'POST',
+                        dataType: 'json',
+                        contentType: 'application/json; charset=utf-8',
+                        url: '@Url.Action("CreateCustomer")',
+                        data: json,
+                        success: function (response) {
+                            if (response == true) {
+                                window.location = '@Url.Action("CustomersIndex", "Administration")';
+                            }
+                            else {
+                                if (response == false) {
+                                    $("#lbError").empty();
+                                    $("#lbError").append("An error ocurred, please try again.");
+                                }
+                                else {
+                                    $("#lbError").empty();
+                                    $("#lbError").append(response);
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+        </script>
+    }

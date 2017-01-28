@@ -14,6 +14,11 @@ namespace JneCommSitesManagement.Controllers
             return View();
         }
 
+        [Authorize]
+        public ActionResult AccessDenied()
+        {
+            return View();
+        }
         //public ActionResult About()
         //{
         //    ViewBag.Message = "Your application description page.";

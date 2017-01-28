@@ -73,12 +73,32 @@
           <Property Name="vCertificationName" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="vCertificationDescription" Type="varchar(max)" />
         </EntityType>
+        <EntityType Name="T_ContactsByCustomer">
+          <Key>
+            <PropertyRef Name="iContactID" />
+          </Key>
+          <Property Name="iContactID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="vCustomerName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="vContactName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="vPhoneContact" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="vEmailContact" Type="varchar" MaxLength="60" Nullable="false" />
+          <Property Name="vAreaContact" Type="varchar" MaxLength="10" />
+        </EntityType>
         <EntityType Name="T_CrewRoles">
           <Key>
             <PropertyRef Name="vCrewRoleName" />
           </Key>
           <Property Name="vCrewRoleName" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="vCrewRoleDescription" Type="varchar(max)" />
+        </EntityType>
+        <EntityType Name="T_Customer">
+          <Key>
+            <PropertyRef Name="vCustomerName" />
+          </Key>
+          <Property Name="vCustomerName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="vStateCode" Type="varchar" MaxLength="2" Nullable="false" />
+          <Property Name="vCustomerAddress" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="vCustomerCity" Type="nchar" MaxLength="10" Nullable="false" />
         </EntityType>
         <EntityType Name="T_Operations">
           <Key>
@@ -112,6 +132,20 @@ warning 6002: The table/view 'JneCommSitesManagementDB.dbo.T_PaymentPeriod' does
           </Key>
           <Property Name="vRoleId" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="biOperationsId" Type="smallint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="T_TechEvolutionCodes">
+          <Key>
+            <PropertyRef Name="vTechEvolutionCodeName" />
+          </Key>
+          <Property Name="vTechEvolutionCodeName" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="vTechEvolutionCodeDescription" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="T_USAStates">
+          <Key>
+            <PropertyRef Name="vStateCode" />
+          </Key>
+          <Property Name="vStateName" Type="varchar" MaxLength="64" Nullable="false" />
+          <Property Name="vStateCode" Type="varchar" MaxLength="2" Nullable="false" />
         </EntityType>
         <EntityType Name="T_UsersData">
           <Key>
@@ -202,6 +236,30 @@ warning 6002: The table/view 'JneCommSitesManagementDB.dbo.vwUserData' does not 
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_T_ContactsByCustomer_T_ContactsByCustomer">
+          <End Role="T_Customer" Type="Self.T_Customer" Multiplicity="1" />
+          <End Role="T_ContactsByCustomer" Type="Self.T_ContactsByCustomer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_Customer">
+              <PropertyRef Name="vCustomerName" />
+            </Principal>
+            <Dependent Role="T_ContactsByCustomer">
+              <PropertyRef Name="vCustomerName" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_T_Customer_T_USAStates">
+          <End Role="T_USAStates" Type="Self.T_USAStates" Multiplicity="1" />
+          <End Role="T_Customer" Type="Self.T_Customer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_USAStates">
+              <PropertyRef Name="vStateCode" />
+            </Principal>
+            <Dependent Role="T_Customer">
+              <PropertyRef Name="vStateCode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_T_Rol_Operations_AspNetRoles">
           <End Role="AspNetRoles" Type="Self.AspNetRoles" Multiplicity="1" />
           <End Role="T_Rol_Operations" Type="Self.T_Rol_Operations" Multiplicity="*" />
@@ -246,9 +304,13 @@ warning 6002: The table/view 'JneCommSitesManagementDB.dbo.vwUserData' does not 
           <EntitySet Name="AspNetUserRoles" EntityType="Self.AspNetUserRoles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_Certifications" EntityType="Self.T_Certifications" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_ContactsByCustomer" EntityType="Self.T_ContactsByCustomer" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_CrewRoles" EntityType="Self.T_CrewRoles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_Customer" EntityType="Self.T_Customer" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_Operations" EntityType="Self.T_Operations" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_Rol_Operations" EntityType="Self.T_Rol_Operations" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_TechEvolutionCodes" EntityType="Self.T_TechEvolutionCodes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_USAStates" EntityType="Self.T_USAStates" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_UsersData" EntityType="Self.T_UsersData" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_PaymentPeriod" EntityType="Self.T_PaymentPeriod" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -286,6 +348,14 @@ warning 6002: The table/view 'JneCommSitesManagementDB.dbo.vwUserData' does not 
           <AssociationSet Name="FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_T_ContactsByCustomer_T_ContactsByCustomer" Association="Self.FK_T_ContactsByCustomer_T_ContactsByCustomer">
+            <End Role="T_Customer" EntitySet="T_Customer" />
+            <End Role="T_ContactsByCustomer" EntitySet="T_ContactsByCustomer" />
+          </AssociationSet>
+          <AssociationSet Name="FK_T_Customer_T_USAStates" Association="Self.FK_T_Customer_T_USAStates">
+            <End Role="T_USAStates" EntitySet="T_USAStates" />
+            <End Role="T_Customer" EntitySet="T_Customer" />
           </AssociationSet>
           <AssociationSet Name="FK_T_Rol_Operations_AspNetRoles" Association="Self.FK_T_Rol_Operations_AspNetRoles">
             <End Role="AspNetRoles" EntitySet="AspNetRoles" />
@@ -429,6 +499,18 @@ warning 6002: The table/view 'JneCommSitesManagementDB.dbo.vwUserData' does not 
           <EntitySet Name="T_Certifications" EntityType="JneCommSitesDataBaseModel.T_Certifications" />
           <EntitySet Name="T_CrewRoles" EntityType="JneCommSitesDataBaseModel.T_CrewRoles" />
           <EntitySet Name="T_PaymentPeriod" EntityType="JneCommSitesDataBaseModel.T_PaymentPeriod" />
+          <EntitySet Name="T_TechEvolutionCodes" EntityType="JneCommSitesDataBaseModel.T_TechEvolutionCodes" />
+          <EntitySet Name="T_ContactsByCustomer" EntityType="JneCommSitesDataBaseModel.T_ContactsByCustomer" />
+          <EntitySet Name="T_Customer" EntityType="JneCommSitesDataBaseModel.T_Customer" />
+          <EntitySet Name="T_USAStates" EntityType="JneCommSitesDataBaseModel.T_USAStates" />
+          <AssociationSet Name="FK_T_ContactsByCustomer_T_ContactsByCustomer" Association="JneCommSitesDataBaseModel.FK_T_ContactsByCustomer_T_ContactsByCustomer">
+            <End Role="T_Customer" EntitySet="T_Customer" />
+            <End Role="T_ContactsByCustomer" EntitySet="T_ContactsByCustomer" />
+          </AssociationSet>
+          <AssociationSet Name="FK_T_Customer_T_USAStates" Association="JneCommSitesDataBaseModel.FK_T_Customer_T_USAStates">
+            <End Role="T_USAStates" EntitySet="T_USAStates" />
+            <End Role="T_Customer" EntitySet="T_Customer" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="T_UsersData">
           <Key>
@@ -516,6 +598,68 @@ warning 6002: The table/view 'JneCommSitesManagementDB.dbo.vwUserData' does not 
           <Property Name="dStartCutOffDate" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="siDaysForPaymentPeriod" Type="Int16" Nullable="false" />
         </EntityType>
+        <EntityType Name="T_TechEvolutionCodes">
+          <Key>
+            <PropertyRef Name="vTechEvolutionCodeName" />
+          </Key>
+          <Property Name="vTechEvolutionCodeName" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="vTechEvolutionCodeDescription" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="T_ContactsByCustomer">
+          <Key>
+            <PropertyRef Name="iContactID" />
+          </Key>
+          <Property Name="iContactID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="vCustomerName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="vContactName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="vPhoneContact" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="vEmailContact" Type="String" Nullable="false" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="vAreaContact" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="T_Customer" Relationship="JneCommSitesDataBaseModel.FK_T_ContactsByCustomer_T_ContactsByCustomer" FromRole="T_ContactsByCustomer" ToRole="T_Customer" />
+        </EntityType>
+        <EntityType Name="T_Customer">
+          <Key>
+            <PropertyRef Name="vCustomerName" />
+          </Key>
+          <Property Name="vCustomerName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="vStateCode" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="vCustomerAddress" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="vCustomerCity" Type="String" Nullable="false" MaxLength="10" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="T_ContactsByCustomer" Relationship="JneCommSitesDataBaseModel.FK_T_ContactsByCustomer_T_ContactsByCustomer" FromRole="T_Customer" ToRole="T_ContactsByCustomer" />
+          <NavigationProperty Name="T_USAStates" Relationship="JneCommSitesDataBaseModel.FK_T_Customer_T_USAStates" FromRole="T_Customer" ToRole="T_USAStates" />
+        </EntityType>
+        <EntityType Name="T_USAStates">
+          <Key>
+            <PropertyRef Name="vStateCode" />
+          </Key>
+          <Property Name="vStateName" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="vStateCode" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="T_Customer" Relationship="JneCommSitesDataBaseModel.FK_T_Customer_T_USAStates" FromRole="T_USAStates" ToRole="T_Customer" />
+        </EntityType>
+        <Association Name="FK_T_ContactsByCustomer_T_ContactsByCustomer">
+          <End Type="JneCommSitesDataBaseModel.T_Customer" Role="T_Customer" Multiplicity="1" />
+          <End Type="JneCommSitesDataBaseModel.T_ContactsByCustomer" Role="T_ContactsByCustomer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_Customer">
+              <PropertyRef Name="vCustomerName" />
+            </Principal>
+            <Dependent Role="T_ContactsByCustomer">
+              <PropertyRef Name="vCustomerName" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_T_Customer_T_USAStates">
+          <End Type="JneCommSitesDataBaseModel.T_USAStates" Role="T_USAStates" Multiplicity="1" />
+          <End Type="JneCommSitesDataBaseModel.T_Customer" Role="T_Customer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_USAStates">
+              <PropertyRef Name="vStateCode" />
+            </Principal>
+            <Dependent Role="T_Customer">
+              <PropertyRef Name="vStateCode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -660,6 +804,44 @@ warning 6002: The table/view 'JneCommSitesManagementDB.dbo.vwUserData' does not 
                 <ScalarProperty Name="siDaysForPaymentPeriod" ColumnName="siDaysForPaymentPeriod" />
                 <ScalarProperty Name="dStartCutOffDate" ColumnName="dStartCutOffDate" />
                 <ScalarProperty Name="siPaymentPeriodId" ColumnName="siPaymentPeriodId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_TechEvolutionCodes">
+            <EntityTypeMapping TypeName="JneCommSitesDataBaseModel.T_TechEvolutionCodes">
+              <MappingFragment StoreEntitySet="T_TechEvolutionCodes">
+                <ScalarProperty Name="vTechEvolutionCodeDescription" ColumnName="vTechEvolutionCodeDescription" />
+                <ScalarProperty Name="vTechEvolutionCodeName" ColumnName="vTechEvolutionCodeName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_ContactsByCustomer">
+            <EntityTypeMapping TypeName="JneCommSitesDataBaseModel.T_ContactsByCustomer">
+              <MappingFragment StoreEntitySet="T_ContactsByCustomer">
+                <ScalarProperty Name="vAreaContact" ColumnName="vAreaContact" />
+                <ScalarProperty Name="vEmailContact" ColumnName="vEmailContact" />
+                <ScalarProperty Name="vPhoneContact" ColumnName="vPhoneContact" />
+                <ScalarProperty Name="vContactName" ColumnName="vContactName" />
+                <ScalarProperty Name="vCustomerName" ColumnName="vCustomerName" />
+                <ScalarProperty Name="iContactID" ColumnName="iContactID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_Customer">
+            <EntityTypeMapping TypeName="JneCommSitesDataBaseModel.T_Customer">
+              <MappingFragment StoreEntitySet="T_Customer">
+                <ScalarProperty Name="vCustomerCity" ColumnName="vCustomerCity" />
+                <ScalarProperty Name="vCustomerAddress" ColumnName="vCustomerAddress" />
+                <ScalarProperty Name="vStateCode" ColumnName="vStateCode" />
+                <ScalarProperty Name="vCustomerName" ColumnName="vCustomerName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_USAStates">
+            <EntityTypeMapping TypeName="JneCommSitesDataBaseModel.T_USAStates">
+              <MappingFragment StoreEntitySet="T_USAStates">
+                <ScalarProperty Name="vStateCode" ColumnName="vStateCode" />
+                <ScalarProperty Name="vStateName" ColumnName="vStateName" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
