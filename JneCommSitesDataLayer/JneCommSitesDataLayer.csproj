@@ -85,13 +85,25 @@
     <Compile Include="T_Certifications.cs">
       <DependentUpon>JneCommSitesModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="T_ContactsByCustomer.cs">
+      <DependentUpon>JneCommSitesModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="T_CrewRoles.cs">
+      <DependentUpon>JneCommSitesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="T_Customer.cs">
       <DependentUpon>JneCommSitesModel.tt</DependentUpon>
     </Compile>
     <Compile Include="T_Operations.cs">
       <DependentUpon>JneCommSitesModel.tt</DependentUpon>
     </Compile>
     <Compile Include="T_PaymentPeriod.cs">
+      <DependentUpon>JneCommSitesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="T_TechEvolutionCodes.cs">
+      <DependentUpon>JneCommSitesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="T_USAStates.cs">
       <DependentUpon>JneCommSitesModel.tt</DependentUpon>
     </Compile>
     <Compile Include="T_UsersData.cs">

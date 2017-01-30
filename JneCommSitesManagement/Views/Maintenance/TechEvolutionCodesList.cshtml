@@ -1,0 +1,38 @@
+﻿@model IEnumerable<JneCommSitesDataLayer.T_TechEvolutionCodes>
+
+@{
+    ViewBag.Title = "TechEvolutionCodesList";
+    Layout = "~/Views/Shared/_LayoutJneCommSites.cshtml";
+}
+
+<h2>Tech Evolution Codes List</h2>
+
+<p>
+    @Html.ActionLink("Create New", "CreateTechEvolutionCode")
+</p>
+<table class="table table-striped">
+    <tr>
+        <th>
+            @Html.DisplayName("Tech Evolution Code Name")
+        </th>
+        <th>
+            @Html.DisplayName("Tech Evolution Code Description")
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.vTechEvolutionCodeName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.vTechEvolutionCodeDescription)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "EditTechEvolutionCode", new { techEvolutionCodeName = item.vTechEvolutionCodeName  }) |
+        </td>
+    </tr>
+}
+
+</table>

@@ -13,7 +13,7 @@ namespace JneCommSitesManagement.App_Start
 
         protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
         {
-            filterContext.Result = new RedirectResult("~/Account/Login");
+            filterContext.Result = new RedirectResult("~/Home/AccessDenied");
         }
 
         public override void OnAuthorization(AuthorizationContext filterContext)

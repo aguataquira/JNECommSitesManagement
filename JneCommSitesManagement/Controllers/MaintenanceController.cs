@@ -37,6 +37,7 @@ namespace JneCommSitesManagement.Controllers
 
 
         //Method to create user
+        [Authorize]
         [AuthorizeFilter]
         public ActionResult CreateUser()
         {
@@ -52,6 +53,7 @@ namespace JneCommSitesManagement.Controllers
 
         // Post method to create user
         [HttpPost]
+        [Authorize]
         [AuthorizeFilter]
         public async Task<ActionResult> CreateUser(Models.CreateUserModel model)
         {
@@ -119,9 +121,11 @@ namespace JneCommSitesManagement.Controllers
             }
                 return View(model);
         }
-        
+
 
         //Method to Edit user
+        [Authorize]
+        [AuthorizeFilter]
         public ActionResult EditUser(string userName)
         {
             if (string.IsNullOrEmpty(userName))
@@ -156,6 +160,8 @@ namespace JneCommSitesManagement.Controllers
         }
 
         [HttpPost]
+        [Authorize]
+        [AuthorizeFilter]
         public async Task<ActionResult> EditUser(Models.CreateUserModel model)
         {
             if (ModelState.IsValid)
@@ -195,9 +201,10 @@ namespace JneCommSitesManagement.Controllers
 
         #endregion
 
-
         #region Roles
         //Method for List of roles
+        [Authorize]
+        [AuthorizeFilter]
         public ActionResult RolesIndex(string roleName)
         {
             if (string.IsNullOrEmpty(roleName))
@@ -211,8 +218,10 @@ namespace JneCommSitesManagement.Controllers
                               select p);
             return View(queryRoles);
         }
-        
+
         //Method to create Rol
+        [Authorize]
+        [AuthorizeFilter]
         public ActionResult CreateRol()
         {
             Models.RolModel rolModel = new RolModel();
@@ -222,6 +231,8 @@ namespace JneCommSitesManagement.Controllers
 
         //Post Method Create Rol
         [HttpPost]
+        [Authorize]
+        [AuthorizeFilter]
         public ActionResult CreateRol(Models.RolModel model, string[] roles)
         {
             ApplicationDbContext context = new ApplicationDbContext();
@@ -262,6 +273,8 @@ namespace JneCommSitesManagement.Controllers
         }
 
         //Method to edit Roles
+        [Authorize]
+        [AuthorizeFilter]
         public ActionResult EditRol(string rolName)
         {
             if (string.IsNullOrEmpty(rolName))
@@ -280,6 +293,8 @@ namespace JneCommSitesManagement.Controllers
         }
 
         [HttpPost]
+        [Authorize]
+        [AuthorizeFilter]
         public ActionResult EditRol(Models.RolModel rolModel, string[] roles)
         {
             if (ModelState.IsValid)
@@ -325,6 +340,10 @@ namespace JneCommSitesManagement.Controllers
         #endregion
 
         #region Certifications
+
+        //Method to certificationList
+        [Authorize]
+        [AuthorizeFilter]
         public ActionResult CertificationsList()
         {
             JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
@@ -334,12 +353,18 @@ namespace JneCommSitesManagement.Controllers
             return View(certificationsQuery);
         }
 
+        //Method to create a new certification
+        [Authorize]
+        [AuthorizeFilter]
         public ActionResult CreateCertification()
         {
             return View();
         }
 
+        //Post method to create a new certification
         [HttpPost]
+        [Authorize]
+        [AuthorizeFilter]
         public ActionResult CreateCertification(Models.CertificationModel model)
         {
             if (ModelState.IsValid)
@@ -360,7 +385,7 @@ namespace JneCommSitesManagement.Controllers
                     newCertification.vCertificationDescription = model.certificationpDescription;
                     _dbContext.T_Certifications.Add(newCertification);
                     _dbContext.SaveChanges();
-                    RedirectToAction("CertificationsList", "Maintenance");
+                    return RedirectToAction("CertificationsList", "Maintenance");
                 }
                 catch (Exception error)
                 {
@@ -371,6 +396,9 @@ namespace JneCommSitesManagement.Controllers
             return View();
         }
 
+        //Method to edit a certification
+        [Authorize]
+        [AuthorizeFilter]
         public ActionResult EditCertification(string certificationName)
         {
             JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
@@ -383,7 +411,11 @@ namespace JneCommSitesManagement.Controllers
             return View(newCertificationModel);
         }
 
+
+        //Post Method to edit a certification
         [HttpPost]
+        [Authorize]
+        [AuthorizeFilter]
         public ActionResult EditCertification(Models.CertificationModel model)
         {
             if (ModelState.IsValid)
@@ -399,7 +431,7 @@ namespace JneCommSitesManagement.Controllers
                     queryCetification.vCertificationDescription = model.certificationpDescription;
 
                     _dbContext.SaveChanges();
-                    RedirectToAction("CertificationsList", "Maintenance");
+                    return RedirectToAction("CertificationsList", "Maintenance");
                 }
                 catch (Exception error)
                 {
@@ -411,12 +443,218 @@ namespace JneCommSitesManagement.Controllers
         }
         #endregion
 
+        #region Tech Evolution Codes
+
+        //Method for the list of the Tech Evolution Codes
+        [Authorize]
+        [AuthorizeFilter]
+        public ActionResult TechEvolutionCodesList()
+        {
+            JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
+            var techEvolutionCodesQuery = (from p in _dbContext.T_TechEvolutionCodes
+                                       orderby p.vTechEvolutionCodeName descending
+                                       select p);
+            return View(techEvolutionCodesQuery);
+        }
+
+        //Method to create a Tech Evolution Code
+        [Authorize]
+        [AuthorizeFilter]
+        public ActionResult CreateTechEvolutionCode()
+        {
+            return View();
+        }
+
+        //Post method to create a Tech Evolution Code
+        [HttpPost]
+        [Authorize]
+        [AuthorizeFilter]
+        public ActionResult CreateTechEvolutionCode(Models.TechEvolutionCodesModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
+                    var existTechEvolutionCode = (from p in _dbContext.T_TechEvolutionCodes
+                                         where p.vTechEvolutionCodeName == model.techEvolutionCodeName
+                                         select p).FirstOrDefault();
+                    if (existTechEvolutionCode != null)
+                    {
+                        ModelState.AddModelError(string.Empty, "Tech Evolution Code already exist");
+                        return View();
+                    }
+                    JneCommSitesDataLayer.T_TechEvolutionCodes newTechEvolutionCode = new JneCommSitesDataLayer.T_TechEvolutionCodes();
+                    newTechEvolutionCode.vTechEvolutionCodeName = model.techEvolutionCodeName;
+                    newTechEvolutionCode.vTechEvolutionCodeDescription = model.techEvolutionCodeDescription;
+                    _dbContext.T_TechEvolutionCodes.Add(newTechEvolutionCode);
+                    _dbContext.SaveChanges();
+                    return RedirectToAction("TechEvolutionCodesList", "Maintenance");
+                }
+                catch (Exception error)
+                {
+                    ModelState.AddModelError(string.Empty, error.Message);
+                    return View();
+                }
+            }
+            return View();
+        }
 
 
+        //Method to edit a tech evolution code
+        [Authorize]
+        [AuthorizeFilter]
+        public ActionResult EditTechEvolutionCode(string techEvolutionCodeName)
+        {
+            JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
+            Models.TechEvolutionCodesModel newTechEvolutionCode = new TechEvolutionCodesModel();
+            var querytechEvolutionCode = (from p in _dbContext.T_TechEvolutionCodes
+                                 where p.vTechEvolutionCodeName == techEvolutionCodeName
+                                 select p).FirstOrDefault();
+            if (querytechEvolutionCode == null)
+                RedirectToAction("TechEvolutionCodesList", "Maintenance");
+            newTechEvolutionCode.techEvolutionCodeName = querytechEvolutionCode.vTechEvolutionCodeName;
+            newTechEvolutionCode.techEvolutionCodeDescription= querytechEvolutionCode.vTechEvolutionCodeDescription;
+            return View(newTechEvolutionCode);
+        }
 
+        //Post method to edit a tech evolution code
+        [HttpPost]
+        [Authorize]
+        [AuthorizeFilter]
+        public ActionResult EditTechEvolutionCode(Models.TechEvolutionCodesModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
 
+                    var queryTechEvolutionCode = (from p in _dbContext.T_TechEvolutionCodes
+                                             where p.vTechEvolutionCodeName == model.techEvolutionCodeName
+                                             select p).FirstOrDefault();
 
+                    queryTechEvolutionCode.vTechEvolutionCodeDescription = model.techEvolutionCodeDescription;
 
+                    _dbContext.SaveChanges();
+                    return RedirectToAction("TechEvolutionCodesList", "Maintenance");
+                }
+                catch (Exception error)
+                {
+                    ModelState.AddModelError(string.Empty, error.Message);
+                    return View();
+                }
+            }
+            return View();
+        }
+
+        #endregion
+
+        #region Crew Roles
+
+        //Mehtod that show the Crew Roles List
+        [Authorize]
+        [AuthorizeFilter]
+        public ActionResult CrewRolesList()
+        {
+            JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
+            var certificationsQuery = (from p in _dbContext.T_CrewRoles
+                                       orderby p.vCrewRoleName descending
+                                       select p);
+            return View(certificationsQuery);
+        }
+
+        //Mothod to create a crew role
+        [Authorize]
+        [AuthorizeFilter]
+        public ActionResult CreateCrewRol()
+        {
+            return View();
+        }
+
+        //Post method to create a crew role
+        [HttpPost]
+        [Authorize]
+        [AuthorizeFilter]
+        public ActionResult CreateCrewRol(Models.CrewRolModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
+                    var existCrewRole = (from p in _dbContext.T_CrewRoles
+                                              where p.vCrewRoleName == model.crewRoleName
+                                              select p).FirstOrDefault();
+                    if (existCrewRole != null)
+                    {
+                        ModelState.AddModelError(string.Empty, "The crew role already exist");
+                        return View();
+                    }
+                    JneCommSitesDataLayer.T_CrewRoles newCrewRole = new JneCommSitesDataLayer.T_CrewRoles();
+                    newCrewRole.vCrewRoleName = model.crewRoleName;
+                    newCrewRole.vCrewRoleDescription = model.crewRoleDescription;
+                    _dbContext.T_CrewRoles.Add(newCrewRole);
+                    _dbContext.SaveChanges();
+                    return RedirectToAction("CrewRolesList", "Maintenance");
+                }
+                catch (Exception error)
+                {
+                    ModelState.AddModelError(string.Empty, error.Message);
+                    return View();
+                }
+            }
+            return View();
+        }
+
+        //Methos to edit a crew role
+        [Authorize]
+        [AuthorizeFilter]
+        public ActionResult EditCrewRol(string crewRoleName)
+        {
+            JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
+            Models.CrewRolModel newCrewRolModel = new CrewRolModel();
+            var queryCrewRole = (from p in _dbContext.T_CrewRoles
+                                     where p.vCrewRoleName == crewRoleName
+                                     select p).FirstOrDefault();
+            if (queryCrewRole == null)
+                RedirectToAction("CrewRolesList", "Maintenance");
+            newCrewRolModel.crewRoleName = queryCrewRole.vCrewRoleName;
+            newCrewRolModel.crewRoleDescription = queryCrewRole.vCrewRoleDescription;
+            return View(newCrewRolModel);
+        }
+
+        //Post Method to edit a crew role
+        [HttpPost]
+        [Authorize]
+        [AuthorizeFilter]
+        public ActionResult EditCrewRol(Models.CrewRolModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
+
+                    var queryCetification = (from p in _dbContext.T_CrewRoles
+                                             where p.vCrewRoleName == model.crewRoleName
+                                             select p).FirstOrDefault();
+
+                    queryCetification.vCrewRoleDescription = model.crewRoleDescription;
+
+                    _dbContext.SaveChanges();
+                    return RedirectToAction("CrewRolesList", "Maintenance");
+                }
+                catch (Exception error)
+                {
+                    ModelState.AddModelError(string.Empty, error.Message);
+                    return View();
+                }
+            }
+            return View();
+        }
+
+        #endregion
 
 
         public ApplicationUserManager UserManager

@@ -169,6 +169,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AdministrationController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MaintenanceController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -178,9 +179,12 @@
     <Compile Include="Helper\Helper.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CertificationModel.cs" />
+    <Compile Include="Models\CrewRolModel.cs" />
+    <Compile Include="Models\CustomerModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\RolModel.cs" />
+    <Compile Include="Models\TechEvolutionCodesModel.cs" />
     <Compile Include="Models\UserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -188,14 +192,26 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
-    <Content Include="Content\JNet Images\JNet Logo.png" />
+    <Content Include="Content\Jne Icons\JeCommCertificationsIcon.png" />
+    <Content Include="Content\Jne Icons\JeCommCustomerIcon.png" />
+    <Content Include="Content\Jne Icons\JeCommMaintenanceIcon.png" />
+    <Content Include="Content\Jne Icons\JeCommPaymentPeriodIcon.png" />
+    <Content Include="Content\Jne Icons\JeCommRolesIcon.png" />
+    <Content Include="Content\Jne Icons\JeCommTechEvolutionCodesIcon.png" />
+    <Content Include="Content\Jne Icons\JeCommUserIcon.png" />
+    <Content Include="Content\JNet Images\AccessDenied.png" />
+    <Content Include="Content\JNet Images\JeCommSitesLogo.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Scripts\angular-mocks.js" />
+    <Content Include="Scripts\angular.js" />
+    <Content Include="Scripts\angular.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Properties\PublishProfiles\JeCommSites.pubxml" />
+    <Content Include="Scripts\angular.min.js.map" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -204,6 +220,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\Json.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
@@ -254,6 +271,16 @@
     <Content Include="Views\Maintenance\CertificationsList.cshtml" />
     <Content Include="Views\Maintenance\CreateCertification.cshtml" />
     <Content Include="Views\Maintenance\EditCertification.cshtml" />
+    <Content Include="Views\Maintenance\CrewRolesList.cshtml" />
+    <Content Include="Views\Maintenance\CreateCrewRol.cshtml" />
+    <Content Include="Views\Maintenance\EditCrewRol.cshtml" />
+    <Content Include="Views\Maintenance\TechEvolutionCodesList.cshtml" />
+    <Content Include="Views\Maintenance\CreateTechEvolutionCode.cshtml" />
+    <Content Include="Views\Maintenance\EditTechEvolutionCode.cshtml" />
+    <Content Include="Views\Administration\CreateCustomer.cshtml" />
+    <Content Include="Views\Administration\CustomersIndex.cshtml" />
+    <Content Include="Views\Administration\EditCustomer.cshtml" />
+    <Content Include="Views\Home\AccessDenied.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

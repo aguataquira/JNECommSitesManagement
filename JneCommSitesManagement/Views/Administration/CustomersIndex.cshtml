@@ -1,0 +1,44 @@
+﻿@model IEnumerable<JneCommSitesDataLayer.T_Customer>
+
+@{
+    ViewBag.Title = "CustomersIndex";
+    Layout = "~/Views/Shared/_LayoutJneCommSites.cshtml";
+}
+
+<h2>Customers List</h2>
+
+<p>
+    @Html.ActionLink("Create New Customer", "CreateCustomer")
+</p>
+<table class="table table-striped">
+    <tr>
+        <th>
+            @Html.DisplayName("Customer Name")
+        </th>
+        <th>
+            @Html.DisplayName("Customer Address")
+        </th>
+        <th>
+            @Html.DisplayName("Customer City")
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.vCustomerName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.vCustomerAddress)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.vCustomerCity)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "EditCustomer", new { customerName = item.vCustomerName}) 
+        </td>
+    </tr>
+}
+
+</table>

@@ -36,5 +36,9 @@ namespace JneCommSitesDataLayer
         public virtual DbSet<T_Certifications> T_Certifications { get; set; }
         public virtual DbSet<T_CrewRoles> T_CrewRoles { get; set; }
         public virtual DbSet<T_PaymentPeriod> T_PaymentPeriod { get; set; }
+        public virtual DbSet<T_TechEvolutionCodes> T_TechEvolutionCodes { get; set; }
+        public virtual DbSet<T_ContactsByCustomer> T_ContactsByCustomer { get; set; }
+        public virtual DbSet<T_Customer> T_Customer { get; set; }
+        public virtual DbSet<T_USAStates> T_USAStates { get; set; }
     }
 }

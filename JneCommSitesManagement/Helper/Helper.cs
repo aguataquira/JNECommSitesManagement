@@ -56,8 +56,23 @@ namespace JneCommSitesManagement.Helper
             return listPermission;
         }
 
-
-
+        public static List<Entry> GetUSAStates()
+        {
+            JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
+            List<JneCommSitesDataLayer.T_USAStates> itemList = (from p in _dbContext.T_USAStates
+                                                                orderby p.vStateCode ascending
+                                                                select p).ToList();
+            List<Entry> items = new List<Entry>();
+            foreach (JneCommSitesDataLayer.T_USAStates item in itemList)
+            {
+                items.Add(new Entry
+                {
+                    ID = item.vStateCode,
+                    Description = item.vStateName
+                });
+            }
+            return items;
+        }
     }
 
     public class ListBoxHelper

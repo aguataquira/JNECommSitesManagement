@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html>
+<html ng-app="JeCommAPP">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +8,7 @@
     @Scripts.Render("~/bundles/modernizr")
 
 </head>
-<body>
+<body ng-controller="JeCommController">
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
@@ -18,7 +18,7 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a href='@Url.Action("Login", "Account")'>
-                    <img src="~/Content/JNet Images/JNet Logo.png" height="50px" width="150px"/>
+                    <img src="~/Content/JNet Images/JeCommSitesLogo.png" height="50px" width="150px"/>
                 </a>
                @* @Html.ActionLink("", "Account", "Login", new { area = "" }, new { @class = "navbar-brand" })*@
             </div>
@@ -29,7 +29,10 @@
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Administration<span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li>@Html.ActionLink("Customers", "Index", "Home")</li>
+                            <li>
+                                <a href='@Url.Action("CustomersIndex", "Administration")'>
+                                <img src="~/Content/Jne Icons/JeCommCustomerIcon.png" />Customers</a>
+                            </li>
                             <li>@Html.ActionLink("Sites", "Index", "Home")</li>
                             <li>@Html.ActionLink("Employees", "Index", "Home")</li>
                             <li>@Html.ActionLink("Mobile Module", "Index", "Home")</li>
@@ -49,12 +52,34 @@
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Maintenance<span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li>@Html.ActionLink("Users", "UsersIndex", "Maintenance")</li>
-                            <li>@Html.ActionLink("Web Roles", "RolesIndex", "Maintenance")</li>
-                            <li>@Html.ActionLink("Certifications", "CertificationsList", "Maintenance")</li>
-                            <li>@Html.ActionLink("Tech Codes", "Index", "Home")</li>
-                            <li>@Html.ActionLink("Crew Roles", "Index", "Home")</li>
-                            <li>@Html.ActionLink("Payment Period", "Index", "Home")</li>
+                            <li>
+                                <a href='@Url.Action("UsersIndex", "Maintenance")'>
+                                <img src="~/Content/Jne Icons/JeCommUserIcon.png" />Web Users</a>
+                            </li>
+                            <li>
+                                <a href='@Url.Action("RolesIndex", "Maintenance")'>
+                                <img src="~/Content/Jne Icons/JeCommRolesIcon.png" />Web Roles</a>
+                            </li>
+                            <li>
+                                <a href='@Url.Action("CertificationsList", "Maintenance")'>
+                                    <img src="~/Content/Jne Icons/JeCommCertificationsIcon.png" />Certifications
+                                </a>
+                            </li>
+                            <li>
+                                <a href='@Url.Action("TechEvolutionCodesList", "Maintenance")'>
+                                    <img src="~/Content/Jne Icons/JeCommTechEvolutionCodesIcon.png" />Tech Evol Codes
+                                </a>
+                            </li>
+                            <li>
+                                <a href='@Url.Action("CrewRolesList", "Maintenance")'>
+                                    <img src="~/Content/Jne Icons/JeCommRolesIcon.png" />Crew Roles
+                                </a>
+                            </li>
+                            <li>
+                                <a href='@Url.Action("Index", "Home")'>
+                                    <img src="~/Content/Jne Icons/JeCommRolesIcon.png" />Payment Period
+                                </a>
+                            </li>
                         </ul>
                     </li>
 
