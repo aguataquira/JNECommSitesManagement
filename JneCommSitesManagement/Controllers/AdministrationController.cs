@@ -7,6 +7,14 @@ using System.Web.Mvc;
 
 namespace JneCommSitesManagement.Controllers
 {
+    public class contact
+    {
+        public string contactName { get; set; }
+        public string contactPhone { get; set; }
+        public string contactEmail { get; set; }
+        public string contactArea { get; set; }
+    }
+
     public class AdministrationController : Controller
     {
         #region Customers 
@@ -186,7 +194,19 @@ namespace JneCommSitesManagement.Controllers
             var queryContactsByUser = (from p in _dbContext.T_ContactsByCustomer
                                        where p.vCustomerName == customerName
                                        select p);
-            return Json("");
+            List<contact> contacts = new List<contact>();
+            foreach(var item in queryContactsByUser)
+            {
+                contacts.Add(new contact
+                {
+                    contactName = item.vContactName,
+                    contactEmail = item.vEmailContact,
+                    contactPhone = item.vPhoneContact,
+                    contactArea = item.vAreaContact
+                });
+            }
+            
+            return Json(contacts, JsonRequestBehavior.AllowGet);
         }
 
         #endregion

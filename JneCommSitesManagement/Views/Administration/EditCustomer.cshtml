@@ -171,19 +171,20 @@
             var batch = new Array();
 
             var helloApp = angular.module("JeCommAPP", []);
-            helloApp.controller("JeCommController", function ($scope) {
+            helloApp.controller("JeCommController", function ($scope, $http) {
+
                 $scope.contacts = [];
 
-                $.ajax({
-                    type: 'GET',
-                    dataType: 'json',
-                    contentType: 'application/json; charset=utf-8',
+                $http({
+                    method: 'GET',
                     url: '@Url.Action("GetContacsByCustomer")',
-                    data: { customerName: 'ATM2' },
-                    success: function (response) {
-
-                    }
+                    params: { customerName: $("#custumerName").val() },
+                }).then(function successCallback(response) {
+                    $scope.contacts = response.data;
+                }, function errorCallback(response) {
+                    
                 });
+
 
                 $scope.addRow = function () {
                       $scope.addRow = function () {

@@ -109,7 +109,7 @@ namespace JneCommSitesManagement.Controllers
                         _dbContext.Dispose();
 
                         TempData["Message"] = "User was created successfully";
-                        return RedirectToAction("UsersList", "Maintenance");
+                        return RedirectToAction("UsersIndex", "Maintenance");
                     }
 
                 }
