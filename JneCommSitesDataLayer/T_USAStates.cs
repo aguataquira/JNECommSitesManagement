@@ -18,6 +18,7 @@ namespace JneCommSitesDataLayer
         public T_USAStates()
         {
             this.T_Customer = new HashSet<T_Customer>();
+            this.T_UsersData = new HashSet<T_UsersData>();
         }
     
         public string vStateName { get; set; }
@@ -25,5 +26,7 @@ namespace JneCommSitesDataLayer
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<T_Customer> T_Customer { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<T_UsersData> T_UsersData { get; set; }
     }
 }

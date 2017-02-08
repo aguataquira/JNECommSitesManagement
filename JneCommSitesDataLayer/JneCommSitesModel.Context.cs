@@ -29,16 +29,17 @@ namespace JneCommSitesDataLayer
         public virtual DbSet<AspNetRoles> AspNetRoles { get; set; }
         public virtual DbSet<AspNetUserClaims> AspNetUserClaims { get; set; }
         public virtual DbSet<AspNetUserLogins> AspNetUserLogins { get; set; }
-        public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
-        public virtual DbSet<T_UsersData> T_UsersData { get; set; }
-        public virtual DbSet<vwUserData> vwUserData { get; set; }
         public virtual DbSet<T_Operations> T_Operations { get; set; }
-        public virtual DbSet<T_Certifications> T_Certifications { get; set; }
         public virtual DbSet<T_CrewRoles> T_CrewRoles { get; set; }
         public virtual DbSet<T_PaymentPeriod> T_PaymentPeriod { get; set; }
         public virtual DbSet<T_TechEvolutionCodes> T_TechEvolutionCodes { get; set; }
         public virtual DbSet<T_ContactsByCustomer> T_ContactsByCustomer { get; set; }
         public virtual DbSet<T_Customer> T_Customer { get; set; }
         public virtual DbSet<T_USAStates> T_USAStates { get; set; }
+        public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
+        public virtual DbSet<T_Certifications> T_Certifications { get; set; }
+        public virtual DbSet<T_CertificationsByUserCrew> T_CertificationsByUserCrew { get; set; }
+        public virtual DbSet<T_UsersData> T_UsersData { get; set; }
+        public virtual DbSet<vwUserData> vwUserData { get; set; }
     }
 }

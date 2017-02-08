@@ -14,7 +14,18 @@ namespace JneCommSitesDataLayer
     
     public partial class T_CrewRoles
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public T_CrewRoles()
+        {
+            this.AspNetUsers = new HashSet<AspNetUsers>();
+        }
+    
         public string vCrewRoleName { get; set; }
         public string vCrewRoleDescription { get; set; }
+        public string Id { get; set; }
+    
+        public virtual AspNetRoles AspNetRoles { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<AspNetUsers> AspNetUsers { get; set; }
     }
 }

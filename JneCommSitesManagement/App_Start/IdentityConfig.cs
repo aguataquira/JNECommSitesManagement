@@ -11,6 +11,8 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using JneCommSitesManagement.Models;
+using SendGrid;
+using SendGrid.Helpers.Mail;
 
 namespace JneCommSitesManagement
 {
@@ -19,7 +21,22 @@ namespace JneCommSitesManagement
         public Task SendAsync(IdentityMessage message)
         {
             // Plug in your email service here to send an email.
-            return Task.FromResult(0);
+            return configSendGridasync(message);
+        }
+
+        private async Task configSendGridasync(IdentityMessage message)
+        {
+           
+            string apiKey = "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";
+            dynamic sg = new SendGridAPIClient(apiKey);
+
+            Email from = new Email("eriapira@jnecommunicationsllc.com");
+            string subject = message.Subject;
+            Email to = new Email(message.Destination);
+            Content content = new Content("text/html", message.Body);
+            Mail mail = new Mail(from, subject, to, content);
+
+            dynamic response = await sg.client.mail.send.post(requestBody: mail.Get());
         }
     }
 

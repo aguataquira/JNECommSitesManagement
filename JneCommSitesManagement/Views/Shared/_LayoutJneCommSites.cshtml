@@ -34,7 +34,11 @@
                                 <img src="~/Content/Jne Icons/JeCommCustomerIcon.png" />Customers</a>
                             </li>
                             <li>@Html.ActionLink("Sites", "Index", "Home")</li>
-                            <li>@Html.ActionLink("Employees", "Index", "Home")</li>
+                            <li>
+                                <a href='@Url.Action("CrewEmployeeIndex", "Administration")'>
+                                    <img src="~/Content/Jne Icons/JeCommCrewIcon.png" />Crew Employee
+                                </a>
+                            </li>
                             <li>@Html.ActionLink("Mobile Module", "Index", "Home")</li>
                         </ul>
                     </li>

@@ -19,8 +19,9 @@ namespace JneCommSitesDataLayer
         {
             this.AspNetUserClaims = new HashSet<AspNetUserClaims>();
             this.AspNetUserLogins = new HashSet<AspNetUserLogins>();
+            this.T_CertificationsByUserCrew = new HashSet<T_CertificationsByUserCrew>();
             this.AspNetRoles = new HashSet<AspNetRoles>();
-            this.T_UsersData = new HashSet<T_UsersData>();
+            this.T_CrewRoles = new HashSet<T_CrewRoles>();
         }
     
         public string Id { get; set; }
@@ -41,8 +42,11 @@ namespace JneCommSitesDataLayer
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AspNetUserLogins> AspNetUserLogins { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<AspNetRoles> AspNetRoles { get; set; }
+        public virtual ICollection<T_CertificationsByUserCrew> T_CertificationsByUserCrew { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<T_UsersData> T_UsersData { get; set; }
+        public virtual ICollection<AspNetRoles> AspNetRoles { get; set; }
+        public virtual T_UsersData T_UsersData { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<T_CrewRoles> T_CrewRoles { get; set; }
     }
 }

@@ -1,0 +1,211 @@
+﻿@model JneCommSitesManagement.Models.EmployeeModel
+
+@{
+    ViewBag.Title = "CreateEmployee";
+    Layout = "~/Views/Shared/_LayoutJneCommSites.cshtml";
+}
+
+<h2>Create Employee</h2>
+
+@using (Html.BeginForm("CreateEmployee", "Administration", FormMethod.Post, new { enctype = "multipart/form-data", id = "formCreateEmployee" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="row">
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.UserCrewGroup, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.DropDownListFor(model => model.UserCrewGroup, new SelectList(Model._UserCrewGroup, "ID", "Description"), "--All Roles--", new { style = "width: 300px; height: 30px;" })
+                        @Html.ValidationMessageFor(model => model.UserCrewGroup, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.UserName, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.firstName, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.firstName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.firstName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.laborHour, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.laborHour, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.laborHour, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.states, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.DropDownListFor(model => model.states, new SelectList(Model._StatesList, "ID", "Description"), "--State--", new { style = "width: 300px; height: 30px;", @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.states, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ConfirmPassword, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.ConfirmPassword, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.isBilingual, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        <div class="checkbox">
+                            @Html.EditorFor(model => model.isBilingual)
+                            @Html.ValidationMessageFor(model => model.isBilingual, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.lockedOutUser, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        <div class="checkbox">
+                            @Html.EditorFor(model => model.lockedOutUser)
+                            @Html.ValidationMessageFor(model => model.lockedOutUser, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+                <table class="table-striped" style="min-width:100%">
+                    <tr>
+                        <th>
+                            Certification Name
+                        </th>
+                        <th>
+                            Expiration Time
+                        </th>
+                        <th>
+                            Document
+                        </th>
+                        <th>
+                            IsActive
+                        </th>
+                    </tr>
+                    @for(int i = 0; i < Model._ListCertifications.Count(); i++)
+                    {
+                        <tr>
+                            <td>
+                                <div class="form-group">
+                                    @Html.TextBoxFor(model => model._ListCertifications[i].certificationName, new Dictionary<string, object>() { { "readonly", "true" } })
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="form-group">
+                                    @Html.EditorFor(model => model._ListCertifications[i].expirationTime, new { htmlAttributes = new { @class = "form-control tbDateTime" } })
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="form-group">
+                                    @Html.TextBoxFor(model => model._ListCertifications[i].documentName, new { type = "file", htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="form-group">
+                                    <div class="checkbox">
+                                        @Html.EditorFor(model => model._ListCertifications[i].isActive)
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </table>
+
+            <div class="form-group">
+                <div class="col-md-offset-0 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+
+<div>
+    @Html.ActionLink("Back to List", "CrewEmployeeIndex")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/angular.js")
+    @Scripts.Render("~/Scripts/Json.js")
+    <script src="~/Scripts/jquery-ui.js"></script>
+    <link href="~/Content/images/jquery-ui.css" rel="stylesheet" />
+    <link href="~/Content/images/theme.css" rel="stylesheet" />
+
+    <script>
+    $(".tbDateTime").datepicker(({ dateFormat: 'yy-mm-dd' }));
+    </script>
+
+}

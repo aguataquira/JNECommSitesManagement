@@ -65,11 +65,18 @@ namespace JneCommSitesManagement.Controllers
                 try
                 {
                     JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
-                    if ((from p in _dbContext.AspNetUsers where p.UserName == UserName select p.Id).Any())
+                    /*if ((from p in _dbContext.AspNetUsers where p.UserName == UserName select p.Id).Any())
                     {
                         throw new Exception("This user name is not available.");
-                    }
+                    }*/
 
+                    var potentialUser = await UserManager.FindByNameAsync(model.UserName);
+                    if (potentialUser != null)
+                        throw new Exception("UserName@This user name is already taken");
+
+                    potentialUser = await UserManager.FindByEmailAsync(model.Email);
+                    if (potentialUser != null)
+                        throw new Exception("Email@This email is already taken");
                     MembershipCreateStatus createStatusResult = MembershipCreateStatus.ProviderError;
                   
                     var userProfile = new ApplicationUser { UserName = model.UserName, Email = model.Email };
@@ -81,6 +88,8 @@ namespace JneCommSitesManagement.Controllers
                     }
                     else
                     {
+                        await UserManager.SendEmailAsync(userProfile.Id, "Welcome to JNECommunications LLC", "This is your Username: " + userProfile.UserName);
+
                         JneCommSitesDataLayer.T_UsersData newUserData = new JneCommSitesDataLayer.T_UsersData();
 
                         JneCommSitesDataLayer.AspNetUsers user = _dbContext.AspNetUsers
@@ -94,14 +103,14 @@ namespace JneCommSitesManagement.Controllers
                                         where p.Name == model.UserGroup
                                         select p).FirstOrDefault();
 
-                        newUserData.UserId = user.Id;
+                        newUserData.Id = user.Id;
                         newUserData.UserFirstName = model.firstName;
                         newUserData.UserLastName = model.LastName;
                         newUserData.NumDaysForPassChange = model.daysChangePass;
                         newUserData.UserDescription = model.Description;
                         newUserData.ForcePassChange = model.forcePassChange;
 
-                        user.T_UsersData.Add(newUserData);
+                        _dbContext.T_UsersData.Add(newUserData);
                         user.AspNetRoles.Add(queryRol);
                         user.LockoutEnabled = model.lockedOutUser;
 
@@ -116,10 +125,17 @@ namespace JneCommSitesManagement.Controllers
                 catch (Exception err)
                 {
                     model._UserGroup = Helper.Helper.GetRoles();
-                    ModelState.AddModelError("", err.Message);
+                    string[] tokens = err.Message.Split('@');
+                    if (tokens.Length > 1)
+                        ModelState.AddModelError(tokens[0], tokens[1]);
+                    else
+                        ModelState.AddModelError(String.Empty, err.Message);
+
+                    
                 }
             }
-                return View(model);
+            model._UserGroup = Helper.Helper.GetRoles();
+            return View(model);
         }
 
 
@@ -142,7 +158,7 @@ namespace JneCommSitesManagement.Controllers
                          select p).First();
 
             var userInf = (from p in _dbContext.T_UsersData
-                           where p.UserId == aspNetUserQuery.Id
+                           where p.Id == aspNetUserQuery.Id
                            select p).First();
             
             Models.CreateUserModel model = new Models.CreateUserModel();
@@ -185,7 +201,7 @@ namespace JneCommSitesManagement.Controllers
                 var result = await UserManager.ResetPasswordAsync(aspNetUserQuery.Id, token, model.Password);
                 }
                 var userInf = (from p in _dbContext.T_UsersData
-                               where p.UserId == aspNetUserQuery.Id
+                               where p.Id == aspNetUserQuery.Id
                                select p).First();
 
                 userInf.UserFirstName = model.firstName;
@@ -213,6 +229,7 @@ namespace JneCommSitesManagement.Controllers
             JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
             var queryRoles = (from p in _dbContext.AspNetRoles
                               where p.Name != "SuperAdministrator"
+                              && p.Name != "CrewRole"
                               && p.Name.Contains(roleName)
                               orderby p.Name
                               select p);
@@ -277,7 +294,7 @@ namespace JneCommSitesManagement.Controllers
         [AuthorizeFilter]
         public ActionResult EditRol(string rolName)
         {
-            if (string.IsNullOrEmpty(rolName))
+            if (string.IsNullOrEmpty(rolName) || rolName == "CrewRole")
               return  RedirectToAction("RolesIndex","Maintenance");
             
             JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
@@ -591,9 +608,16 @@ namespace JneCommSitesManagement.Controllers
                         ModelState.AddModelError(string.Empty, "The crew role already exist");
                         return View();
                     }
+
+                    var queryCrewRole = (from p in _dbContext.AspNetRoles
+                                         where p.Name == "CrewRole"
+                                         select p).FirstOrDefault();
+
                     JneCommSitesDataLayer.T_CrewRoles newCrewRole = new JneCommSitesDataLayer.T_CrewRoles();
                     newCrewRole.vCrewRoleName = model.crewRoleName;
                     newCrewRole.vCrewRoleDescription = model.crewRoleDescription;
+                    newCrewRole.Id = queryCrewRole.Id;
+
                     _dbContext.T_CrewRoles.Add(newCrewRole);
                     _dbContext.SaveChanges();
                     return RedirectToAction("CrewRolesList", "Maintenance");

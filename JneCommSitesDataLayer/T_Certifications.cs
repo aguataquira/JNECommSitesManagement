@@ -14,7 +14,16 @@ namespace JneCommSitesDataLayer
     
     public partial class T_Certifications
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public T_Certifications()
+        {
+            this.T_CertificationsByUserCrew = new HashSet<T_CertificationsByUserCrew>();
+        }
+    
         public string vCertificationName { get; set; }
         public string vCertificationDescription { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<T_CertificationsByUserCrew> T_CertificationsByUserCrew { get; set; }
     }
 }

@@ -4,29 +4,35 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="a5797c7f23f24c54bc7d11589545f3b8" Name="Diagram1">
+      <Diagram DiagramId="a5797c7f23f24c54bc7d11589545f3b8" Name="Diagram1" ZoomLevel="89">
         <EntityTypeShape EntityType="JneCommSitesDataBaseModel.C__MigrationHistory" Width="1.5" PointX="0.75" PointY="6.75" IsExpanded="true" />
         <EntityTypeShape EntityType="JneCommSitesDataBaseModel.AspNetRoles" Width="1.5" PointX="0.75" PointY="2.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="JneCommSitesDataBaseModel.AspNetUserClaims" Width="1.5" PointX="5.25" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="JneCommSitesDataBaseModel.AspNetUserClaims" Width="1.75" PointX="2.875" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="JneCommSitesDataBaseModel.AspNetUserLogins" Width="1.5" PointX="5.25" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="JneCommSitesDataBaseModel.AspNetUsers" Width="1.5" PointX="3" PointY="1.375" IsExpanded="true" />
-        <AssociationConnector Association="JneCommSitesDataBaseModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" ManuallyRouted="false" />
-        <AssociationConnector Association="JneCommSitesDataBaseModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" ManuallyRouted="false" />
-        <AssociationConnector Association="JneCommSitesDataBaseModel.AspNetUserRoles" ManuallyRouted="false" />
-        <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_UsersData" Width="1.625" PointX="5.25" PointY="10.875" />
-        <AssociationConnector Association="JneCommSitesDataBaseModel.FK_T_UsersData_AspNetUsers" />
-        <EntityTypeShape EntityType="JneCommSitesDataBaseModel.vwUserData" Width="1.5" PointX="7.375" PointY="0.75" />
-        <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_Operations" Width="1.5" PointX="3" PointY="7" />
+        <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_Operations" Width="1.5" PointX="3" PointY="9" />
         <AssociationConnector Association="JneCommSitesDataBaseModel.T_Rol_Operations" />
-        <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_Certifications" Width="1.5" PointX="5.375" PointY="7.625" />
         <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_CrewRoles" Width="1.5" PointX="5.375" PointY="6" />
         <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_PaymentPeriod" Width="1.5" PointX="5.375" PointY="9.125" />
-        <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_TechEvolutionCodes" Width="1.5" PointX="7.375" PointY="4.75" />
+        <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_TechEvolutionCodes" Width="1.5" PointX="7.625" PointY="3.125" />
         <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_ContactsByCustomer" Width="1.5" PointX="11.875" PointY="8" />
         <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_Customer" Width="1.5" PointX="9.625" PointY="8" />
         <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_USAStates" Width="1.5" PointX="7.375" PointY="8.375" />
         <AssociationConnector Association="JneCommSitesDataBaseModel.FK_T_ContactsByCustomer_T_ContactsByCustomer" />
         <AssociationConnector Association="JneCommSitesDataBaseModel.FK_T_Customer_T_USAStates" />
+        <AssociationConnector Association="JneCommSitesDataBaseModel.FK_T_CrewRoles_AspNetRoles" />
+        <EntityTypeShape EntityType="JneCommSitesDataBaseModel.AspNetUsers" Width="1.5" PointX="3" PointY="4.75" />
+        <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_Certifications" Width="1.5" PointX="7.75" PointY="0.75" />
+        <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_CertificationsByUserCrew" Width="2.125" PointX="5.125" PointY="0.75" />
+        <AssociationConnector Association="JneCommSitesDataBaseModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" />
+        <AssociationConnector Association="JneCommSitesDataBaseModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" />
+        <AssociationConnector Association="JneCommSitesDataBaseModel.FK_T_CertificationsByUserCrew_AspNetUsers" />
+        <AssociationConnector Association="JneCommSitesDataBaseModel.FK_T_CertificationsByUserCrew_T_Certifications" />
+        <AssociationConnector Association="JneCommSitesDataBaseModel.AspNetUserRoles" />
+        <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_UsersData" Width="1.5" PointX="6.25" PointY="11.75" />
+        <AssociationConnector Association="JneCommSitesDataBaseModel.FK_T_UsersData_AspNetUsers" />
+        <AssociationConnector Association="JneCommSitesDataBaseModel.AspNetUserCrewRoles" />
+        <AssociationConnector Association="JneCommSitesDataBaseModel.FK_T_UsersData_AspNetUsers1" />
+        <EntityTypeShape EntityType="JneCommSitesDataBaseModel.vwUserData" Width="1.5" PointX="10.375" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

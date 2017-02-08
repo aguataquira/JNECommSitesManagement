@@ -34,7 +34,7 @@ namespace JneCommSitesManagement.Models
         public string LastName { get; set; }
 
         [Required(ErrorMessage = "Number of days to change your password is Required")]
-        [Display(Name = "Number of days to change your password ")]
+        [Display(Name = "Days to change password")]
         public short daysChangePass { get; set; }
 
         [Required(ErrorMessage = "Email address is Required")]

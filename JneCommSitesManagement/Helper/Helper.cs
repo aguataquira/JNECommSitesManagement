@@ -12,6 +12,7 @@ namespace JneCommSitesManagement.Helper
             JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
             List<JneCommSitesDataLayer.AspNetRoles> itemList = (from p in _dbContext.AspNetRoles
                                                         where p.Name != "SuperAdmin"
+                                                        && p.Name != "CrewRole"
                                                         select p).ToList();
             List<Entry> items = new List<Entry>();
             foreach (JneCommSitesDataLayer.AspNetRoles item in itemList)
@@ -20,6 +21,44 @@ namespace JneCommSitesManagement.Helper
                 {
                     ID = item.Name,
                     Description = item.Name
+                });
+            }
+            return items;
+        }
+
+        public static List<Entry> GetSubRoles(string roleName)
+        {
+            JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
+            var queryRol = (from d in _dbContext.AspNetRoles
+                            where d.Name == roleName
+                            select d).FirstOrDefault();
+            List<JneCommSitesDataLayer.T_CrewRoles> itemList = (from p in _dbContext.T_CrewRoles
+                                                                where p.Id == queryRol.Id 
+                                                                select p).ToList();
+            List<Entry> items = new List<Entry>();
+            foreach (JneCommSitesDataLayer.T_CrewRoles item in itemList)
+            {
+                items.Add(new Entry
+                {
+                    ID = item.vCrewRoleName,
+                    Description = item.vCrewRoleName
+                });
+            }
+            return items;
+        }
+
+        public static List<Entry> GetCertifications()
+        {
+            JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
+            List<JneCommSitesDataLayer.T_Certifications> itemList = (from p in _dbContext.T_Certifications
+                                                                select p).ToList();
+            List<Entry> items = new List<Entry>();
+            foreach (JneCommSitesDataLayer.T_Certifications item in itemList)
+            {
+                items.Add(new Entry
+                {
+                    ID = item.vCertificationName,
+                    Description = item.vCertificationName
                 });
             }
             return items;

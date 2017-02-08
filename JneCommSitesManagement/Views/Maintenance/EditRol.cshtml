@@ -1,4 +1,5 @@
 ﻿@model JneCommSitesManagement.Models.RolModel
+@using JneCommSitesManagement.Helper
 
 @{
     ViewBag.Title = "EditRol";
@@ -31,27 +32,34 @@
                 @Html.ValidationMessageFor(model => model.GroupDescription, "", new { @class = "text-danger" })
             </div>
         </div>
-        @foreach (var item in Model.OperationsList)
-        {
-            <div class="form-group">
-                @Html.Label(item.Text, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.CheckBoxFor(model => item.Selected, new { @Name = "roles", @id = "tbl" + item.Value, @Value = item.Value })
-                    @Html.ValidationMessageFor(model => model.Operation, "", new { @class = "text-danger" })
+
+        <div class="row">
+            @foreach (var item in Model.OperationsList)
+            {
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.Label(item.Text, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            <div class="slideTwo">
+                                @Html.CheckBoxSimple("tbl_" + item.Value, item.Selected, new { @Name = "roles", @value = item.Value, @style = "visibility:hidden" })
+                                <label for="tbl_@item.Value"></label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        }
+            }
+        </div>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </div>
     </div>
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to List", "RolesIndex")
 </div>
 
 @section Scripts {

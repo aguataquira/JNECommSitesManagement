@@ -1,76 +1,30 @@
 ﻿@model JneCommSitesManagement.Models.CreateUserModel
+@using JneCommSitesManagement.Helper
 
 @{
     ViewBag.Title = "EditUser";
     Layout = "~/Views/Shared/_LayoutJneCommSites.cshtml";
 }
 
-<h2>EditUser</h2>
+<h2>Edit User</h2>
 
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
-        <h4>CreateUserModel</h4>
-        <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="row">
-            <div class="col-md-6">
 
+            <div class="col-md-8">
                 <div class="form-group">
-                    @Html.LabelFor(model => model.UserGroup, htmlAttributes: new { @class = "control-label col-md-4" })
-                    <div class="col-md-8">
+                    @Html.LabelFor(model => model.UserGroup, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-6">
                         @Html.DropDownListFor(model => model.UserGroup, new SelectList(Model._UserGroup, "ID", "Description"), "--All Groups--", new { style = "width: 300px; height: 30px;" })
                         @Html.ValidationMessageFor(model => model.UserGroup, "", new { @class = "text-danger" })
                     </div>
                 </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(model => model.firstName, htmlAttributes: new { @class = "control-label col-md-4" })
-                    <div class="col-md-8">
-                        @Html.EditorFor(model => model.firstName, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.firstName, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-4" })
-                    <div class="col-md-8">
-                        @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-4" })
-                    <div class="col-md-8">
-                        @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(model => model.lockedOutUser, htmlAttributes: new { @class = "control-label col-md-4" })
-                    <div class="col-md-8">
-                        <div class="checkbox slideThree">
-                            @Html.EditorFor(model => model.lockedOutUser)
-                            @Html.ValidationMessageFor(model => model.lockedOutUser, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(model => model.forcePassChange, htmlAttributes: new { @class = "control-label col-md-4" })
-                    <div class="col-md-8">
-                        <div class="checkbox">
-                            @Html.EditorFor(model => model.forcePassChange)
-                            @Html.ValidationMessageFor(model => model.forcePassChange, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                </div>
-
             </div>
 
             <div class="col-md-6">
@@ -81,15 +35,10 @@
                         @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
                     </div>
                 </div>
+            </div>
 
-                <div class="form-group">
-                    @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label col-md-4" })
-                    <div class="col-md-8">
-                        @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
-                    </div>
-                </div>
 
+            <div class="col-md-6">
                 <div class="form-group">
                     @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-4" })
                     <div class="col-md-8">
@@ -97,7 +46,52 @@
                         @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
                     </div>
                 </div>
+            </div>
 
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.firstName, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.firstName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.firstName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.TextAreaFor(model => model.Description, new { style = "width: 306px; height: 89px;", htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-md-6">
                 <div class="form-group">
                     @Html.LabelFor(model => model.ConfirmPassword, htmlAttributes: new { @class = "control-label col-md-4" })
                     <div class="col-md-8">
@@ -105,7 +99,9 @@
                         @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "text-danger" })
                     </div>
                 </div>
+            </div>
 
+            <div class="col-md-6">
                 <div class="form-group">
                     @Html.LabelFor(model => model.daysChangePass, htmlAttributes: new { @class = "control-label col-md-4" })
                     <div class="col-md-8">
@@ -113,12 +109,37 @@
                         @Html.ValidationMessageFor(model => model.daysChangePass, "", new { @class = "text-danger" })
                     </div>
                 </div>
-
             </div>
+
+            <div class="col-md-6">
+                <div class="col-md-4">
+                    @Html.Label("Locked Out User")
+                </div>
+                <div class="col-md-offset-8">
+                    <div class="slideTwo">
+                        @Html.CheckBoxSimple("lockedOutUser", Model.lockedOutUser, new { @style = "visibility:hidden" })
+                        <label for="lockedOutUser"></label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="col-md-4">
+                    @Html.Label("Force Password Change")
+                </div>
+                <div class="col-md-offset-8">
+                    <div class="slideTwo">
+                        @Html.CheckBoxSimple("forcePassChange", Model.forcePassChange, new { @style = "visibility:hidden" })
+                        <label for="forcePassChange"></label>
+                    </div>
+                </div>
+            </div>
+            
+
 
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-8">
-                    <input type="submit" value="Create" class="btn btn-default" />
+                    <input type="submit" value="Save" class="btn btn-primary" />
                 </div>
             </div>
 

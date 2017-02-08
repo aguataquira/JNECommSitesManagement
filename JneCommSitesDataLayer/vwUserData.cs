@@ -14,15 +14,24 @@ namespace JneCommSitesDataLayer
     
     public partial class vwUserData
     {
-        public string Expr1 { get; set; }
+        public string UserID { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public bool LockoutEnabled { get; set; }
         public string UserName { get; set; }
+        public string RoleName { get; set; }
+        public string RoleID { get; set; }
         public string UserFirstName { get; set; }
         public string UserLastName { get; set; }
         public string UserDescription { get; set; }
         public Nullable<short> NumDaysForPassChange { get; set; }
+        public Nullable<System.DateTime> PassRecoveryDate { get; set; }
+        public string PassRecovery { get; set; }
         public Nullable<bool> ForcePassChange { get; set; }
+        public string Phone { get; set; }
+        public Nullable<bool> IsBilingual { get; set; }
+        public Nullable<decimal> LaborHourPay { get; set; }
+        public string vStateName { get; set; }
+        public string vStateCode { get; set; }
     }
 }
