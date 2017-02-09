@@ -27,16 +27,6 @@ namespace JneCommSitesManagement
         private async Task configSendGridasync(IdentityMessage message)
         {
            
-            string apiKey = "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";
-            dynamic sg = new SendGridAPIClient(apiKey);
-
-            Email from = new Email("eriapira@jnecommunicationsllc.com");
-            string subject = message.Subject;
-            Email to = new Email(message.Destination);
-            Content content = new Content("text/html", message.Body);
-            Mail mail = new Mail(from, subject, to, content);
-
-            dynamic response = await sg.client.mail.send.post(requestBody: mail.Get());
         }
     }
 

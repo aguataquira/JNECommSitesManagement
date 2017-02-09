@@ -337,14 +337,14 @@ namespace JneCommSitesManagement.Controllers
                                 newCertificationByUser.vCertificationName = item.certificationName;
                                 newCertificationByUser.Id = user.Id; if (item.expirationTime != null)
                                     newCertificationByUser.dExpirationTime = Convert.ToDateTime(item.expirationTime);
-                                if (item.documentName != null)
+                                if (item.documentToUpload != null)
                                 {
-                                    newCertificationByUser.vDocumentName = model.UserName + "_" + item.certificationName + Path.GetExtension(item.documentName.FileName);
+                                    newCertificationByUser.vDocumentName = (model.UserName + "_" + item.certificationName + Path.GetExtension(item.documentToUpload.FileName)).Replace(" ", "");
 
                                     string path = System.IO.Path.Combine(
-                                                           Server.MapPath("~/Documents/Certifications/"), model.UserName + "_" + item.certificationName + Path.GetExtension(item.documentName.FileName));
+                                                           Server.MapPath("~/Documents/Certifications/"), (model.UserName + "_" + item.certificationName + Path.GetExtension(item.documentToUpload.FileName)).Replace(" ", ""));
                                     // file is uploaded
-                                    item.documentName.SaveAs(path);
+                                    item.documentToUpload.SaveAs(path);
                                 }
                                 _dbContext.T_CertificationsByUserCrew.Add(newCertificationByUser);
                                 _dbContext.SaveChanges();
@@ -443,6 +443,7 @@ namespace JneCommSitesManagement.Controllers
             {
                 bool isActive = false;
                 string actualDate = DateTime.Now.ToString("yyyy-MM-dd");
+                string documentName = "NoFileUpload.png";
 
                 var queryCertificationByUser = (from p in _dbContext.T_CertificationsByUserCrew
                                                 where p.vCertificationName == item.vCertificationName
@@ -453,10 +454,12 @@ namespace JneCommSitesManagement.Controllers
                 { 
                     isActive = true;
                     actualDate = Convert.ToDateTime(queryCertificationByUser.dExpirationTime).ToString("yyyy-MM-dd");
+                    documentName = queryCertificationByUser.vDocumentName;
                 }
                 model._ListCertifications.Add(new Models.CertificationsByEmployee
                 {
                     certificationName = item.vCertificationName,
+                    documentName = documentName,
                     expirationTime = actualDate,
                     isActive = isActive
                 });
@@ -523,14 +526,14 @@ namespace JneCommSitesManagement.Controllers
                         newCertificationByUser.vCertificationName = item.certificationName;
                         newCertificationByUser.Id = aspNetUserQuery.Id;if(item.expirationTime != null)
                         newCertificationByUser.dExpirationTime = Convert.ToDateTime(item.expirationTime);
-                        if(item.documentName != null)
+                        if(item.documentToUpload != null)
                         { 
-                        newCertificationByUser.vDocumentName = model.UserName + "_" + item.certificationName + Path.GetExtension(item.documentName.FileName);
+                        newCertificationByUser.vDocumentName = (model.UserName + "_" + item.certificationName + Path.GetExtension(item.documentToUpload.FileName)).Replace(" ","");
                         
                         string path = System.IO.Path.Combine(
-                                               Server.MapPath("~/Documents/Certifications/"), model.UserName + "_" + item.certificationName + Path.GetExtension(item.documentName.FileName));
+                                               Server.MapPath("~/Documents/Certifications/"), (model.UserName + "_" + item.certificationName + Path.GetExtension(item.documentToUpload.FileName)).Replace(" ", ""));
                         // file is uploaded
-                        item.documentName.SaveAs(path);
+                        item.documentToUpload.SaveAs(path);
                         }
                         _dbContext.T_CertificationsByUserCrew.Add(newCertificationByUser);
                         _dbContext.SaveChanges();

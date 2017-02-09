@@ -28,8 +28,10 @@ namespace JneCommSitesManagement.Controllers
                 userID = "";
 
             JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
+            
             var queryUsers = (from p in _dbContext.vwUserData
                               where p.UserName.Contains(userID)
+                              && p.RoleName != "CrewRole"
                               select p);
 
             return View(queryUsers);

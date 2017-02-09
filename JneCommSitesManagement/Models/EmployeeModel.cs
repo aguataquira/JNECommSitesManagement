@@ -22,9 +22,13 @@ namespace JneCommSitesManagement.Models
         [Display(Name = "*Expiration Time")]
         public string expirationTime { get; set; }
 
+        [StringLength(20, ErrorMessage = "{0} should have between {2} and {1} characters.", MinimumLength = 10)]
+        [Display(Name = "*Expiration Time")]
+        public string documentName { get; set; }
+
         //[Required(ErrorMessage = "Document Name is Required")]
         [Display(Name = "Document Name")]
-        public HttpPostedFileBase documentName { get; set; }
+        public HttpPostedFileBase documentToUpload { get; set; }
     }
 
     public class EmployeeModel
