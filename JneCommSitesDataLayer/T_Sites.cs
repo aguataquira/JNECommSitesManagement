@@ -12,18 +12,26 @@ namespace JneCommSitesDataLayer
     using System;
     using System.Collections.Generic;
     
-    public partial class T_TechEvolutionCodes
+    public partial class T_Sites
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public T_TechEvolutionCodes()
+        public T_Sites()
         {
-            this.T_Sites = new HashSet<T_Sites>();
+            this.AspNetUsers = new HashSet<AspNetUsers>();
         }
     
+        public string vSiteName { get; set; }
+        public string vAddress { get; set; }
+        public string vCity { get; set; }
+        public string vStateCode { get; set; }
         public string vTechEvolutionCodeName { get; set; }
-        public string vTechEvolutionCodeDescription { get; set; }
+        public string vCustomerName { get; set; }
+        public string vReferalOrderName { get; set; }
     
+        public virtual T_Customer T_Customer { get; set; }
+        public virtual T_TechEvolutionCodes T_TechEvolutionCodes { get; set; }
+        public virtual T_USAStates T_USAStates { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<T_Sites> T_Sites { get; set; }
+        public virtual ICollection<AspNetUsers> AspNetUsers { get; set; }
     }
 }

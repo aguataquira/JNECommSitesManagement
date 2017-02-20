@@ -26,6 +26,67 @@ namespace JneCommSitesManagement.Helper
             return items;
         }
 
+        public static List<Entry> GetCustomers()
+        {
+            JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
+            List<JneCommSitesDataLayer.T_Customer> itemList = (from p in _dbContext.T_Customer
+                                                                select p).ToList();
+            List<Entry> items = new List<Entry>();
+            foreach (JneCommSitesDataLayer.T_Customer item in itemList)
+            {
+                items.Add(new Entry
+                {
+                    ID = item.vCustomerName,
+                    Description = item.vCustomerName
+                });
+            }
+            return items;
+        }
+
+
+        public static List<Entry> GetTechEvolutionCodes()
+        {
+            JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
+            List<JneCommSitesDataLayer.T_TechEvolutionCodes> itemList = (from p in _dbContext.T_TechEvolutionCodes
+                                                               select p).ToList();
+            List<Entry> items = new List<Entry>();
+            foreach (JneCommSitesDataLayer.T_TechEvolutionCodes item in itemList)
+            {
+                items.Add(new Entry
+                {
+                    ID = item.vTechEvolutionCodeName,
+                    Description = item.vTechEvolutionCodeName
+                });
+            }
+            return items;
+        }
+
+
+        public static List<Entry> GetCrewUser()
+        {
+            JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
+            List<JneCommSitesDataLayer.AspNetUsers> itemList = (from p in _dbContext.AspNetUsers
+                                                                         from d in p.AspNetRoles
+                                                                         where d.Name == "CrewRole"
+                                                                         select p).ToList();
+            List<Entry> items = new List<Entry>();
+            foreach (JneCommSitesDataLayer.AspNetUsers item in itemList)
+            {
+                string roleQuery = (from p in _dbContext.T_CrewRoles
+                               from d in p.AspNetUsers
+                               where d.Id == item.Id
+                               select p.vCrewRoleName).FirstOrDefault();
+
+                items.Add(new Entry
+                {
+                    ID = item.UserName,
+                    Description = item.T_UsersData.UserFirstName + " " + item.T_UsersData.UserLastName + " - " + roleQuery
+                });
+
+            }
+            return items;
+        }
+
         public static List<Entry> GetSubRoles(string roleName)
         {
             JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();

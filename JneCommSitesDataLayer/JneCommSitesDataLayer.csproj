@@ -104,6 +104,9 @@
     <Compile Include="T_PaymentPeriod.cs">
       <DependentUpon>JneCommSitesModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="T_Sites.cs">
+      <DependentUpon>JneCommSitesModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="T_TechEvolutionCodes.cs">
       <DependentUpon>JneCommSitesModel.tt</DependentUpon>
     </Compile>

@@ -11,7 +11,12 @@ namespace JneCommSitesManagement.Controllers
         [Authorize]
         public ActionResult Index()
         {
-            return View();
+            JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
+            DateTime timeExpirationAlert = DateTime.Now.AddDays(15);
+            var queryCertification = (from p in _dbContext.T_CertificationsByUserCrew
+                                      where timeExpirationAlert > p.dExpirationTime
+                                      select p);
+            return View(queryCertification);
         }
 
         [Authorize]

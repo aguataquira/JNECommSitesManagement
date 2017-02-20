@@ -1,0 +1,52 @@
+﻿@model IEnumerable<JneCommSitesDataLayer.T_Sites>
+
+@{
+    ViewBag.Title = "SitesIndex";
+    Layout = "~/Views/Shared/_LayoutJneCommSites.cshtml";
+}
+
+<h2>Sites List</h2>
+
+<p>
+    @Html.ActionLink("Create New Site", "CreateSite")
+</p>
+<table class="table table-striped">
+    <tr>
+        <th>
+            @Html.DisplayName("Site Name")
+        </th>
+        <th>
+            @Html.DisplayName("Site Adress")
+        </th>
+        <th>
+            @Html.DisplayName("Tech Evolution Code")
+        </th>
+        <th>
+            @Html.DisplayName("Customer Name")
+        </th>
+        <th>
+
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.vSiteName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.vAddress)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.vTechEvolutionCodeName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.vCustomerName)
+        </td>
+        <td>
+            @Html.ActionLink("Edit Site", "EditSite", new { siteName = item.vSiteName }) 
+        </td>
+    </tr>
+}
+
+</table>

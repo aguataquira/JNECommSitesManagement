@@ -199,6 +199,7 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\RolModel.cs" />
+    <Compile Include="Models\SiteModel.cs" />
     <Compile Include="Models\TechEvolutionCodesModel.cs" />
     <Compile Include="Models\UserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -319,9 +320,13 @@
     <Content Include="Views\Administration\CrewEmployeeIndex.cshtml" />
     <Content Include="Views\Administration\CreateEmployee.cshtml" />
     <Content Include="Views\Administration\EditEmployee.cshtml" />
+    <Content Include="Views\Administration\SitesIndex.cshtml" />
+    <Content Include="Views\Administration\CreateSite.cshtml" />
+    <Content Include="Views\Administration\EditSite.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Documents\ReferalOrder\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

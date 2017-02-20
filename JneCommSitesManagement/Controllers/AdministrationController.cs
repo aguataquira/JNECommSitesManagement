@@ -22,6 +22,12 @@ namespace JneCommSitesManagement.Controllers
         public string contactArea { get; set; }
     }
 
+    public class CrewUserData
+    {
+        public string crewName { get; set; }
+        public string crewRole{ get; set; }
+    }
+
     public class AdministrationController : Controller
     {
         //Global 
@@ -39,9 +45,9 @@ namespace JneCommSitesManagement.Controllers
 
             JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
             var queryCustomers = (from p in _dbContext.T_Customer
-                              where p.vCustomerName.Contains(customerID)
-                              orderby p.vCustomerName descending
-                              select p);
+                                  where p.vCustomerName.Contains(customerID)
+                                  orderby p.vCustomerName descending
+                                  select p);
 
             return View(queryCustomers);
         }
@@ -64,8 +70,8 @@ namespace JneCommSitesManagement.Controllers
         [AuthorizeFilter]
         public ActionResult CreateCustomer(Models.CustomerModels model)
         {
-            if(ModelState.IsValid)
-            { 
+            if (ModelState.IsValid)
+            {
                 JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
 
                 var queryCustomer = (from p in _dbContext.T_Customer
@@ -120,9 +126,9 @@ namespace JneCommSitesManagement.Controllers
             JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
 
             var queryCustomer = (from p in _dbContext.T_Customer
-                                   where p.vCustomerName == customerName
-                                   select p).FirstOrDefault();
-            
+                                 where p.vCustomerName == customerName
+                                 select p).FirstOrDefault();
+
             Models.CustomerModels model = new Models.CustomerModels();
 
             model._StatesList = Helper.Helper.GetUSAStates();
@@ -130,8 +136,8 @@ namespace JneCommSitesManagement.Controllers
             model.customerAddress = queryCustomer.vCustomerAddress;
             model.states = queryCustomer.vStateCode;
             model.customerCity = queryCustomer.vCustomerCity;
-            
-            
+
+
             return View(model);
         }
 
@@ -165,11 +171,11 @@ namespace JneCommSitesManagement.Controllers
                                                    where p.vCustomerName == model.custumerName
                                                    select p);
 
-                    foreach(var item in queryContactsByCustomer)
+                    foreach (var item in queryContactsByCustomer)
                     {
                         _dbContextContacts.T_ContactsByCustomer.Remove(item);
                     }
-                        _dbContextContacts.SaveChanges();
+                    _dbContextContacts.SaveChanges();
 
                     foreach (var item in model._ListContacts)
                     {
@@ -185,7 +191,7 @@ namespace JneCommSitesManagement.Controllers
 
                         _dbContext.SaveChanges();
                     }
-                    
+
                     return Json(true);
                 }
                 catch (Exception error)
@@ -194,7 +200,7 @@ namespace JneCommSitesManagement.Controllers
                 }
             }
             return View(model);
-                
+
         }
 
         public JsonResult GetContacsByCustomer(string customerName)
@@ -205,7 +211,7 @@ namespace JneCommSitesManagement.Controllers
                                        where p.vCustomerName == customerName
                                        select p);
             List<contact> contacts = new List<contact>();
-            foreach(var item in queryContactsByUser)
+            foreach (var item in queryContactsByUser)
             {
                 contacts.Add(new contact
                 {
@@ -215,14 +221,15 @@ namespace JneCommSitesManagement.Controllers
                     contactArea = item.vAreaContact
                 });
             }
-            
+
             return Json(contacts, JsonRequestBehavior.AllowGet);
         }
 
         #endregion
 
-
         #region Crew Employees
+        //[Authorize]
+        //[AuthorizeFilter]
         public ActionResult CrewEmployeeIndex(string userID)
         {
             if (string.IsNullOrEmpty(userID))
@@ -237,11 +244,14 @@ namespace JneCommSitesManagement.Controllers
             return View(queryUsers);
         }
 
+
+        //[Authorize]
+        //[AuthorizeFilter]
         public ActionResult CreateEmployee()
         {
             JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbConetxt = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
             Models.EmployeeModel model = new Models.EmployeeModel();
-            string actualDate = DateTime.Now.ToString("yyyy-MM-dd");
+            string actualDate = "";// DateTime.Now.ToString("yyyy-MM-dd");
             model._UserCrewGroup = Helper.Helper.GetSubRoles("CrewRole");
             model._StatesList = Helper.Helper.GetUSAStates();
 
@@ -252,7 +262,8 @@ namespace JneCommSitesManagement.Controllers
 
             foreach (var item in queryCertifications)
             {
-                model._ListCertifications.Add(new Models.CertificationsByEmployee {
+                model._ListCertifications.Add(new Models.CertificationsByEmployee
+                {
                     certificationName = item.vCertificationName,
                     expirationTime = actualDate
                 });
@@ -261,6 +272,9 @@ namespace JneCommSitesManagement.Controllers
             return View(model);
         }
 
+
+        //[Authorize]
+        //[AuthorizeFilter]
         [HttpPost]
         public async Task<ActionResult> CreateEmployee(Models.EmployeeModel model)
         {
@@ -272,7 +286,7 @@ namespace JneCommSitesManagement.Controllers
                 try
                 {
                     JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
-                    
+
 
                     var potentialUser = await UserManager.FindByNameAsync(model.UserName);
                     if (potentialUser != null)
@@ -308,8 +322,8 @@ namespace JneCommSitesManagement.Controllers
                                         select p).FirstOrDefault();
 
                         var queryCrewRol = (from p in _dbContext.T_CrewRoles
-                                              where p.vCrewRoleName == model.UserCrewGroup
-                                              select p).FirstOrDefault();
+                                            where p.vCrewRoleName == model.UserCrewGroup
+                                            select p).FirstOrDefault();
 
                         newUserData.Id = user.Id;
                         newUserData.UserFirstName = model.firstName;
@@ -328,7 +342,7 @@ namespace JneCommSitesManagement.Controllers
 
                         _dbContext.SaveChanges();
 
-                       
+
                         foreach (var item in model._ListCertifications)
                         {
                             if (item.isActive)
@@ -341,8 +355,7 @@ namespace JneCommSitesManagement.Controllers
                                 {
                                     newCertificationByUser.vDocumentName = (model.UserName + "_" + item.certificationName + Path.GetExtension(item.documentToUpload.FileName)).Replace(" ", "");
 
-                                    string path = System.IO.Path.Combine(
-                                                           Server.MapPath("~/Documents/Certifications/"), (model.UserName + "_" + item.certificationName + Path.GetExtension(item.documentToUpload.FileName)).Replace(" ", ""));
+                                    string path = System.IO.Path.Combine(Server.MapPath("~/Documents/Certifications/"), (model.UserName + "_" + item.certificationName + Path.GetExtension(item.documentToUpload.FileName)).Replace(" ", ""));
                                     // file is uploaded
                                     item.documentToUpload.SaveAs(path);
                                 }
@@ -398,9 +411,10 @@ namespace JneCommSitesManagement.Controllers
                                        select p.vCertificationName);
             return Json(queryCertifications, JsonRequestBehavior.AllowGet);
         }
-        #endregion
 
-        #region EditEmployee
+
+        //[Authorize]
+        //[AuthorizeFilter]
         public ActionResult EditEmployee(string employeeName)
         {
             if (string.IsNullOrEmpty(employeeName))
@@ -442,7 +456,7 @@ namespace JneCommSitesManagement.Controllers
             foreach (var item in queryCertifications)
             {
                 bool isActive = false;
-                string actualDate = DateTime.Now.ToString("yyyy-MM-dd");
+                string actualDate = "";// DateTime.Now.ToString("yyyy-MM-dd");
                 string documentName = "NoFileUpload.png";
 
                 var queryCertificationByUser = (from p in _dbContext.T_CertificationsByUserCrew
@@ -451,7 +465,7 @@ namespace JneCommSitesManagement.Controllers
                                                 select p).FirstOrDefault();
 
                 if (queryCertificationByUser != null)
-                { 
+                {
                     isActive = true;
                     actualDate = Convert.ToDateTime(queryCertificationByUser.dExpirationTime).ToString("yyyy-MM-dd");
                     documentName = queryCertificationByUser.vDocumentName;
@@ -467,6 +481,9 @@ namespace JneCommSitesManagement.Controllers
             return View(model);
         }
 
+
+        [Authorize]
+        [AuthorizeFilter]
         [HttpPost]
         public async Task<ActionResult> EditEmployee(Models.EmployeeModel model)
         {
@@ -515,29 +532,29 @@ namespace JneCommSitesManagement.Controllers
                 {
                     _Context.T_CertificationsByUserCrew.Remove(item);
                 }
-                    _Context.SaveChanges();
+                _Context.SaveChanges();
 
-                
+
                 foreach (var item in model._ListCertifications)
                 {
                     if (item.isActive)
                     {
                         JneCommSitesDataLayer.T_CertificationsByUserCrew newCertificationByUser = new JneCommSitesDataLayer.T_CertificationsByUserCrew();
                         newCertificationByUser.vCertificationName = item.certificationName;
-                        newCertificationByUser.Id = aspNetUserQuery.Id;if(item.expirationTime != null)
-                        newCertificationByUser.dExpirationTime = Convert.ToDateTime(item.expirationTime);
-                        if(item.documentToUpload != null)
-                        { 
-                        newCertificationByUser.vDocumentName = (model.UserName + "_" + item.certificationName + Path.GetExtension(item.documentToUpload.FileName)).Replace(" ","");
-                        
-                        string path = System.IO.Path.Combine(
-                                               Server.MapPath("~/Documents/Certifications/"), (model.UserName + "_" + item.certificationName + Path.GetExtension(item.documentToUpload.FileName)).Replace(" ", ""));
-                        // file is uploaded
-                        item.documentToUpload.SaveAs(path);
+                        newCertificationByUser.Id = aspNetUserQuery.Id; if (item.expirationTime != null)
+                            newCertificationByUser.dExpirationTime = Convert.ToDateTime(item.expirationTime);
+                        if (item.documentToUpload != null)
+                        {
+                            newCertificationByUser.vDocumentName = (model.UserName + "_" + item.certificationName + Path.GetExtension(item.documentToUpload.FileName)).Replace(" ", "");
+
+                            string path = System.IO.Path.Combine(
+                                                   Server.MapPath("~/Documents/Certifications/"), (model.UserName + "_" + item.certificationName + Path.GetExtension(item.documentToUpload.FileName)).Replace(" ", ""));
+                            // file is uploaded
+                            item.documentToUpload.SaveAs(path);
                         }
                         _dbContext.T_CertificationsByUserCrew.Add(newCertificationByUser);
                         _dbContext.SaveChanges();
-                        
+
                     }
                 }
                 model._UserCrewGroup = Helper.Helper.GetSubRoles("CrewRole");
@@ -547,6 +564,156 @@ namespace JneCommSitesManagement.Controllers
             model._UserCrewGroup = Helper.Helper.GetSubRoles("CrewRole");
             model._StatesList = Helper.Helper.GetUSAStates();
             return View(model);
+        }
+
+        #endregion
+
+        #region Sites
+        public ActionResult SitesIndex()
+        {
+            JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
+            var querySites = (from p in _dbContext.T_Sites
+                              orderby p.vSiteName ascending
+                              select p);
+            return View(querySites);
+        }
+
+
+        public ActionResult CreateSite()
+        {
+            Models.SiteModel model = new SiteModel();
+            model._StatesList = Helper.Helper.GetUSAStates();
+            model._CustomerList = Helper.Helper.GetCustomers();
+            model._TechnologyList = Helper.Helper.GetTechEvolutionCodes();
+            model._CrewUserNameList = Helper.Helper.GetCrewUser();
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult CreateSite(Models.SiteModel model)
+        {
+            if (ModelState.IsValid)
+            {
+
+                try
+                {
+                    JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
+
+                    var querySite = (from p in _dbContext.T_Sites
+                                     where p.vSiteName == model.siteName
+                                     select p).FirstOrDefault();
+
+                    if (querySite != null)
+                    {
+                        ModelState.AddModelError(string.Empty, "The Site already exist");
+                        model._StatesList = Helper.Helper.GetUSAStates();
+                        return Json("The Site already exist");
+                    }
+
+
+                    JneCommSitesDataLayer.T_Sites newSite = new JneCommSitesDataLayer.T_Sites();
+                    newSite.vSiteName = model.siteName;
+                    newSite.vAddress = model.siteAddress;
+                    newSite.vCity = model.siteCity;
+                    newSite.vStateCode = model.states;
+                    newSite.vCustomerName = model.customerName;
+                    newSite.vTechEvolutionCodeName = model.technology;
+
+
+                    HttpPostedFileBase fileContent = model.referalOrder;
+                    if (fileContent != null && fileContent.ContentLength > 0)
+                    {
+                        // get a stream
+                        var stream = fileContent.InputStream;
+                        // and optionally write the file to disk
+                        newSite.vReferalOrderName = (model.siteName + Path.GetExtension(fileContent.FileName)).Replace(" ", "");
+                        string path = System.IO.Path.Combine(Server.MapPath("~/Documents/ReferalOrder/"), (model.siteName + Path.GetExtension(fileContent.FileName)).Replace(" ", ""));
+                        // file is uploaded
+                        fileContent.SaveAs(path);
+                    }
+
+
+                    foreach (var item in model._ListCrew)
+                    {
+                        var queryCrewuser = (from p in _dbContext.AspNetUsers
+                                             where p.UserName == item
+                                             select p).FirstOrDefault();
+                        newSite.AspNetUsers.Add(queryCrewuser);
+                    }
+
+                    _dbContext.T_Sites.Add(newSite);
+                    _dbContext.SaveChanges();
+
+                    return Json(true);
+                }
+                catch (Exception error)
+                {
+                    return Json(error.Message);
+                }
+            }
+            return Json("There is a error please try again");
+        }
+
+
+        public ActionResult EditSite(string siteName)
+        {
+
+            JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
+
+            var querySite = (from p in _dbContext.T_Sites
+                             where p.vSiteName == siteName
+                             select p).FirstOrDefault();
+
+            Models.SiteModel model = new SiteModel();
+            model._StatesList = Helper.Helper.GetUSAStates();
+            model._CustomerList = Helper.Helper.GetCustomers();
+            model._TechnologyList = Helper.Helper.GetTechEvolutionCodes();
+            model._CrewUserNameList = Helper.Helper.GetCrewUser();
+
+            model.siteName = querySite.vSiteName ;
+            model.siteAddress = querySite.vAddress ;
+            model.siteCity = querySite.vCity ;
+            model.states = querySite.vStateCode ;
+            model.customerName = querySite.vCustomerName ;
+            model.technology = querySite.vTechEvolutionCodeName ;
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult EditSite(Models.SiteModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                return View();
+            }
+                return View();
+        }
+
+
+        public JsonResult GetCrewUsersBySite(string siteName)
+        {
+            JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
+
+            var queryCrewUsersBySite = (from p in _dbContext.AspNetUsers
+                                       from d in p.T_Sites
+                                       where d.vSiteName == siteName
+                                       select p);
+            List<CrewUserData> crewUsers = new List<CrewUserData>();
+            foreach (var item in queryCrewUsersBySite)
+            {
+                string roleQuery = (from p in _dbContext.T_CrewRoles
+                                    from d in p.AspNetUsers
+                                    where d.Id == item.Id
+                                    select p.vCrewRoleName).FirstOrDefault();
+
+                crewUsers.Add(new CrewUserData {
+                    crewName = item.UserName,
+                    crewRole = item.T_UsersData.UserFirstName + " " + item.T_UsersData.UserFirstName + "-" + roleQuery
+                });
+            }
+
+            return Json(crewUsers, JsonRequestBehavior.AllowGet);
         }
         #endregion
     }

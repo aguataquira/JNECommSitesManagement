@@ -33,6 +33,11 @@
         <AssociationConnector Association="JneCommSitesDataBaseModel.AspNetUserCrewRoles" />
         <AssociationConnector Association="JneCommSitesDataBaseModel.FK_T_UsersData_AspNetUsers1" />
         <EntityTypeShape EntityType="JneCommSitesDataBaseModel.vwUserData" Width="1.5" PointX="10.375" PointY="0.75" />
+        <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_Sites" Width="1.5" PointX="12.875" PointY="4.25" />
+        <AssociationConnector Association="JneCommSitesDataBaseModel.FK_T_Sites_T_Customer" />
+        <AssociationConnector Association="JneCommSitesDataBaseModel.FK_T_Sites_T_TechEvolutionCodes" />
+        <AssociationConnector Association="JneCommSitesDataBaseModel.FK_T_Sites_T_USAStates" />
+        <AssociationConnector Association="JneCommSitesDataBaseModel.CrewUsersBySite" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

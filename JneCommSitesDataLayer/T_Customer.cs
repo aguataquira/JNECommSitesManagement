@@ -18,6 +18,7 @@ namespace JneCommSitesDataLayer
         public T_Customer()
         {
             this.T_ContactsByCustomer = new HashSet<T_ContactsByCustomer>();
+            this.T_Sites = new HashSet<T_Sites>();
         }
     
         public string vCustomerName { get; set; }
@@ -28,5 +29,7 @@ namespace JneCommSitesDataLayer
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<T_ContactsByCustomer> T_ContactsByCustomer { get; set; }
         public virtual T_USAStates T_USAStates { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<T_Sites> T_Sites { get; set; }
     }
 }

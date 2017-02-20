@@ -21,6 +21,7 @@
           </Key>
           <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="AspNetUserClaims">
           <Key>
@@ -73,6 +74,14 @@
           <Property Name="LockoutEnabled" Type="bit" Nullable="false" />
           <Property Name="AccessFailedCount" Type="int" Nullable="false" />
           <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CrewUsersBySite">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="vSiteName" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="vSiteName" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="T_Certifications">
           <Key>
@@ -151,6 +160,18 @@ warning 6002: The table/view 'JneCommSitesManagementDB.dbo.T_PaymentPeriod' does
           </Key>
           <Property Name="vRoleId" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="biOperationsId" Type="smallint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="T_Sites">
+          <Key>
+            <PropertyRef Name="vSiteName" />
+          </Key>
+          <Property Name="vSiteName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="vAddress" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="vCity" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="vStateCode" Type="varchar" MaxLength="2" Nullable="false" />
+          <Property Name="vTechEvolutionCodeName" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="vCustomerName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="vReferalOrderName" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="T_TechEvolutionCodes">
           <Key>
@@ -236,6 +257,30 @@ warning 6002: The table/view 'JneCommSitesManagementDB.dbo.vwUserData' does not 
             </Principal>
             <Dependent Role="AspNetUserCrewRoles">
               <PropertyRef Name="vCrewRoleName" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CrewUsersBySite_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="CrewUsersBySite" Type="Self.CrewUsersBySite" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CrewUsersBySite">
+              <PropertyRef Name="Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CrewUsersBySite_T_Sites">
+          <End Role="T_Sites" Type="Self.T_Sites" Multiplicity="1" />
+          <End Role="CrewUsersBySite" Type="Self.CrewUsersBySite" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_Sites">
+              <PropertyRef Name="vSiteName" />
+            </Principal>
+            <Dependent Role="CrewUsersBySite">
+              <PropertyRef Name="vSiteName" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -379,6 +424,42 @@ warning 6002: The table/view 'JneCommSitesManagementDB.dbo.vwUserData' does not 
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_T_Sites_T_Customer">
+          <End Role="T_Customer" Type="Self.T_Customer" Multiplicity="1" />
+          <End Role="T_Sites" Type="Self.T_Sites" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_Customer">
+              <PropertyRef Name="vCustomerName" />
+            </Principal>
+            <Dependent Role="T_Sites">
+              <PropertyRef Name="vCustomerName" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_T_Sites_T_TechEvolutionCodes">
+          <End Role="T_TechEvolutionCodes" Type="Self.T_TechEvolutionCodes" Multiplicity="1" />
+          <End Role="T_Sites" Type="Self.T_Sites" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_TechEvolutionCodes">
+              <PropertyRef Name="vTechEvolutionCodeName" />
+            </Principal>
+            <Dependent Role="T_Sites">
+              <PropertyRef Name="vTechEvolutionCodeName" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_T_Sites_T_USAStates">
+          <End Role="T_USAStates" Type="Self.T_USAStates" Multiplicity="1" />
+          <End Role="T_Sites" Type="Self.T_Sites" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_USAStates">
+              <PropertyRef Name="vStateCode" />
+            </Principal>
+            <Dependent Role="T_Sites">
+              <PropertyRef Name="vStateCode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_T_UsersData_AspNetUsers">
           <End Role="T_USAStates" Type="Self.T_USAStates" Multiplicity="0..1" />
           <End Role="T_UsersData" Type="Self.T_UsersData" Multiplicity="*" />
@@ -399,6 +480,7 @@ warning 6002: The table/view 'JneCommSitesManagementDB.dbo.vwUserData' does not 
           <EntitySet Name="AspNetUserLogins" EntityType="Self.AspNetUserLogins" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetUserRoles" EntityType="Self.AspNetUserRoles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CrewUsersBySite" EntityType="Self.CrewUsersBySite" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_Certifications" EntityType="Self.T_Certifications" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_CertificationsByUserCrew" EntityType="Self.T_CertificationsByUserCrew" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_ContactsByCustomer" EntityType="Self.T_ContactsByCustomer" Schema="dbo" store:Type="Tables" />
@@ -406,6 +488,7 @@ warning 6002: The table/view 'JneCommSitesManagementDB.dbo.vwUserData' does not 
           <EntitySet Name="T_Customer" EntityType="Self.T_Customer" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_Operations" EntityType="Self.T_Operations" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_Rol_Operations" EntityType="Self.T_Rol_Operations" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_Sites" EntityType="Self.T_Sites" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_TechEvolutionCodes" EntityType="Self.T_TechEvolutionCodes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_USAStates" EntityType="Self.T_USAStates" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_UsersData" EntityType="Self.T_UsersData" Schema="dbo" store:Type="Tables" />
@@ -446,6 +529,14 @@ warning 6002: The table/view 'JneCommSitesManagementDB.dbo.vwUserData' does not 
           <AssociationSet Name="FK_AspNetUserCrewRoles_T_CrewRoles" Association="Self.FK_AspNetUserCrewRoles_T_CrewRoles">
             <End Role="T_CrewRoles" EntitySet="T_CrewRoles" />
             <End Role="AspNetUserCrewRoles" EntitySet="AspNetUserCrewRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CrewUsersBySite_AspNetUsers" Association="Self.FK_CrewUsersBySite_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="CrewUsersBySite" EntitySet="CrewUsersBySite" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CrewUsersBySite_T_Sites" Association="Self.FK_CrewUsersBySite_T_Sites">
+            <End Role="T_Sites" EntitySet="T_Sites" />
+            <End Role="CrewUsersBySite" EntitySet="CrewUsersBySite" />
           </AssociationSet>
           <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
@@ -491,6 +582,18 @@ warning 6002: The table/view 'JneCommSitesManagementDB.dbo.vwUserData' does not 
             <End Role="T_Operations" EntitySet="T_Operations" />
             <End Role="T_Rol_Operations" EntitySet="T_Rol_Operations" />
           </AssociationSet>
+          <AssociationSet Name="FK_T_Sites_T_Customer" Association="Self.FK_T_Sites_T_Customer">
+            <End Role="T_Customer" EntitySet="T_Customer" />
+            <End Role="T_Sites" EntitySet="T_Sites" />
+          </AssociationSet>
+          <AssociationSet Name="FK_T_Sites_T_TechEvolutionCodes" Association="Self.FK_T_Sites_T_TechEvolutionCodes">
+            <End Role="T_TechEvolutionCodes" EntitySet="T_TechEvolutionCodes" />
+            <End Role="T_Sites" EntitySet="T_Sites" />
+          </AssociationSet>
+          <AssociationSet Name="FK_T_Sites_T_USAStates" Association="Self.FK_T_Sites_T_USAStates">
+            <End Role="T_USAStates" EntitySet="T_USAStates" />
+            <End Role="T_Sites" EntitySet="T_Sites" />
+          </AssociationSet>
           <AssociationSet Name="FK_T_UsersData_AspNetUsers" Association="Self.FK_T_UsersData_AspNetUsers">
             <End Role="T_USAStates" EntitySet="T_USAStates" />
             <End Role="T_UsersData" EntitySet="T_UsersData" />
@@ -519,6 +622,7 @@ warning 6002: The table/view 'JneCommSitesManagementDB.dbo.vwUserData' does not 
           <NavigationProperty Name="T_Operations" Relationship="JneCommSitesDataBaseModel.T_Rol_Operations" FromRole="AspNetRoles" ToRole="T_Operations" />
           <NavigationProperty Name="T_CrewRoles" Relationship="JneCommSitesDataBaseModel.FK_T_CrewRoles_AspNetRoles" FromRole="AspNetRoles" ToRole="T_CrewRoles" />
           <NavigationProperty Name="AspNetUsers" Relationship="JneCommSitesDataBaseModel.AspNetUserRoles" FromRole="AspNetRoles" ToRole="AspNetUsers" />
+          <Property Name="Description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="AspNetUserClaims">
           <Key>
@@ -606,6 +710,23 @@ warning 6002: The table/view 'JneCommSitesManagementDB.dbo.vwUserData' does not 
             <End Role="T_UsersData" EntitySet="T_UsersData" />
           </AssociationSet>
           <EntitySet Name="vwUserData" EntityType="JneCommSitesDataBaseModel.vwUserData" />
+          <EntitySet Name="T_Sites" EntityType="JneCommSitesDataBaseModel.T_Sites" />
+          <AssociationSet Name="FK_T_Sites_T_Customer" Association="JneCommSitesDataBaseModel.FK_T_Sites_T_Customer">
+            <End Role="T_Customer" EntitySet="T_Customer" />
+            <End Role="T_Sites" EntitySet="T_Sites" />
+          </AssociationSet>
+          <AssociationSet Name="FK_T_Sites_T_TechEvolutionCodes" Association="JneCommSitesDataBaseModel.FK_T_Sites_T_TechEvolutionCodes">
+            <End Role="T_TechEvolutionCodes" EntitySet="T_TechEvolutionCodes" />
+            <End Role="T_Sites" EntitySet="T_Sites" />
+          </AssociationSet>
+          <AssociationSet Name="FK_T_Sites_T_USAStates" Association="JneCommSitesDataBaseModel.FK_T_Sites_T_USAStates">
+            <End Role="T_USAStates" EntitySet="T_USAStates" />
+            <End Role="T_Sites" EntitySet="T_Sites" />
+          </AssociationSet>
+          <AssociationSet Name="CrewUsersBySite" Association="JneCommSitesDataBaseModel.CrewUsersBySite">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="T_Sites" EntitySet="T_Sites" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="T_Operations">
           <Key>
@@ -651,6 +772,7 @@ warning 6002: The table/view 'JneCommSitesManagementDB.dbo.vwUserData' does not 
           </Key>
           <Property Name="vTechEvolutionCodeName" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="vTechEvolutionCodeDescription" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="T_Sites" Relationship="JneCommSitesDataBaseModel.FK_T_Sites_T_TechEvolutionCodes" FromRole="T_TechEvolutionCodes" ToRole="T_Sites" />
         </EntityType>
         <EntityType Name="T_ContactsByCustomer">
           <Key>
@@ -674,6 +796,7 @@ warning 6002: The table/view 'JneCommSitesManagementDB.dbo.vwUserData' does not 
           <Property Name="vCustomerCity" Type="String" Nullable="false" MaxLength="10" FixedLength="true" Unicode="true" />
           <NavigationProperty Name="T_ContactsByCustomer" Relationship="JneCommSitesDataBaseModel.FK_T_ContactsByCustomer_T_ContactsByCustomer" FromRole="T_Customer" ToRole="T_ContactsByCustomer" />
           <NavigationProperty Name="T_USAStates" Relationship="JneCommSitesDataBaseModel.FK_T_Customer_T_USAStates" FromRole="T_Customer" ToRole="T_USAStates" />
+          <NavigationProperty Name="T_Sites" Relationship="JneCommSitesDataBaseModel.FK_T_Sites_T_Customer" FromRole="T_Customer" ToRole="T_Sites" />
         </EntityType>
         <EntityType Name="T_USAStates">
           <Key>
@@ -683,6 +806,7 @@ warning 6002: The table/view 'JneCommSitesManagementDB.dbo.vwUserData' does not 
           <Property Name="vStateCode" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="T_Customer" Relationship="JneCommSitesDataBaseModel.FK_T_Customer_T_USAStates" FromRole="T_USAStates" ToRole="T_Customer" />
           <NavigationProperty Name="T_UsersData" Relationship="JneCommSitesDataBaseModel.FK_T_UsersData_AspNetUsers1" FromRole="T_USAStates" ToRole="T_UsersData" />
+          <NavigationProperty Name="T_Sites" Relationship="JneCommSitesDataBaseModel.FK_T_Sites_T_USAStates" FromRole="T_USAStates" ToRole="T_Sites" />
         </EntityType>
         <Association Name="FK_T_ContactsByCustomer_T_ContactsByCustomer">
           <End Type="JneCommSitesDataBaseModel.T_Customer" Role="T_Customer" Multiplicity="1" />
@@ -742,6 +866,7 @@ warning 6002: The table/view 'JneCommSitesManagementDB.dbo.vwUserData' does not 
           <NavigationProperty Name="AspNetRoles" Relationship="JneCommSitesDataBaseModel.AspNetUserRoles" FromRole="AspNetUsers" ToRole="AspNetRoles" />
           <NavigationProperty Name="T_UsersData" Relationship="JneCommSitesDataBaseModel.FK_T_UsersData_AspNetUsers" FromRole="AspNetUsers" ToRole="T_UsersData" />
           <NavigationProperty Name="T_CrewRoles" Relationship="JneCommSitesDataBaseModel.AspNetUserCrewRoles" FromRole="AspNetUsers" ToRole="T_CrewRoles" />
+          <NavigationProperty Name="T_Sites" Relationship="JneCommSitesDataBaseModel.CrewUsersBySite" FromRole="AspNetUsers" ToRole="T_Sites" />
         </EntityType>
         <EntityType Name="T_Certifications">
           <Key>
@@ -896,6 +1021,62 @@ warning 6002: The table/view 'JneCommSitesManagementDB.dbo.vwUserData' does not 
           <Property Name="vStateName" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
           <Property Name="vStateCode" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="T_Sites">
+          <Key>
+            <PropertyRef Name="vSiteName" />
+          </Key>
+          <Property Name="vSiteName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="vAddress" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="vCity" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="vStateCode" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="vTechEvolutionCodeName" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="vCustomerName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="T_Customer" Relationship="JneCommSitesDataBaseModel.FK_T_Sites_T_Customer" FromRole="T_Sites" ToRole="T_Customer" />
+          <NavigationProperty Name="T_TechEvolutionCodes" Relationship="JneCommSitesDataBaseModel.FK_T_Sites_T_TechEvolutionCodes" FromRole="T_Sites" ToRole="T_TechEvolutionCodes" />
+          <NavigationProperty Name="T_USAStates" Relationship="JneCommSitesDataBaseModel.FK_T_Sites_T_USAStates" FromRole="T_Sites" ToRole="T_USAStates" />
+          <NavigationProperty Name="AspNetUsers" Relationship="JneCommSitesDataBaseModel.CrewUsersBySite" FromRole="T_Sites" ToRole="AspNetUsers" />
+          <Property Name="vReferalOrderName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <Association Name="FK_T_Sites_T_Customer">
+          <End Type="JneCommSitesDataBaseModel.T_Customer" Role="T_Customer" Multiplicity="1" />
+          <End Type="JneCommSitesDataBaseModel.T_Sites" Role="T_Sites" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_Customer">
+              <PropertyRef Name="vCustomerName" />
+            </Principal>
+            <Dependent Role="T_Sites">
+              <PropertyRef Name="vCustomerName" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_T_Sites_T_TechEvolutionCodes">
+          <End Type="JneCommSitesDataBaseModel.T_TechEvolutionCodes" Role="T_TechEvolutionCodes" Multiplicity="1" />
+          <End Type="JneCommSitesDataBaseModel.T_Sites" Role="T_Sites" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_TechEvolutionCodes">
+              <PropertyRef Name="vTechEvolutionCodeName" />
+            </Principal>
+            <Dependent Role="T_Sites">
+              <PropertyRef Name="vTechEvolutionCodeName" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_T_Sites_T_USAStates">
+          <End Type="JneCommSitesDataBaseModel.T_USAStates" Role="T_USAStates" Multiplicity="1" />
+          <End Type="JneCommSitesDataBaseModel.T_Sites" Role="T_Sites" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_USAStates">
+              <PropertyRef Name="vStateCode" />
+            </Principal>
+            <Dependent Role="T_Sites">
+              <PropertyRef Name="vStateCode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="CrewUsersBySite">
+          <End Type="JneCommSitesDataBaseModel.AspNetUsers" Role="AspNetUsers" Multiplicity="*" />
+          <End Type="JneCommSitesDataBaseModel.T_Sites" Role="T_Sites" Multiplicity="*" />
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -915,6 +1096,7 @@ warning 6002: The table/view 'JneCommSitesManagementDB.dbo.vwUserData' does not 
           <EntitySetMapping Name="AspNetRoles">
             <EntityTypeMapping TypeName="JneCommSitesDataBaseModel.AspNetRoles">
               <MappingFragment StoreEntitySet="AspNetRoles">
+                <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
               </MappingFragment>
@@ -1112,6 +1294,27 @@ warning 6002: The table/view 'JneCommSitesManagementDB.dbo.vwUserData' does not 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="T_Sites">
+            <EntityTypeMapping TypeName="JneCommSitesDataBaseModel.T_Sites">
+              <MappingFragment StoreEntitySet="T_Sites">
+                <ScalarProperty Name="vReferalOrderName" ColumnName="vReferalOrderName" />
+                <ScalarProperty Name="vCustomerName" ColumnName="vCustomerName" />
+                <ScalarProperty Name="vTechEvolutionCodeName" ColumnName="vTechEvolutionCodeName" />
+                <ScalarProperty Name="vStateCode" ColumnName="vStateCode" />
+                <ScalarProperty Name="vCity" ColumnName="vCity" />
+                <ScalarProperty Name="vAddress" ColumnName="vAddress" />
+                <ScalarProperty Name="vSiteName" ColumnName="vSiteName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="CrewUsersBySite" TypeName="JneCommSitesDataBaseModel.CrewUsersBySite" StoreEntitySet="CrewUsersBySite">
+            <EndProperty Name="T_Sites">
+              <ScalarProperty Name="vSiteName" ColumnName="vSiteName" />
+            </EndProperty>
+            <EndProperty Name="AspNetUsers">
+              <ScalarProperty Name="Id" ColumnName="Id" />
+            </EndProperty>
+          </AssociationSetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

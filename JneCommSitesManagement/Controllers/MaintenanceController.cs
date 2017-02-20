@@ -47,7 +47,7 @@ namespace JneCommSitesManagement.Controllers
             Models.CreateUserModel model = new Models.CreateUserModel();
             model._UserGroup = Helper.Helper.GetRoles();
             model.daysChangePass = 365;
-            model.Email = "support@jnecommunicationsllc.com";
+            model.Email = "";
             model.lockedOutUser = true;
             model.forcePassChange = true;
             return View(model);
@@ -267,7 +267,7 @@ namespace JneCommSitesManagement.Controllers
                                   where p.Name == model.nameGroup
                                   select p).First();
 
-            //rolInformation.Description = model.GroupDescription;
+            rolInformation.Description = model.GroupDescription;
 
             if (roles != null)
             {
@@ -307,6 +307,7 @@ namespace JneCommSitesManagement.Controllers
 
             Models.RolModel rolModel = new RolModel();
             rolModel.nameGroup = rolInfQuery.Name;
+            rolModel.GroupDescription = rolInfQuery.Description;
             rolModel.OperationsList = Helper.Helper.GetOperations(rolName);
             return View(rolModel);
         }
@@ -324,7 +325,7 @@ namespace JneCommSitesManagement.Controllers
                                    where p.Name == rolModel.nameGroup
                                    select p).FirstOrDefault();
 
-                //rolInfQuery.Description = rolModel.GroupDescription;
+                rolInfQuery.Description = rolModel.GroupDescription;
 
                 var operationByRol = (from p in _dbContext.AspNetRoles
                                       from d in _dbContext.T_Operations
@@ -422,11 +423,13 @@ namespace JneCommSitesManagement.Controllers
         {
             JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
             Models.CertificationModel newCertificationModel = new CertificationModel();
-            var queryCetification = (from p in _dbContext.T_Certifications
+            var queryCertification = (from p in _dbContext.T_Certifications
                                      where p.vCertificationName == certificationName
                                      select p).FirstOrDefault();
-            if (queryCetification == null)
+            if (queryCertification == null)
                 RedirectToAction("CertificationsList", "Maintenance");
+            newCertificationModel.certificationpDescription = queryCertification.vCertificationDescription;
+            newCertificationModel.certificationName = queryCertification.vCertificationName;
             return View(newCertificationModel);
         }
 

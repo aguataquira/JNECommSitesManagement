@@ -1,0 +1,256 @@
+﻿@model JneCommSitesManagement.Models.SiteModel
+
+@{
+    ViewBag.Title = "CreateSite";
+    Layout = "~/Views/Shared/_LayoutJneCommSites.cshtml";
+}
+
+<h2>Create Site</h2>
+<label class="text-danger" id="lbError"></label>
+
+@using (Html.BeginForm("CreateSite", "Administration", FormMethod.Post, new { enctype = "multipart/form-data", id = "formCreateSite" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.siteName, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.siteName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.siteName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.siteAddress, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.siteAddress, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.siteAddress, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.siteCity, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.siteCity, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.siteCity, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.states, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @Html.DropDownListFor(model => model.states, new SelectList(Model._StatesList, "ID", "Description"), "--State--", new { style = "width: 300px; height: 30px;", @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.states, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.technology, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.DropDownListFor(model => model.technology, new SelectList(Model._TechnologyList, "ID", "Description"), "--Technology--", new { style = "width: 300px; height: 30px;", @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.technology, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.customerName, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.DropDownListFor(model => model.customerName, new SelectList(Model._CustomerList, "ID", "Description"), "--Customer--", new { style = "width: 300px; height: 30px;", @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.customerName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.referalOrder, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.referalOrder, new { type = "file", accept = "image/png, image/jpeg", htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.referalOrder, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <table class="table table-striped .table-bordered">
+            <tr>
+                <th>
+                    UserName
+                </th>
+                <th>
+                    Name - Role
+                </th>
+                <th>
+                    Action
+                </th>
+            </tr>
+            <tr ng-repeat="item in crewList">
+                <td>
+                    {{item.crewName}}
+                </td>
+                <td>
+                    {{item.crewRole}}
+                </td>
+                <td>
+                    <input type="button" value="Remove" class="btn btn-warning" ng-click="removeRow(item.name)" return false; />
+                </td>
+            </tr>
+        </table>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="col-md-8">Crew Name</label>
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.crewUserName, new SelectList(Model._CrewUserNameList, "ID", "Description"), "--Crew User--", new { ng_model = "crewName", style = "width: 300px; height: 30px;", @class = "form-control" })
+                        @*<input type="text" class="form-control" name="crewName" ng-model="crewName"/>*@
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                    <label class="col-md-8">Action</label>
+                    <div class="col-md-10">
+                        <input type="button" class="btn btn-success" value="Add Crew User" ng-click="addRow()" id="btAddRow" return false;/>
+                    </div>
+            </div>
+        </div>
+
+        <br />
+            <div class="form-group">
+                <div class="col-md-offset-0 col-md-12">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
+            </div>
+        </div>
+}
+
+
+
+
+
+<div>
+    @Html.ActionLink("Back to List", "SitesIndex")
+</div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/angular.js")
+    @Scripts.Render("~/Scripts/Json.js")
+
+    <script>
+            var batch = new Array();
+            var helloApp = angular.module("JeCommAPP", []);
+            helloApp.controller("JeCommController", function ($scope) {
+
+                $scope.crewList = [];
+
+               
+                    $scope.addRow = function () {
+                        if ($("#crewUserName option:selected").val() != "") {
+                            batch.push($scope.crewName);
+                            $scope.crewList.push({ 'crewName': $scope.crewName, 'crewRole': $("#crewUserName option:selected").html() });
+                            $("#crewUserName option:selected").remove();
+                            $scope.crewName = '';
+                        }
+                    };
+
+                $scope.removeRow = function (name) {
+                    var index = -1;
+                    var comArr = eval($scope.crewList);
+                    for (var i = 0; i < comArr.length; i++) {
+                        if (comArr[i].name === name) {
+                            index = i;
+                            break;
+                        }
+                    }
+                    if (index === -1) {
+                        alert("Something gone wrong");
+                    }
+                    $scope.crewList.splice(index, 1);
+                    batch.splice(index, 1);
+                };
+
+            });
+
+
+            $('#formCreateSite').submit(function (event) {
+                if ($('#formCreateSite').valid()) {
+                    event.preventDefault();
+
+
+                    //var files = e.target.files;
+                    var data = new FormData();
+                    var files = $("#referalOrder").get(0).files;
+                    data.append("referalOrder", files[0]);
+                    data.append("siteName", $("#siteName").val());
+                    data.append("siteAddress", $("#siteAddress").val());
+                    data.append("siteCity", $("#siteCity").val());
+                    data.append("states", $("#states").val());
+                    data.append("technology", $("#technology").val());
+                    data.append("customerName", $("#customerName").val());
+                    for (x = 0; x < batch.length; x++)
+                        {
+                        data.append("_ListCrew", batch[x]);
+                    }
+
+                    //var data = new FormData($('#formCreateSite')[0]);
+
+                    var transaction =
+                    {
+                        "_ListCrew": batch,
+                        "siteName": $("#siteName").val(),
+                        "siteAddress": $("#siteAddress").val(),
+                        "siteCity": $("#siteCity").val(),
+                        "states": $("#states").val(),
+                        "technology": $("#technology").val(),
+                        "customerName": $("#customerName").val(),
+                        "referalOrder":  files[0]
+                    }
+
+                    
+
+                    var json = JSON.stringify(transaction);
+
+                    $.ajax({
+                        type: 'POST',
+                        dataType: 'json',
+                        contentType: 'application/json; charset=utf-8',
+                        url: '@Url.Action("CreateSite")',
+                        contentType: false,
+                        processData: false,
+                        data: data,
+                        success: function (response) {
+                            if (response == true) {
+                                window.location = '@Url.Action("SitesIndex", "Administration")';
+                            }
+                            else {
+                                if (response == false) {
+                                    $("#lbError").empty();
+                                    $("#lbError").append("An error ocurred, please try again.");
+                                }
+                                else {
+                                    $("#lbError").empty();
+                                    $("#lbError").append(response);
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+    </script>
+}

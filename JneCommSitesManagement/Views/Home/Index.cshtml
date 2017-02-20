@@ -1,30 +1,42 @@
-﻿@{
+﻿@model IEnumerable<JneCommSitesDataLayer.T_CertificationsByUserCrew>
+
+@{
     ViewBag.Title = "Welcome to Jne Communications";
     Layout = "~/Views/Shared/_LayoutJneCommSites.cshtml";
 }
 
 <div class="jumbotron">
     <h1>JNE COMMUNICATIONS</h1>
-    <p class="lead">JNE Communications offers a profesional service for .....</p>
-    <p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
 </div>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>TECHNOLOGIC SOLUTIONS</h2>
-        <p>
-            Regardless of your establishment, our solutions provide full coverage to meet your demands.
-        </p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>RELIABLE UP-TIME</h2>
-        <p>Our record of up-time and reliable customer service speaks for itself when compared to the competition.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>SMART TECHNOLOGY</h2>
-        <p>Over 5 years of experience crafting the best in tech solutions for communications..</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>
-</div>
+<table class="table table-striped">
+    <tr>
+        <th>
+            @Html.DisplayName("Certification Name")
+        </th>
+        <th>
+            @Html.DisplayName("Expiration Time")
+        </th>
+        <th>
+            @Html.DisplayName("User Name")
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+
+        <tr class="text-warning">
+            <td>
+                @Html.DisplayFor(modelItem => item.vCertificationName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.dExpirationTime)
+            </td>
+            <td>
+                @Html.ActionLink("Edit "+ item.AspNetUsers.UserName, "../Administration/EditEmployee", new { employeeName = item.AspNetUsers.UserName })
+            </td>
+        </tr>
+    }
+
+</table>
