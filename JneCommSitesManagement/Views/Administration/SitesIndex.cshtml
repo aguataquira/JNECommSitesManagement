@@ -5,10 +5,12 @@
     Layout = "~/Views/Shared/_LayoutJneCommSites.cshtml";
 }
 
-<h2>Sites List</h2>
+<h3 class="text-info">Sites List</h3>
 
 <p>
-    @Html.ActionLink("Create New Site", "CreateSite")
+    <a href='@Url.Action("CreateSite", "Administration")'>
+        <img src="~/Content/Jne Icons/AddSiteIcon.png" />  Add Site
+    </a>
 </p>
 <table class="table table-striped">
     <tr>

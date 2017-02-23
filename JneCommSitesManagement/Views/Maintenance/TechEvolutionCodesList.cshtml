@@ -5,11 +5,14 @@
     Layout = "~/Views/Shared/_LayoutJneCommSites.cshtml";
 }
 
-<h2>Tech Evolution Codes List</h2>
+<h3 class="text-info">Tech Evolution Code List</h3>
 
 <p>
-    @Html.ActionLink("Create New", "CreateTechEvolutionCode")
+    <a href='@Url.Action("CreateTechEvolutionCode", "Maintenance")'>
+        <img src="~/Content/Jne Icons/AddTechEvolutionCodeIcon.png" />  Add Tech Evolution Code
+    </a>
 </p>
+
 <table class="table table-striped">
     <tr>
         <th>

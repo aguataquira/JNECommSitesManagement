@@ -209,6 +209,14 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\images\theme.css" />
+    <Content Include="Content\Jne Icons\AddCertificationIcon.png" />
+    <Content Include="Content\Jne Icons\AddCrewEmployeeIcon.png" />
+    <Content Include="Content\Jne Icons\AddCrewRoleIcon.png" />
+    <Content Include="Content\Jne Icons\AddCustomerIcon.png" />
+    <Content Include="Content\Jne Icons\AddRoleIcon.png" />
+    <Content Include="Content\Jne Icons\AddSiteIcon.png" />
+    <Content Include="Content\Jne Icons\AddTechEvolutionCodeIcon.png" />
+    <Content Include="Content\Jne Icons\AddUserIcon.png" />
     <Content Include="Content\Jne Icons\JeCommCrewIcon.png" />
     <Content Include="Content\Jne Icons\JeCommCertificationsIcon.png" />
     <Content Include="Content\Jne Icons\JeCommCustomerIcon.png" />
@@ -217,6 +225,7 @@
     <Content Include="Content\Jne Icons\JeCommRolesIcon.png" />
     <Content Include="Content\Jne Icons\JeCommTechEvolutionCodesIcon.png" />
     <Content Include="Content\Jne Icons\JeCommUserIcon.png" />
+    <Content Include="Content\Jne Icons\SitesIcon.png" />
     <Content Include="Content\JNet Images\AccessDenied.png" />
     <Content Include="Content\JNet Images\JeCommSitesLogo.png" />
     <Content Include="Content\images\jquery-ui.css" />

@@ -5,10 +5,12 @@
     Layout = "~/Views/Shared/_LayoutJneCommSites.cshtml";
 }
 
-<h2>UsersIndex</h2>
+<h3 class="text-info">Web Users List</h3>
 
 <p>
-    @Html.ActionLink("Create New User", "CreateUser")
+    <a href='@Url.Action("CreateUser", "Maintenance")'>
+        <img src="~/Content/Jne Icons/AddUserIcon.png" />Add Web User
+    </a>
 </p>
 <table class="table table-striped">
     <tr>

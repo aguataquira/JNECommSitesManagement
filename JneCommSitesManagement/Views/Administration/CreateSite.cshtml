@@ -5,7 +5,9 @@
     Layout = "~/Views/Shared/_LayoutJneCommSites.cshtml";
 }
 
-<h2>Create Site</h2>
+
+<h3 class="text-info"> Create Site</h3>
+
 <label class="text-danger" id="lbError"></label>
 
 @using (Html.BeginForm("CreateSite", "Administration", FormMethod.Post, new { enctype = "multipart/form-data", id = "formCreateSite" }))
@@ -106,7 +108,7 @@
                     {{item.crewRole}}
                 </td>
                 <td>
-                    <input type="button" value="Remove" class="btn btn-warning" ng-click="removeRow(item.name)" return false; />
+                    <input type="button" value="Remove" class="btn btn-warning" ng-click="removeRow(item.crewName, item.crewRole)" return false; />
                 </td>
             </tr>
         </table>
@@ -169,21 +171,24 @@
                         }
                     };
 
-                $scope.removeRow = function (name) {
-                    var index = -1;
-                    var comArr = eval($scope.crewList);
-                    for (var i = 0; i < comArr.length; i++) {
-                        if (comArr[i].name === name) {
-                            index = i;
-                            break;
+                    $scope.removeRow = function (crewName, crewRole) {
+                        //alert(crewName)
+                        var index = -1;
+                        var comArr = eval($scope.crewList);
+                        for (var i = 0; i < comArr.length; i++) {
+                            if (comArr[i].crewName === crewName) {
+                                index = i;
+                                break;
+                            }
                         }
-                    }
-                    if (index === -1) {
-                        alert("Something gone wrong");
-                    }
-                    $scope.crewList.splice(index, 1);
-                    batch.splice(index, 1);
-                };
+                        if (index === -1) {
+                            alert("Something gone wrong");
+                        }
+                        $("#crewUserName").append('<option value="' + crewName + '">' + crewRole + '</option>');
+                        $scope.crewList.splice(index, 1);
+                        //alert(index)
+                        batch.splice(index, 1);
+                    };
 
             });
 

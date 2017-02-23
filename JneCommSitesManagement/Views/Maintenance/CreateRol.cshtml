@@ -6,13 +6,13 @@
     Layout = "~/Views/Shared/_LayoutJneCommSites.cshtml";
 }
 
+<h3 class="text-info"> Create Role</h3>
 
 @using (Html.BeginForm()) 
 {
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4>Create Rol</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
@@ -55,7 +55,7 @@
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to List", "RolesIndex")
 </div>
 
 @section Scripts {

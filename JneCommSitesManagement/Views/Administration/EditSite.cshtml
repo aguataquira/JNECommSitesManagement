@@ -5,7 +5,9 @@
     Layout = "~/Views/Shared/_LayoutJneCommSites.cshtml";
 }
 
-<h2>Edit Site</h2>
+
+<h3 class="text-info"> Edit Site</h3>
+<label class="text-danger" id="lbError"></label>
 
 @using (Html.BeginForm("EditSite", "Administration", FormMethod.Post, new { enctype = "multipart/form-data", id = "formEditSite" }))
 {
@@ -106,7 +108,7 @@
                     {{item.crewRole}}
                 </td>
                 <td>
-                    <input type="button" value="Remove" class="btn btn-warning" ng-click="removeRow(item.name)" return false; />
+                    <input type="button" value="Remove" class="btn btn-warning" ng-click="removeRow(item.crewName, item.crewRole)" return false; />
                 </td>
             </tr>
         </table>
@@ -132,7 +134,7 @@
         <br />
         <div class="form-group">
             <div class="col-md-offset-0 col-md-12">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Guardar" class="btn btn-primary" />
             </div>
         </div>
     </div>
@@ -164,8 +166,14 @@
                     params: { siteName: $("#siteName").val() },
                 }).then(function successCallback(response) {
                     $scope.crewList = response.data;
-                }, function errorCallback(response) {
-
+                    for (i in response.data)
+                    {
+                        //alert(response.data[i]["crewName"]);
+                            $("#crewUserName option[value='" + response.data[i]["crewName"] + "']").remove();
+                            batch.push(response.data[i]["crewName"])
+                        }
+                },
+                    function errorCallback(response) {
                 });
 
 
@@ -179,11 +187,12 @@
                         }
                     };
 
-                $scope.removeRow = function (name) {
+                $scope.removeRow = function (crewName, crewRole) {
+                    //alert(crewName)
                     var index = -1;
                     var comArr = eval($scope.crewList);
                     for (var i = 0; i < comArr.length; i++) {
-                        if (comArr[i].name === name) {
+                        if (comArr[i].crewName === crewName) {
                             index = i;
                             break;
                         }
@@ -191,7 +200,9 @@
                     if (index === -1) {
                         alert("Something gone wrong");
                     }
+                    $("#crewUserName").append('<option value="'+crewName+'">'+crewRole+'</option>');
                     $scope.crewList.splice(index, 1);
+                    //alert(index)
                     batch.splice(index, 1);
                 };
 

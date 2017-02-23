@@ -685,6 +685,44 @@ namespace JneCommSitesManagement.Controllers
         {
             if (ModelState.IsValid)
             {
+                JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
+
+                var querySite = (from p in _dbContext.T_Sites
+                                 where p.vSiteName == model.siteName
+                                 select p).FirstOrDefault();
+
+                querySite.vAddress = model.siteAddress;
+                querySite.vCity = model.siteCity;
+                querySite.vStateCode = model.states;
+                querySite.vTechEvolutionCodeName = model.technology;
+                querySite.vCustomerName = model.customerName;
+                querySite.AspNetUsers.Clear();
+
+
+                HttpPostedFileBase fileContent = model.referalOrder;
+                if (fileContent != null && fileContent.ContentLength > 0)
+                {
+                    // get a stream
+                    var stream = fileContent.InputStream;
+                    // and optionally write the file to disk
+                    querySite.vReferalOrderName = (model.siteName + Path.GetExtension(fileContent.FileName)).Replace(" ", "");
+                    string path = System.IO.Path.Combine(Server.MapPath("~/Documents/ReferalOrder/"), (model.siteName + Path.GetExtension(fileContent.FileName)).Replace(" ", ""));
+                    // file is uploaded
+                    fileContent.SaveAs(path);
+                }
+
+                if(model._ListCrew != null )
+                { 
+                foreach (var item in model._ListCrew)
+                {
+                    var queryCrewuser = (from p in _dbContext.AspNetUsers
+                                         where p.UserName == item
+                                         select p).FirstOrDefault();
+                    querySite.AspNetUsers.Add(queryCrewuser);
+                }
+                }
+                _dbContext.SaveChanges();
+
                 return View();
             }
                 return View();
@@ -709,7 +747,7 @@ namespace JneCommSitesManagement.Controllers
 
                 crewUsers.Add(new CrewUserData {
                     crewName = item.UserName,
-                    crewRole = item.T_UsersData.UserFirstName + " " + item.T_UsersData.UserFirstName + "-" + roleQuery
+                    crewRole = item.T_UsersData.UserFirstName + " " + item.T_UsersData.UserLastName + "-" + roleQuery
                 });
             }
 

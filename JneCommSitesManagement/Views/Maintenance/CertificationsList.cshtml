@@ -5,10 +5,12 @@
     Layout = "~/Views/Shared/_LayoutJneCommSites.cshtml";
 }
 
-<h2>Certifications List</h2>
+<h3 class="text-info">Certification List</h3>
 
 <p>
-    @Html.ActionLink("Create New Certification", "CreateCertification")
+    <a href='@Url.Action("CreateCertification", "Maintenance")'>
+        <img src="~/Content/Jne Icons/AddCertificationIcon.png" />Add Certifiction
+    </a>
 </p>
 <table class="table table-striped">
     <tr>

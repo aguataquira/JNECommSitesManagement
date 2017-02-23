@@ -5,7 +5,9 @@
     Layout = "~/Views/Shared/_LayoutJneCommSites.cshtml";
 }
 
-<h2>Edit Employee</h2>
+
+<h3 class="text-info"> Edit Employee</h3>
+
 
 @using (Html.BeginForm("EditEmployee", "Administration", FormMethod.Post, new { enctype = "multipart/form-data", id = "formEditEmployee" }))
 {

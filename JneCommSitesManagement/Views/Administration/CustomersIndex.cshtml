@@ -5,10 +5,12 @@
     Layout = "~/Views/Shared/_LayoutJneCommSites.cshtml";
 }
 
-<h2>Customers List</h2>
+<h3 class="text-info">Customers List</h3>
 
 <p>
-    @Html.ActionLink("Create New Customer", "CreateCustomer")
+    <a href='@Url.Action("CreateCustomer", "Administration")'>
+        <img src="~/Content/Jne Icons/AddCustomerIcon.png" />  Add Customer
+    </a>
 </p>
 <table class="table table-striped">
     <tr>
