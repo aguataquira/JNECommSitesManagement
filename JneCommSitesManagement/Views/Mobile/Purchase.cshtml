@@ -1,0 +1,237 @@
+﻿@model JneCommSitesManagement.Models.ActivityLogsPurchase
+
+@{
+    ViewBag.Title = "Purchase";
+    Layout = "~/Views/Shared/_LayoutCrewJneCommSites.cshtml";
+}
+
+<h2>Purchase - Compra @ViewBag.Tittle</h2>
+
+@using (Html.BeginForm("Purchase", "Mobile", FormMethod.Post, new { enctype = "multipart/form-data", id = "formPurchase" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        <hr />
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+       
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.description, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.description, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.description, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.sitePurchase, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.sitePurchase, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        @Html.ValidationMessageFor(model => model.sitePurchase, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.purchaseType, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.purchaseType, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        @Html.ValidationMessageFor(model => model.purchaseType, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.startPurchaseCheckPoint, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.startPurchaseCheckPoint, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        @Html.ValidationMessageFor(model => model.startPurchaseCheckPoint, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.documentToUpload, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.documentToUpload, new { type = "file", accept = "image/png, image/jpeg", htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.documentToUpload, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-0 col-md-12">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </div>
+
+
+        
+
+    </div>
+}
+
+
+<div id="dialog" title="Certification Document">
+    <img id="CertificationImage" src="" />
+</div>
+
+
+
+
+<table class="table-striped" style="min-width:100%">
+    <tr>
+        <th>
+            Description / Descripcion
+        </th>
+        <th>
+            Date Purchase / Dia compra
+        </th>
+        <th>
+            Invoice - Factura
+        </th>
+    </tr>
+    <tr ng-repeat="item in contacts">
+        <td>
+            {{item.description}}
+        </td>
+        <td>
+            {{item.purchaseDate}}
+        </td>
+        <td>
+            <button class="btn-success" ng-click="ShowImage("test")">Show Invoice</button>
+        </td>
+    </tr>
+</table>
+
+
+<div>
+    @Html.ActionLink("Back to Activity Log option", "CreateActivityLogOptions")
+</div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/angular.js")
+    @Scripts.Render("~/Scripts/Json.js")
+    <script src="~/Scripts/jquery-ui.js"></script>
+    <link href="~/Content/images/jquery-ui.css" rel="stylesheet" />
+    <link href="~/Content/images/theme.css" rel="stylesheet" />
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var test = new Date();
+            $("#startPurchaseCheckPoint").val(test.toISOString().substring(0, 19).replace("T", " "));
+            window.setInterval(updateCheckPoint, 500000);
+        });
+
+        function updateCheckPoint() {
+            var actualDate = new Date();
+            $("#startPurchaseCheckPoint").val(actualDate.toISOString().substring(0, 19).replace("T", " "));
+        }
+
+
+    </script>
+    <script type="text/javascript">
+
+            var batch = new Array();
+
+            var helloApp = angular.module("JeCommAPP", []);
+            helloApp.controller("JeCommController", function ($scope, $http) {
+
+                $scope.ShowImage = function (invoiceName) {
+                    alert(invoiceName);
+                };
+
+                $scope.contacts = [];
+
+                $http({
+                    method: 'GET',
+                    url: '@Url.Action("GetPurchaseByUser")',
+                    params: { purchaseType: $("#purchaseType").val() },
+                }).then(function successCallback(response) {
+                    $scope.contacts = response.data;
+                }, function errorCallback(response) {
+
+                });
+
+                $scope.removeRow = function (name) {
+                    var index = -1;
+                    var comArr = eval($scope.contacts);
+                    for (var i = 0; i < comArr.length; i++) {
+                        if (comArr[i].name === name) {
+                            index = i;
+                            break;
+                        }
+                    }
+                    if (index === -1) {
+                        alert("Something gone wrong");
+                    }
+                    $scope.contacts.splice(index, 1);
+                    batch.splice(index, 1);
+                };
+
+
+
+                $('#Purchase').submit(function (event) {
+                    if ($('#Purchase').valid()) {
+                    event.preventDefault();
+
+                    var transaction =
+                    {
+                        "description": $("#description").val(),
+                        "sitePurchase": $("#sitePurchase").val(),
+                        "purchaseType": $("#purchaseType").val(),
+                        "startPurchaseCheckPoint": $("#startPurchaseCheckPoint").val(),
+                        "endPurchaseCheckPoint": $("#endPurchaseCheckPoint").val(),
+                        "documentToUpload": $("#documentToUpload").val()
+                    }
+
+                    var json = JSON.stringify(transaction);
+
+                    $.ajax({
+                        type: 'POST',
+                        dataType: 'json',
+                        contentType: 'application/json; charset=utf-8',
+                        url: '@Url.Action("Purchase")',
+                        data: json,
+                        success: function (response) {
+                            if (response == true) {
+                               
+                                $scope.contacts = [];
+                                $http({
+                                    method: 'GET',
+                                    url: '@Url.Action("GetPurchaseByUser")',
+                                    params: { customerName: $("#purchaseType").val() },
+                                }).then(function successCallback(response) {
+                                    $scope.contacts = response.data;
+                                }, function errorCallback(response) {
+
+                                });
+
+
+                            }
+                            else {
+                                if (response == false) {
+                                    $("#lbError").empty();
+                                    $("#lbError").append("An error ocurred, please try again.");
+                                }
+                                else {
+                                    $("#lbError").empty();
+                                    $("#lbError").append(response);
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+
+
+            });
+    </script>
+}

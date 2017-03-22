@@ -15,6 +15,7 @@ namespace JneCommSitesDataLayer
     public partial class T_UsersData
     {
         public string Id { get; set; }
+        public string vStateCode { get; set; }
         public string UserFirstName { get; set; }
         public string UserLastName { get; set; }
         public string UserDescription { get; set; }
@@ -25,7 +26,6 @@ namespace JneCommSitesDataLayer
         public string Phone { get; set; }
         public Nullable<bool> IsBilingual { get; set; }
         public Nullable<decimal> LaborHourPay { get; set; }
-        public string vStateCode { get; set; }
     
         public virtual AspNetUsers AspNetUsers { get; set; }
         public virtual T_USAStates T_USAStates { get; set; }

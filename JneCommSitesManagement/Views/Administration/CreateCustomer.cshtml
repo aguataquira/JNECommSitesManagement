@@ -1,10 +1,24 @@
 ﻿@model JneCommSitesManagement.Models.CustomerModels
-
+@using JneCommSitesManagement.Helper;
 @{
-    ViewBag.Title = "CreateCustomer";
-    Layout = "~/Views/Shared/_LayoutJneCommSites.cshtml";
+    ViewBag.Title = "Create Customer";
 }
 
+@{
+    var queryCrewRol = Helper.GetCrewRoleByUser(User.Identity.Name);
+    if (queryCrewRol != null)
+    {
+        if (queryCrewRol == "LEADER")
+        {
+            Layout = "~/Views/Shared/_LayoutCrewJneCommSites.cshtml";
+        }
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_LayoutJneCommSites.cshtml";
+    }
+
+}
 
 <h3 class="text-info"> Create Customer</h3>
 
@@ -171,18 +185,28 @@
 
         $scope.addRow = function () {
             if ($scope.contactName != null && $scope.contactPhone != null && $scope.contactEmail != null && $scope.contactArea != null) {
+                if (isNumber($scope.contactPhone)) {
                 batch.push({ 'contactName': $scope.contactName, 'contactPhone': $scope.contactPhone, 'contactEmail': $scope.contactEmail, 'contactArea': $scope.contactArea });
                 $scope.contacts.push({ 'contactName': $scope.contactName, 'contactPhone': $scope.contactPhone, 'contactEmail': $scope.contactEmail, 'contactArea': $scope.contactArea });
                 $scope.contactName = '';
                 $scope.contactPhone = '';
                 $scope.contactEmail = '';
                 $scope.contactArea = '';
+                }
+                else {
+                    $("#lbError").empty();
+                    $("#lbError").append("Contact Phone should be a number");
+                    $('html, body').animate({ scrollTop: 0 }, 'slow');
+                }
             }
             else {
                 alert("Add the contact information");
             }
         };
 
+        function isNumber(n) {
+            return !isNaN(parseFloat(n)) && isFinite(n);
+        }
 
         $scope.removeRow = function (name) {
             var index = -1;
@@ -236,6 +260,7 @@
                         else {
                             $("#lbError").empty();
                             $("#lbError").append(response);
+                            $('html, body').animate({ scrollTop: 0 }, 'slow');
                         }
                     }
                 }

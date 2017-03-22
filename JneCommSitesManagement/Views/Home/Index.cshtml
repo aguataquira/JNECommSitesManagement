@@ -1,8 +1,24 @@
 ﻿@model IEnumerable<JneCommSitesDataLayer.T_CertificationsByUserCrew>
+@using JneCommSitesManagement.Helper;
 
 @{
-    ViewBag.Title = "Welcome to Jne Communications";
-    Layout = "~/Views/Shared/_LayoutJneCommSites.cshtml";
+    ViewBag.Title = "Home JeCommSites";
+}
+
+@{
+    var queryCrewRol = Helper.GetCrewRoleByUser(User.Identity.Name);
+    if (queryCrewRol != null)
+    {
+        if (queryCrewRol == "LEADER")
+        {
+            Layout = "~/Views/Shared/_LayoutCrewJneCommSites.cshtml";
+        }
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_LayoutJneCommSites.cshtml";
+    }
+
 }
 
 <div class="jumbotron">

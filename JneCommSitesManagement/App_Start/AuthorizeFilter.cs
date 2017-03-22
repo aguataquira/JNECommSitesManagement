@@ -53,6 +53,7 @@ namespace JneCommSitesManagement.App_Start
                                    && d.vOperationName == _actionName
                                    select d);
 
+
             var actualOperation = operationsQuery.FirstOrDefault(op => op.vOperationName == _actionName && op.vControllerName == _controllerName);
 
             ret = (actualOperation != null);

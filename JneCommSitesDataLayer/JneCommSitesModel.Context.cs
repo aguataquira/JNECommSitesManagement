@@ -39,8 +39,12 @@ namespace JneCommSitesDataLayer
         public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
         public virtual DbSet<T_Certifications> T_Certifications { get; set; }
         public virtual DbSet<T_CertificationsByUserCrew> T_CertificationsByUserCrew { get; set; }
-        public virtual DbSet<T_UsersData> T_UsersData { get; set; }
         public virtual DbSet<vwUserData> vwUserData { get; set; }
         public virtual DbSet<T_Sites> T_Sites { get; set; }
+        public virtual DbSet<T_ActivityLog> T_ActivityLog { get; set; }
+        public virtual DbSet<T_Purchase> T_Purchase { get; set; }
+        public virtual DbSet<T_PurchaseType> T_PurchaseType { get; set; }
+        public virtual DbSet<T_TaskProgress> T_TaskProgress { get; set; }
+        public virtual DbSet<T_UsersData> T_UsersData { get; set; }
     }
 }

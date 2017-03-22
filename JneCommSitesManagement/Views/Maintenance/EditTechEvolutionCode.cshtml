@@ -1,8 +1,24 @@
 ﻿@model JneCommSitesManagement.Models.TechEvolutionCodesModel
+@using JneCommSitesManagement.Helper;
 
 @{
-    ViewBag.Title = "EditTechEvolutionCode";
-    Layout = "~/Views/Shared/_LayoutJneCommSites.cshtml";
+    ViewBag.Title = "Edit Tech Evolution Code";
+}
+
+@{
+    var queryCrewRol = Helper.GetCrewRoleByUser(User.Identity.Name);
+    if (queryCrewRol != null)
+    {
+        if (queryCrewRol == "LEADER")
+        {
+            Layout = "~/Views/Shared/_LayoutCrewJneCommSites.cshtml";
+        }
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_LayoutJneCommSites.cshtml";
+    }
+
 }
 
 <h3 class="text-info"> Edit Tech Evolution Code</h3>

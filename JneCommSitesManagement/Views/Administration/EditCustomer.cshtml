@@ -1,12 +1,28 @@
 ﻿@model JneCommSitesManagement.Models.CustomerModels
+@using JneCommSitesManagement.Helper;
 
 @{
-    ViewBag.Title = "EditCustomer";
-    Layout = "~/Views/Shared/_LayoutJneCommSites.cshtml";
+    ViewBag.Title = "Edit Customer";
+}
+
+@{
+    var queryCrewRol = Helper.GetCrewRoleByUser(User.Identity.Name);
+    if (queryCrewRol != null)
+    {
+        if (queryCrewRol == "LEADER")
+        {
+            Layout = "~/Views/Shared/_LayoutCrewJneCommSites.cshtml";
+        }
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_LayoutJneCommSites.cshtml";
+    }
+
 }
 
 <h3 class="text-info"> Edit Customer</h3>
-
+<label class="text-danger" id="lbError"></label>
 
 
     @using (Html.BeginForm("EditCustomer", "Administration", FormMethod.Post, new { id = "formEditCustomer" }))
@@ -98,17 +114,18 @@
                             {{item.contactArea}}
                         </td>
                         <td>
-                            <input type="button" value="Remove" class="btn btn-primary" ng-click="removeRow(item.name)" />
+                            <input type="button" value="Remove" class="btn btn-primary" ng-click="removeRow(item.contactName)" />
                         </td>
                     </tr>
                 </table>
+
 
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
                             <label class="col-md-8">Contact Name</label>
                             <div class="col-md-10">
-                                <input type="text" class="form-control" name="contactName" ng-model="contactName" required />
+                                <input type="text" class="form-control" name="contactName" ng-model="contactName"/>
                             </div>
                         </div>
                     </div>
@@ -116,7 +133,7 @@
                         <div class="form-group">
                             <label class="col-md-8">Contact Phone</label>
                             <div class="col-md-10">
-                                <input type="text" class="form-control" name="contactPhone" ng-model="contactPhone" required />
+                                <input type="text" class="form-control" name="contactPhone" ng-model="contactPhone" />
                             </div>
                         </div>
                     </div>
@@ -124,7 +141,7 @@
                         <div class="form-group">
                             <label class="col-md-8">Email</label>
                             <div class="col-md-10">
-                                <input type="email" class="form-control" name="contactEmail" ng-model="contactEmail" required />
+                                <input type="email" class="form-control" name="contactEmail" ng-model="contactEmail" />
                             </div>
                         </div>
                     </div>
@@ -132,7 +149,7 @@
                         <div class="form-group">
                             <label class="col-md-12">Area</label>
                             <div class="col-md-10">
-                                <input type="text" class="form-control" name="contactArea" ng-model="contactArea" required />
+                                <input type="text" class="form-control" name="contactArea" ng-model="contactArea" />
                             </div>
                         </div>
                     </div>
@@ -153,6 +170,7 @@
 
             </div>
         </div>
+
     }
 
 
@@ -179,20 +197,34 @@
                     params: { customerName: $("#custumerName").val() },
                 }).then(function successCallback(response) {
                     $scope.contacts = response.data;
+                    for (i in response.data) {
+                        //alert(response.data[i]["crewName"]);
+                        batch.push({ 'contactName': response.data[i]["contactName"], 'contactPhone': response.data[i]["contactPhone"], 'contactEmail': response.data[i]["contactEmail"], 'contactArea': response.data[i]["contactArea"] })
+                    }
                 }, function errorCallback(response) {
                     
                 });
 
+                function isNumber(n) {
+                    return !isNaN(parseFloat(n)) && isFinite(n);
+                }
 
                 $scope.addRow = function () {
                     if ($scope.contactName != null && $scope.contactPhone != null && $scope.contactEmail != null && $scope.contactArea != null)
                     {
-                        batch.push({ 'contactName': $scope.contactName, 'contactPhone': $scope.contactPhone, 'contactEmail': $scope.contactEmail, 'contactArea': $scope.contactArea });
-                        $scope.contacts.push({ 'contactName': $scope.contactName, 'contactPhone': $scope.contactPhone, 'contactEmail': $scope.contactEmail, 'contactArea': $scope.contactArea });
-                        $scope.contactName = '';
-                        $scope.contactPhone = '';
-                        $scope.contactEmail = '';
-                        $scope.contactArea = '';
+                        if (isNumber($scope.contactPhone)) {
+                            batch.push({ 'contactName': $scope.contactName, 'contactPhone': $scope.contactPhone, 'contactEmail': $scope.contactEmail, 'contactArea': $scope.contactArea });
+                            $scope.contacts.push({ 'contactName': $scope.contactName, 'contactPhone': $scope.contactPhone, 'contactEmail': $scope.contactEmail, 'contactArea': $scope.contactArea });
+                            $scope.contactName = '';
+                            $scope.contactPhone = '';
+                            $scope.contactEmail = '';
+                            $scope.contactArea = '';
+                        }
+                        else {
+                            $("#lbError").empty();
+                            $("#lbError").append("Contact Phone should be a number");
+                            $('html, body').animate({ scrollTop: 0 }, 'slow');
+                        }
                     }
                     else
                     {
@@ -204,7 +236,7 @@
                     var index = -1;
                     var comArr = eval($scope.contacts);
                     for (var i = 0; i < comArr.length; i++) {
-                        if (comArr[i].name === name) {
+                        if (comArr[i].contactName === name) {
                             index = i;
                             break;
                         }
@@ -241,19 +273,13 @@
                         url: '@Url.Action("EditCustomer")',
                         data: json,
                         success: function (response) {
-                            if (response == true) {
+                            
+                            if (response == true)
                                 window.location = '@Url.Action("CustomersIndex", "Administration")';
-                            }
-                            else {
-                                if (response == false) {
-                                    $("#lbError").empty();
-                                    $("#lbError").append("An error ocurred, please try again.");
-                                }
-                                else {
-                                    $("#lbError").empty();
-                                    $("#lbError").append(response);
-                                }
-                            }
+                            else
+                                $("#lbError").empty();
+                                $("#lbError").append(response);
+                                $('html, body').animate({ scrollTop: 0 }, 'slow');
                         }
                     });
                 }

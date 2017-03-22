@@ -83,6 +83,9 @@
       <DependentUpon>JneCommSitesModel.edmx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="T_ActivityLog.cs">
+      <DependentUpon>JneCommSitesModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="T_Certifications.cs">
       <DependentUpon>JneCommSitesModel.tt</DependentUpon>
     </Compile>
@@ -104,7 +107,16 @@
     <Compile Include="T_PaymentPeriod.cs">
       <DependentUpon>JneCommSitesModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="T_Purchase.cs">
+      <DependentUpon>JneCommSitesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="T_PurchaseType.cs">
+      <DependentUpon>JneCommSitesModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="T_Sites.cs">
+      <DependentUpon>JneCommSitesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="T_TaskProgress.cs">
       <DependentUpon>JneCommSitesModel.tt</DependentUpon>
     </Compile>
     <Compile Include="T_TechEvolutionCodes.cs">

@@ -1,8 +1,24 @@
 ﻿@model JneCommSitesManagement.Models.EmployeeModel
+@using JneCommSitesManagement.Helper;
 
 @{
-    ViewBag.Title = "EditEmployee";
-    Layout = "~/Views/Shared/_LayoutJneCommSites.cshtml";
+    ViewBag.Title = "Edit Crew Employee";
+}
+
+@{
+    var queryCrewRol = Helper.GetCrewRoleByUser(User.Identity.Name);
+    if (queryCrewRol != null)
+    {
+        if (queryCrewRol == "LEADER")
+        {
+            Layout = "~/Views/Shared/_LayoutCrewJneCommSites.cshtml";
+        }
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_LayoutJneCommSites.cshtml";
+    }
+
 }
 
 
@@ -145,13 +161,13 @@
                         Expiration Time
                     </th>
                     <th>
-                        Upload Doc.
+                        Upload New Image
                     </th>
                     <th>
                         Show Doc.
                     </th>
                     <th>
-                        IsActive
+                        Is Active
                     </th>
                 </tr>
                 @for (int i = 0; i < Model._ListCertifications.Count(); i++)

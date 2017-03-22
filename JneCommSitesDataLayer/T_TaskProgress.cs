@@ -12,24 +12,19 @@ namespace JneCommSitesDataLayer
     using System;
     using System.Collections.Generic;
     
-    public partial class T_USAStates
+    public partial class T_TaskProgress
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public T_USAStates()
+        public T_TaskProgress()
         {
-            this.T_Customer = new HashSet<T_Customer>();
-            this.T_Sites = new HashSet<T_Sites>();
-            this.T_UsersData = new HashSet<T_UsersData>();
+            this.T_ActivityLog = new HashSet<T_ActivityLog>();
         }
     
-        public string vStateName { get; set; }
-        public string vStateCode { get; set; }
+        public int iTaskProgressID { get; set; }
+        public string vTaskProgressName { get; set; }
+        public string vTaskDescription { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<T_Customer> T_Customer { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<T_Sites> T_Sites { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<T_UsersData> T_UsersData { get; set; }
+        public virtual ICollection<T_ActivityLog> T_ActivityLog { get; set; }
     }
 }

@@ -1,9 +1,25 @@
 ﻿@model JneCommSitesManagement.Models.CreateUserModel
 @using JneCommSitesManagement.Helper
 
+
 @{
-    ViewBag.Title = "CreateUser";
-    Layout = "~/Views/Shared/_LayoutJneCommSites.cshtml";
+    ViewBag.Title = "Create User";
+}
+
+@{
+    var queryCrewRol = Helper.GetCrewRoleByUser(User.Identity.Name);
+    if (queryCrewRol != null)
+    {
+        if (queryCrewRol == "LEADER")
+        {
+            Layout = "~/Views/Shared/_LayoutCrewJneCommSites.cshtml";
+        }
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_LayoutJneCommSites.cshtml";
+    }
+
 }
 
 <h3 class="text-info"> Create User</h3>

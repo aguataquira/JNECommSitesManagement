@@ -1,10 +1,24 @@
 ﻿@model JneCommSitesManagement.Models.SiteModel
-
+@using JneCommSitesManagement.Helper;
 @{
-    ViewBag.Title = "CreateSite";
-    Layout = "~/Views/Shared/_LayoutJneCommSites.cshtml";
+    ViewBag.Title = "Create Site";
 }
 
+@{
+    var queryCrewRol = Helper.GetCrewRoleByUser(User.Identity.Name);
+    if (queryCrewRol != null)
+    {
+        if (queryCrewRol == "LEADER")
+        {
+            Layout = "~/Views/Shared/_LayoutCrewJneCommSites.cshtml";
+        }
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_LayoutJneCommSites.cshtml";
+    }
+
+}
 
 <h3 class="text-info"> Create Site</h3>
 

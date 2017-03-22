@@ -12,29 +12,30 @@ namespace JneCommSitesDataLayer
     using System;
     using System.Collections.Generic;
     
-    public partial class T_Sites
+    public partial class T_ActivityLog
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public T_Sites()
+        public T_ActivityLog()
         {
-            this.AspNetUsers = new HashSet<AspNetUsers>();
-            this.T_ActivityLog = new HashSet<T_ActivityLog>();
+            this.T_Purchase = new HashSet<T_Purchase>();
+            this.T_TaskProgress = new HashSet<T_TaskProgress>();
         }
     
+        public int iActivityLogID { get; set; }
+        public string Id { get; set; }
         public string vSiteName { get; set; }
-        public string vAddress { get; set; }
-        public string vCity { get; set; }
-        public string vStateCode { get; set; }
-        public string vTechEvolutionCodeName { get; set; }
-        public string vCustomerName { get; set; }
-        public string vReferalOrderName { get; set; }
+        public System.DateTime dtStartWorkingDay { get; set; }
+        public Nullable<System.DateTime> dtArrivingToWareHouse { get; set; }
+        public Nullable<System.DateTime> dtDepartureFromWereHouse { get; set; }
+        public Nullable<System.DateTime> dtEndWorkingDay { get; set; }
+        public Nullable<int> iProgress { get; set; }
+        public string vNotes { get; set; }
     
-        public virtual T_Customer T_Customer { get; set; }
-        public virtual T_TechEvolutionCodes T_TechEvolutionCodes { get; set; }
-        public virtual T_USAStates T_USAStates { get; set; }
+        public virtual AspNetUsers AspNetUsers { get; set; }
+        public virtual T_Sites T_Sites { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<AspNetUsers> AspNetUsers { get; set; }
+        public virtual ICollection<T_Purchase> T_Purchase { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<T_ActivityLog> T_ActivityLog { get; set; }
+        public virtual ICollection<T_TaskProgress> T_TaskProgress { get; set; }
     }
 }

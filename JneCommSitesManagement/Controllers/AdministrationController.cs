@@ -112,7 +112,9 @@ namespace JneCommSitesManagement.Controllers
 
                 return Json(true);
             }
-            return Json(false);
+            if (model._ListContacts == null)
+                return Json("You need add a contact for the costumer.");
+            return Json("There is a error, please try again.");
         }
 
 
@@ -199,7 +201,7 @@ namespace JneCommSitesManagement.Controllers
                     return Json(error.Message);
                 }
             }
-            return View(model);
+            return Json("There is a error, Please try again.");
 
         }
 
@@ -571,6 +573,15 @@ namespace JneCommSitesManagement.Controllers
         #region Sites
         public ActionResult SitesIndex()
         {
+
+            var queryCrewRol = Helper.Helper.GetCrewRoleByUser(HttpContext.User.Identity.Name);
+            if (queryCrewRol != null)
+            {
+                if (queryCrewRol != "LEADER")
+                {
+                    return RedirectToAction("Mobile/CreateActivityLogOptions");
+                }
+            }
             JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
             var querySites = (from p in _dbContext.T_Sites
                               orderby p.vSiteName ascending
@@ -723,9 +734,9 @@ namespace JneCommSitesManagement.Controllers
                 }
                 _dbContext.SaveChanges();
 
-                return View();
+                return Json(true);
             }
-                return View();
+                return Json("An error ocurred, please try again.");
         }
 
 

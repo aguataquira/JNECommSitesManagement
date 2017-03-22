@@ -186,12 +186,14 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MaintenanceController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\MobileController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helper\Helper.cs" />
     <Compile Include="Helper\HelperUI.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\ActivityLogsModels.cs" />
     <Compile Include="Models\CertificationModel.cs" />
     <Compile Include="Models\CrewRolModel.cs" />
     <Compile Include="Models\CustomerModels.cs" />
@@ -225,6 +227,7 @@
     <Content Include="Content\Jne Icons\JeCommRolesIcon.png" />
     <Content Include="Content\Jne Icons\JeCommTechEvolutionCodesIcon.png" />
     <Content Include="Content\Jne Icons\JeCommUserIcon.png" />
+    <Content Include="Content\Jne Icons\JeCommMobileIcon.png" />
     <Content Include="Content\Jne Icons\SitesIcon.png" />
     <Content Include="Content\JNet Images\AccessDenied.png" />
     <Content Include="Content\JNet Images\JeCommSitesLogo.png" />
@@ -306,7 +309,7 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Shared\_LayoutJneCommSites.cshtml" />
+    <Content Include="Views\Shared\_LayoutCrewJneCommSites.cshtml" />
     <Content Include="Views\Maintenance\UsersIndex.cshtml" />
     <Content Include="Views\Maintenance\CreateUser.cshtml" />
     <Content Include="Views\Maintenance\EditUser.cshtml" />
@@ -332,9 +335,14 @@
     <Content Include="Views\Administration\SitesIndex.cshtml" />
     <Content Include="Views\Administration\CreateSite.cshtml" />
     <Content Include="Views\Administration\EditSite.cshtml" />
+    <Content Include="Views\Shared\_LayoutJneCommSites.cshtml" />
+    <Content Include="Views\Mobile\CreateActivityLogOptions.cshtml" />
+    <Content Include="Views\Mobile\Purchase.cshtml" />
+    <Content Include="Views\Mobile\EndWorkingDay.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Documents\Invoices\" />
     <Folder Include="Documents\ReferalOrder\" />
   </ItemGroup>
   <ItemGroup>

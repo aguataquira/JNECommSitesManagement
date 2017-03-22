@@ -26,6 +26,16 @@ namespace JneCommSitesManagement.Helper
             return items;
         }
 
+        public static string GetCrewRoleByUser(string userName)
+        {
+            JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
+            string queryRol = (from p in _dbContext.T_CrewRoles
+                               from d in p.AspNetUsers
+                                where d.UserName == userName
+                                select p.vCrewRoleName).FirstOrDefault();
+            return queryRol;
+        }
+
         public static List<Entry> GetCustomers()
         {
             JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
@@ -42,8 +52,7 @@ namespace JneCommSitesManagement.Helper
             }
             return items;
         }
-
-
+        
         public static List<Entry> GetTechEvolutionCodes()
         {
             JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
@@ -61,6 +70,106 @@ namespace JneCommSitesManagement.Helper
             return items;
         }
 
+        public static List<Entry> GetSitesAssignedToUserCrew(string userName)
+        {
+            JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
+            var querySites = (from d in _dbContext.T_Sites
+                                from p in d.AspNetUsers
+                                where p.UserName == userName
+                                select d);
+            
+            List<Entry> items = new List<Entry>();
+
+            foreach (JneCommSitesDataLayer.T_Sites item in querySites)
+            {
+                items.Add(new Entry
+                {
+                    ID = item.vSiteName,
+                    Description = item.vSiteName
+                });
+            }
+
+            return items;
+        }
+
+        public static List<Entry> GetActivityLogOptions()
+        {
+            List<Entry> items = new List<Entry>();
+            
+                items.Add(new Entry
+                {
+                    ID = "StartWorkingDay",
+                    Description = "Start Working Day - Inicio Jornada"
+                });
+
+                items.Add(new Entry
+                {
+                    ID = "ArrivingWareHouse",
+                    Description = "Arriving WareHouse - Llegada a Bodega"
+                });
+
+                items.Add(new Entry
+                {
+                    ID = "DepartureWareHouse",
+                    Description = "Departure WareHouse - Salida Bodega"
+                });
+
+                items.Add(new Entry
+                {
+                    ID = "Shopping",
+                    Description = "Shoping - Compra"
+                });
+
+                items.Add(new Entry
+                {
+                    ID = "Fuel",
+                    Description = "Fuel"
+                });
+
+                items.Add(new Entry
+                {
+                    ID = "Hotel",
+                    Description = "Hotel"
+                });
+            
+                items.Add(new Entry
+                {
+                    ID = "EndWorkingDay",
+                    Description = "End Working Day - Finalizar Jornada"
+                });
+
+            return items;
+        }
+
+        public static List<Entry> GetActivityProgress()
+        {
+            List<Entry> items = new List<Entry>();
+
+            items.Add(new Entry
+            {
+                ID = "25",
+                Description = "25%"
+            });
+
+            items.Add(new Entry
+            {
+                ID = "50",
+                Description = "50%"
+            });
+
+            items.Add(new Entry
+            {
+                ID = "75",
+                Description = "75%"
+            });
+
+            items.Add(new Entry
+            {
+                ID = "100",
+                Description = "100%"
+            });
+            return items;
+        }
 
         public static List<Entry> GetCrewUser()
         {
@@ -155,7 +264,38 @@ namespace JneCommSitesManagement.Helper
             }
             return listPermission;
         }
+        
+        public static List<ListBoxHelper> GetActivityLogOptions(int activityLogID)
+        {
+            JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
+            List<JneCommSitesDataLayer.T_TaskProgress> itemList = (from p in _dbContext.T_TaskProgress
+                                                                 select p).ToList();
 
+            List<ListBoxHelper> listTaskProgress = new List<ListBoxHelper>();
+
+            foreach (JneCommSitesDataLayer.T_TaskProgress item in itemList)
+            {
+                bool selected = false;
+                var taskByActivityLog = (from p in _dbContext.T_TaskProgress
+                                         from d in p.T_ActivityLog
+                                          where d.iActivityLogID == activityLogID
+                                          select p);
+                foreach (var itemTask in taskByActivityLog)
+                {
+                    if (itemTask.iTaskProgressID == item.iTaskProgressID)
+                        selected = true;
+                }
+                listTaskProgress.Add(new ListBoxHelper
+                {
+                    Selected = selected,
+                    isChildren = false,
+                    Text = item.vTaskProgressName,
+                    Value = item.iTaskProgressID.ToString(),
+                });
+            }
+            return listTaskProgress;
+        }
+        
         public static List<Entry> GetUSAStates()
         {
             JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
