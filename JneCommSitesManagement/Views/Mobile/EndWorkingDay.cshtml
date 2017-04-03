@@ -20,10 +20,10 @@
 
             <div class="col-md-6">
                 <div class="form-group">
-                    @Html.LabelFor(model => model.sitePurchase, htmlAttributes: new { @class = "control-label col-md-4" })
+                    @Html.LabelFor(model => model.siteID, htmlAttributes: new { @class = "control-label col-md-4" })
                     <div class="col-md-8">
-                        @Html.EditorFor(model => model.sitePurchase, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-                        @Html.ValidationMessageFor(model => model.sitePurchase, "", new { @class = "text-danger" })
+                        @Html.EditorFor(model => model.siteID, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        @Html.ValidationMessageFor(model => model.siteID, "", new { @class = "text-danger" })
                     </div>
                 </div>
             </div>
@@ -98,18 +98,54 @@
     <script>
 
         $(document).ready(function () {
-            alert();
-            var date = new Date();
-            $("#endWorkingDayCheckPoint").val(date.toISOString().substring(0, 19).replace("T", " "));
+            var d = new Date;
+            var actualDate = formatDate(d, 4);
+            $("#endWorkingDayCheckPoint").val(actualDate);
+            window.setInterval(updateCheckPoint, 500000);
         });
 
-    window.setInterval(updateCheckPoint, 500000);
     
     function updateCheckPoint() {
-        var date = new Date();
-        $("#endWorkingDayCheckPoint").val(date.toISOString().substring(0, 19).replace("T", " "));
+        var d = new Date;
+        var actualDate = formatDate(d, 3);
+        $("#endWorkingDayCheckPoint").val(actualDate);
     }
 
+    function formatDate(dateObj, format) {
+        var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        var curr_date = dateObj.getDate();
+        var curr_month = dateObj.getMonth();
+        curr_month = curr_month + 1;
+        var curr_year = dateObj.getFullYear();
+        var curr_min = dateObj.getMinutes();
+        var curr_hr = dateObj.getHours();
+        var curr_sc = dateObj.getSeconds();
+        if (curr_month.toString().length == 1)
+            curr_month = '0' + curr_month;
+        if (curr_date.toString().length == 1)
+            curr_date = '0' + curr_date;
+        if (curr_hr.toString().length == 1)
+            curr_hr = '0' + curr_hr;
+        if (curr_min.toString().length == 1)
+            curr_min = '0' + curr_min;
+
+        if (format == 1)//dd-mm-yyyy
+        {
+            return curr_date + "-" + curr_month + "-" + curr_year;
+        }
+        else if (format == 2)//yyyy-mm-dd
+        {
+            return curr_year + "-" + curr_month + "-" + curr_date;
+        }
+        else if (format == 3)//dd/mm/yyyy
+        {
+            return curr_date + "/" + curr_month + "/" + curr_year;
+        }
+        else if (format == 4)// MM/dd/yyyy HH:mm:ss
+        {
+            return curr_month + "/" + curr_date + "/" + curr_year + " " + curr_hr + ":" + curr_min + ":" + curr_sc;
+        }
+    }
     </script>
 
 }

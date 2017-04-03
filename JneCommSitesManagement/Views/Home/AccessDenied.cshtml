@@ -1,7 +1,17 @@
-﻿
+﻿@using JneCommSitesManagement.Helper;
+
 @{
-    ViewBag.Title = "AccessDenied";
-    Layout = "~/Views/Shared/_LayoutJneCommSites.cshtml";
+    ViewBag.Title = "Access Denied";
+    var queryCrewRol = Helper.GetCrewRoleByUser(User.Identity.Name);
+    if (queryCrewRol != null)
+    {
+        Layout = "~/Views/Shared/_LayoutCrewJneCommSites.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_LayoutJneCommSites.cshtml";
+    }
+
 }
 <br />
 <br />

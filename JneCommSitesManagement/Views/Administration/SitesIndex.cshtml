@@ -8,10 +8,7 @@
     var queryCrewRol = Helper.GetCrewRoleByUser(User.Identity.Name);
     if (queryCrewRol != null)
     {
-        if (queryCrewRol == "LEADER")
-        {
             Layout = "~/Views/Shared/_LayoutCrewJneCommSites.cshtml";
-        }
     }
     else
     {
@@ -42,8 +39,8 @@
         <th>
             @Html.DisplayName("Customer Name")
         </th>
-        <th>
-
+        <th colspan="3">
+            @Html.DisplayName("Actions")
         </th>
     </tr>
 
@@ -62,7 +59,13 @@
             @Html.DisplayFor(modelItem => item.vCustomerName)
         </td>
         <td>
-            @Html.ActionLink("Edit Site", "EditSite", new { siteName = item.vSiteName }) 
+            @Html.ActionLink("Edit", "EditSite", new { siteName = item.vSiteName},  new { @class = "btn btn-info" }) 
+        </td>
+        <td>
+            @Html.ActionLink("Expenses", "SiteExpenses", new { siteName = item.vSiteName }, new { @class = "btn btn-info" })
+        </td>
+        <td>
+            @Html.ActionLink("Progress", "SiteProgress", new { siteName = item.vSiteName }, new { @class = "btn btn-info" })
         </td>
     </tr>
 }

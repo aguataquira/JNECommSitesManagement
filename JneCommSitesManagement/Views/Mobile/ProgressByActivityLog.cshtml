@@ -1,0 +1,71 @@
+﻿
+@{
+    ViewBag.Title = "ProgressByActivityLog";
+    Layout = "~/Views/Shared/_LayoutCrewJneCommSites.cshtml";
+}
+
+<h3 class="text-info"> Your Time  - Tu Tiempo</h3>
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="table-bordered table-hover" style="min-width:100%">
+            <tr class="alert-info">
+                <th>Employee - Empleado</th>
+                <th>Horas Hasta el {{date | date:'yyyy-MM-dd'}}</th>
+                <th>Horas de trabajo</th>
+                <th>Total Horas</th>
+            </tr>
+            <tr></tr>
+            <tr ng-repeat="item in PayRollInformation">
+                <td>
+                    {{item.employee}}
+                </td>
+                <td>
+                    {{item.lastHours}}
+                </td>
+                <td>
+                    {{item.todayHours}}
+                </td>
+                <td>
+                    {{item.totalHours}}
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<br />
+<br />
+<div>
+    @Html.ActionLink("Back to Activity Log option", "CreateActivityLogOptions")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/angular.js")
+    @Scripts.Render("~/Scripts/Json.js")
+    <script src="~/Scripts/jquery-ui.js"></script>
+    <link href="~/Content/images/jquery-ui.css" rel="stylesheet" />
+    <link href="~/Content/images/theme.css" rel="stylesheet" />
+
+
+
+    <script>
+            var appController = angular.module("JeCommAPP", []);
+
+            appController.controller("JeCommController", function ($scope, $http) {
+
+                $scope.date = new Date();
+                $scope.PayRollInformation = [];
+
+                $http({
+                    method: 'GET',
+                    url: '@Url.Action("GetHoursCrew")',
+                }).then(function successCallback(response) {
+                    $scope.PayRollInformation = response.data;
+                },
+                    function errorCallback(response) {
+                    });
+            });
+    </script>
+
+}

@@ -1,0 +1,72 @@
+﻿@model JneCommSitesManagement.Models.SiteModel
+
+@using JneCommSitesManagement.Helper;
+
+@{
+    ViewBag.Title = "Site Progress";
+}
+
+@{
+    var queryCrewRol = Helper.GetCrewRoleByUser(User.Identity.Name);
+    if (queryCrewRol != null)
+    {
+        Layout = "~/Views/Shared/_LayoutCrewJneCommSites.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_LayoutJneCommSites.cshtml";
+    }
+
+}
+
+
+<h3 class="text-info"> Site Progress for @Model.siteName</h3>
+<input type="text" id="siteName" ng-show="false" value="@Model.siteName" />
+<div ng-repeat="item in progress">
+    <div class="panel panel-default">
+        <div class="panel-heading">Activity Date: {{item.dateActivity}}</div>
+        <div class="panel-body">
+            <p> <b>Leader Crew at Site:</b> {{item.leaderCrew}}</p>
+            <p> <b>Notes by Leader Crew:</b> {{item.notes}}</p>
+            <p> <b>Progress:</b> {{item.progress}}</p>
+            <p> <b>Activities Done: </b></p>
+            <ul class="list-inline" ng-repeat="items in item.activitiesDone">
+                <li class="list-group-item list-group-item-success" >{{items}}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/angular.js")
+    @Scripts.Render("~/Scripts/Json.js")
+    <script src="~/Scripts/jquery-ui.js"></script>
+    <link href="~/Content/images/jquery-ui.css" rel="stylesheet" />
+    <link href="~/Content/images/theme.css" rel="stylesheet" />
+
+
+
+    <script>
+
+
+        var helloApp = angular.module("JeCommAPP", []);
+        helloApp.controller("JeCommController", function ($scope, $http) {
+
+            $scope.progress = [];
+
+            $http({
+                method: 'GET',
+                url: '@Url.Action("GetActivityLogsBySite")',
+                params: { siteName: $("#siteName").val() },
+            }).then(function successCallback(response) {
+                $scope.progress = response.data;
+            },
+                function errorCallback(response) {
+                });
+            
+        });
+
+    </script>
+
+}

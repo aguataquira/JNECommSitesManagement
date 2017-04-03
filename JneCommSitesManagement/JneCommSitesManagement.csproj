@@ -246,7 +246,6 @@
     <Content Include="Content\images\ui-icons_3d80b3_256x240.png" />
     <Content Include="Content\images\ui-icons_72a7cf_256x240.png" />
     <Content Include="Content\images\ui-icons_ffffff_256x240.png" />
-    <Content Include="Documents\Certifications\16473391_1484455148255048_1081001690120436240_n.jpg" />
     <Content Include="Documents\Certifications\NoFileUpload.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -339,6 +338,9 @@
     <Content Include="Views\Mobile\CreateActivityLogOptions.cshtml" />
     <Content Include="Views\Mobile\Purchase.cshtml" />
     <Content Include="Views\Mobile\EndWorkingDay.cshtml" />
+    <Content Include="Views\Mobile\ProgressByActivityLog.cshtml" />
+    <Content Include="Views\Administration\SiteExpenses.cshtml" />
+    <Content Include="Views\Administration\SiteProgress.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

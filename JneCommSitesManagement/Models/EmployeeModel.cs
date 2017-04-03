@@ -59,6 +59,7 @@ namespace JneCommSitesManagement.Models
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Labor hour is Required")]
+        [Range(0.01, 40.00, ErrorMessage = "Price must be between 0.01 and 40.00")]
         [Display(Name = "Labor Hour $")]
         public double laborHour { get; set; }
 

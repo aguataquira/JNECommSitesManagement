@@ -1,0 +1,96 @@
+﻿@model JneCommSitesManagement.Models.SiteModel
+
+@using JneCommSitesManagement.Helper;
+
+@{
+    ViewBag.Title = "Site Expenses";
+}
+
+@{
+    var queryCrewRol = Helper.GetCrewRoleByUser(User.Identity.Name);
+    if (queryCrewRol != null)
+    {
+        Layout = "~/Views/Shared/_LayoutCrewJneCommSites.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_LayoutJneCommSites.cshtml";
+    }
+
+}
+
+
+<h3 class="text-info"> Site Expenses for @Model.siteName</h3>
+
+<input type="text" id="siteName" ng-show="false" value="@Model.siteName"/>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Expenses History</div>
+    <div class="panel-body">
+        <p>You can find here the expenses for the Site.</p>
+        <p class="">
+            <table class="table-bordered table-hover" style="min-width:100%">
+                <tr class="alert-info">
+                    <th>Expense Date</th>
+                    <th>Description</th>
+                    <th>Expense Type</th>
+                    <th>Value</th>
+                    <th>Total</th>
+                </tr>
+                <tr></tr>
+                <tr ng-repeat="item in expenses">
+                    <td>
+                        {{item.datePurchase}}
+                    </td>
+                    <td>
+                        {{item.purchaseDescription}}
+                    </td>
+                    <td>
+                        {{item.purchaseType}}
+                    </td>
+                    <td>
+                        {{item.valuePurchase | currency:USD$:2}}
+                    </td>
+                    <td>
+                        {{item.totalExpenses | currency:USD$:2}}
+                    </td>
+                </tr>
+            </table>
+        </p>
+    </div>
+</div>
+
+<div>
+    @Html.ActionLink("Back to List", "SitesIndex")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/angular.js")
+    @Scripts.Render("~/Scripts/Json.js")
+    <script src="~/Scripts/jquery-ui.js"></script>
+    <link href="~/Content/images/jquery-ui.css" rel="stylesheet" />
+    <link href="~/Content/images/theme.css" rel="stylesheet" />
+
+
+
+    <script>
+        var helloApp = angular.module("JeCommAPP", []);
+        helloApp.controller("JeCommController", function ($scope, $http) {
+
+            $scope.expenses = [];
+
+            $http({
+                method: 'GET',
+                url: '@Url.Action("GetExpensesBySite")',
+                params: { siteName: $("#siteName").val() },
+            }).then(function successCallback(response) {
+                $scope.expenses = response.data;
+            },
+                function errorCallback(response) {
+                });
+        });
+
+    </script>
+
+}

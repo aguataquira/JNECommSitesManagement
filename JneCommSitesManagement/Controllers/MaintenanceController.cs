@@ -109,6 +109,7 @@ namespace JneCommSitesManagement.Controllers
                         newUserData.UserFirstName = model.firstName;
                         newUserData.UserLastName = model.LastName;
                         newUserData.NumDaysForPassChange = model.daysChangePass;
+                        newUserData.vStateCode = "TX";
                         newUserData.UserDescription = model.Description;
                         newUserData.ForcePassChange = model.forcePassChange;
 

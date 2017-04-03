@@ -7,10 +7,10 @@
 
 <h3 class="text-info"> Select a Activity - Seleccione una Actividad</h3>
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <hr />
         <div class="row">
@@ -28,26 +28,26 @@
                 <div class="form-group">
                     @Html.LabelFor(model => model.checkPoint, htmlAttributes: new { @class = "control-label col-md-4" })
                     <div class="col-md-8">
-                        @Html.EditorFor(model => model.checkPoint, new { htmlAttributes = new { ng_model = "checkPoint", @class = "form-control", @readonly = "readonly" } })
+                        @Html.EditorFor(model => model.checkPoint, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
                         @Html.ValidationMessageFor(model => model.checkPoint, "", new { @class = "text-danger" })
                     </div>
                 </div>
             </div>
             @if (string.IsNullOrEmpty(Model.site))
-            { 
-            <div class="col-md-6" ng-hide="dvSitesHidden">
-                <div class="form-group">
-                    @Html.LabelFor(model => model.site, htmlAttributes: new { @class = "control-label col-md-4" })
-                    <div class="col-md-8">
-                        @Html.DropDownListFor(model => model.site, new SelectList(Model._SitesList, "ID", "Description"), "--Select a Option--", new { ng_model = "ddlSite", style = "width: 300px; height: 30px;" })
-                        @Html.ValidationMessageFor(model => model.site, "", new { @class = "text-danger" })
+            {
+                <div class="col-md-6" ng-hide="dvSitesHidden">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.site, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @Html.DropDownListFor(model => model.site, new SelectList(Model._SitesList, "ID", "Description"), "--Select a Option--", new { ng_model = "ddlSite", style = "width: 300px; height: 30px;" })
+                            @Html.ValidationMessageFor(model => model.site, "", new { @class = "text-danger" })
+                        </div>
                     </div>
                 </div>
-            </div>
             }
             else
             {
-                <div class="col-md-6" >
+                <div class="col-md-6">
                     <div class="form-group">
                         @Html.LabelFor(model => model.site, htmlAttributes: new { @class = "control-label col-md-4" })
                         <div class="col-md-8">
@@ -59,24 +59,26 @@
             }
         </div>
         <div class="form-group">
-            <div class="col-md-offset-0 col-md-12">
+            <div class="col-md-offset-0 col-md-2">
                 <input type="submit" value="Go / Save" class="btn btn-primary" />
+            </div>
+            <div class="col-md-offset-0 col-md-2">
+                <input type="button" value="Time Sheet" class="btn btn-primary"  onclick="location.href='@Url.Action("ProgressByActivityLog", "Mobile")'"/>
             </div>
         </div>
 
-        
 
-        <table class="table-striped" style="min-width:100%">
-            <tr>
+
+        <table class="table-bordered table-hover" style="min-width:100%">
+            <tr class="alert-info">
                 <th>Start Working Day</th>
                 <th>Arriving Warehouse</th>
                 <th>Departure Warehouse</th>
                 <th>End Working Day</th>
                 <th>Site</th>
             </tr>
-            <tr>
-               
-            </tr><tr ng-repeat="item in ActivityCheckPoints">
+            <tr></tr>
+            <tr ng-repeat="item in ActivityCheckPoints">
                 <td>
                     {{item.StartWorkingDay}}
                 </td>
@@ -108,63 +110,105 @@
 
 
 
-<script>
+    <script>
+
+        $(document).ready(function () {
+            var d = new Date;
+            var actualDate = formatDate(d, 4);
+            $("#checkPoint").val(actualDate);
+            window.setInterval(updateCheckPoint, 500000);
+        });
 
 
-    window.setInterval(updateCheckPoint, 10000);
+        function updateCheckPoint() {
+            var d = new Date;
+            var actualDate = formatDate(d, 3);
+            $("#checkPoint").val(actualDate);
+        }
 
-    function updateCheckPoint() {
-        var test = new Date();
-        $("#checkPoint").val(test.toISOString().substring(0, 19).replace("T", " "));
-    }
 
+        function formatDate(dateObj, format) {
+            var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            var curr_date = dateObj.getDate();
+            var curr_month = dateObj.getMonth();
+            curr_month = curr_month + 1;
+            var curr_year = dateObj.getFullYear();
+            var curr_min = dateObj.getMinutes();
+            var curr_hr = dateObj.getHours();
+            var curr_sc = dateObj.getSeconds();
+            if (curr_month.toString().length == 1)
+                curr_month = '0' + curr_month;
+            if (curr_date.toString().length == 1)
+                curr_date = '0' + curr_date;
+            if (curr_hr.toString().length == 1)
+                curr_hr = '0' + curr_hr;
+            if (curr_min.toString().length == 1)
+                curr_min = '0' + curr_min;
+
+            if (format == 1)//dd-mm-yyyy
+            {
+                return curr_date + "-" + curr_month + "-" + curr_year;
+            }
+            else if (format == 2)//yyyy-mm-dd
+            {
+                return curr_year + "-" + curr_month + "-" + curr_date;
+            }
+            else if (format == 3)//dd/mm/yyyy
+            {
+                return curr_date + "/" + curr_month + "/" + curr_year;
+            }
+            else if (format == 4)// MM/dd/yyyy HH:mm:ss
+            {
+                return curr_month + "/" + curr_date + "/" + curr_year + " " + curr_hr + ":" + curr_min + ":" + curr_sc;
+            }
+        }
 
         var batch = new Array();
 
-       
 
-            var helloApp = angular.module("JeCommAPP", []);
-            helloApp.controller("JeCommController", function ($scope, $http) {
-                $scope.dvSitesHidden = true;
-                $scope.ActivityCheckPoints = [];
 
-                $scope.changedValue = function (item) {
-                    
-                    
-                        var test = new Date();
-                        $scope.checkPoint = test.toISOString().substring(0, 19).replace("T", " ");
-                    
-                    switch(item)
-                    {
-                        case "DepartureWareHouse":
-                            $scope.dvSitesHidden = false;
-                            break;
-                        case "Shopping":
-                            $scope.dvSitesHidden = false;
-                            break;
-                        case "Fuel":
-                            $scope.dvSitesHidden = false;
-                            break;
-                        case "Hotel":
-                            $scope.dvSitesHidden = false;
-                            break;
-                        default:
-                            $scope.dvSitesHidden = true;
-                            break;
-                    }
+        var helloApp = angular.module("JeCommAPP", []);
+        helloApp.controller("JeCommController", function ($scope, $http) {
+            $scope.dvSitesHidden = true;
+            $scope.ActivityCheckPoints = [];
+
+            $scope.changedValue = function (item) {
+
+
+                //var d = new Date;
+                //var actualDate = formatDate(d, 4);
+                //$("#checkPoint").val(actualDate);
+
+                switch (item) {
+                    case "DepartureWareHouse":
+                        $scope.dvSitesHidden = false;
+                        break;
+                    case "Shopping":
+                        $scope.dvSitesHidden = false;
+                        break;
+                    case "Fuel":
+                        $scope.dvSitesHidden = false;
+                        break;
+                    case "Hotel":
+                        $scope.dvSitesHidden = false;
+                        break;
+                    default:
+                        $scope.dvSitesHidden = false;
+                        break;
                 }
+            }
 
-                $http({
-                    method: 'GET',
-                    url: '@Url.Action("GetActivityLogsByUser")',
-                }).then(function successCallback(response) {
-                    $scope.ActivityCheckPoints = response.data;
-                },
-                    function errorCallback(response) {
-                });
-
+            $http({
+                method: 'GET',
+                url: '@Url.Action("GetActivityLogsByUser")',
+            }).then(function successCallback(response) {
+                $scope.ActivityCheckPoints = response.data;
+            },
+                function errorCallback(response) {
 
             });
+
+        });
 
     </script>
 

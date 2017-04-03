@@ -56,6 +56,15 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group">
+                    @Html.LabelFor(model => model.price, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.price, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.price, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
                     @Html.LabelFor(model => model.documentToUpload, htmlAttributes: new { @class = "control-label col-md-4" })
                     <div class="col-md-8">
                         @Html.TextBoxFor(model => model.documentToUpload, new { type = "file", accept = "image/png, image/jpeg", htmlAttributes = new { @class = "form-control" } })
@@ -77,15 +86,15 @@
 }
 
 
-<div id="dialog" title="Certification Document">
+<div id="dialog" title="Invoice - Factura">
     <img id="CertificationImage" src="" />
 </div>
 
 
 
 
-<table class="table-striped" style="min-width:100%">
-    <tr>
+<table class="table-bordered table-hover" style="min-width:100%">
+    <tr class="alert-info">
         <th>
             Description / Descripcion
         </th>
@@ -104,7 +113,7 @@
             {{item.purchaseDate}}
         </td>
         <td>
-            <button class="btn-success" ng-click="ShowImage("test")">Show Invoice</button>
+            <button class="btn btn-success" ng-click="ShowImage(item.invoiceName)">Show Invoice</button>
         </td>
     </tr>
 </table>
@@ -116,28 +125,82 @@
 
 
 @section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-    @Scripts.Render("~/Scripts/angular.js")
-    @Scripts.Render("~/Scripts/Json.js")
-    <script src="~/Scripts/jquery-ui.js"></script>
-    <link href="~/Content/images/jquery-ui.css" rel="stylesheet" />
-    <link href="~/Content/images/theme.css" rel="stylesheet" />
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/Scripts/angular.js")
+@Scripts.Render("~/Scripts/Json.js")
+<script src="~/Scripts/jquery-ui.js"></script>
+<link href="~/Content/images/jquery-ui.css" rel="stylesheet" />
+<link href="~/Content/images/theme.css" rel="stylesheet" />
 
     <script type="text/javascript">
         $(document).ready(function () {
-            var test = new Date();
-            $("#startPurchaseCheckPoint").val(test.toISOString().substring(0, 19).replace("T", " "));
+            var d = new Date;
+            var actualDate = formatDate(d, 4);
+            $("#startPurchaseCheckPoint").val(actualDate);
             window.setInterval(updateCheckPoint, 500000);
         });
 
         function updateCheckPoint() {
-            var actualDate = new Date();
-            $("#startPurchaseCheckPoint").val(actualDate.toISOString().substring(0, 19).replace("T", " "));
+            var d = new Date;
+            var actualDate = formatDate(d, 4);
+            $("#startPurchaseCheckPoint").val(actualDate);
         }
 
 
+        function formatDate(dateObj, format) {
+            var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            var curr_date = dateObj.getDate();
+            var curr_month = dateObj.getMonth();
+            curr_month = curr_month + 1;
+            var curr_year = dateObj.getFullYear();
+            var curr_min = dateObj.getMinutes();
+            var curr_hr = dateObj.getHours();
+            var curr_sc = dateObj.getSeconds();
+            if (curr_month.toString().length == 1)
+                curr_month = '0' + curr_month;
+            if (curr_date.toString().length == 1)
+                curr_date = '0' + curr_date;
+            if (curr_hr.toString().length == 1)
+                curr_hr = '0' + curr_hr;
+            if (curr_min.toString().length == 1)
+                curr_min = '0' + curr_min;
+
+            if (format == 1)//dd-mm-yyyy
+            {
+                return curr_date + "-" + curr_month + "-" + curr_year;
+            }
+            else if (format == 2)//yyyy-mm-dd
+            {
+                return curr_year + "-" + curr_month + "-" + curr_date;
+            }
+            else if (format == 3)//dd/mm/yyyy
+            {
+                return curr_date + "/" + curr_month + "/" + curr_year;
+            }
+            else if (format == 4)// MM/dd/yyyy HH:mm:ss
+            {
+                return curr_month + "/" + curr_date + "/" + curr_year + " " + curr_hr + ":" + curr_min + ":" + curr_sc;
+            }
+        }
     </script>
+
     <script type="text/javascript">
+
+        $("#dialog").dialog({
+            autoOpen: false,
+            maxWidth: 500,
+            maxHeight: 400,
+            width: 500,
+            height: 400,
+            show: {
+                effect: "blind",
+                duration: 1000
+            },
+            hide: {
+                effect: "explode",
+                duration: 1000
+            }
+        });
 
             var batch = new Array();
 
@@ -145,7 +208,9 @@
             helloApp.controller("JeCommController", function ($scope, $http) {
 
                 $scope.ShowImage = function (invoiceName) {
-                    alert(invoiceName);
+                    document.getElementById("CertificationImage").src = "/Documents/Invoices/" + invoiceName;
+                    $("#dialog").dialog("open");
+
                 };
 
                 $scope.contacts = [];

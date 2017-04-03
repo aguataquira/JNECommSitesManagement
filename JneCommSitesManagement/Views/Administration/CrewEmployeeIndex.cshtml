@@ -8,10 +8,7 @@
     var queryCrewRol = Helper.GetCrewRoleByUser(User.Identity.Name);
     if (queryCrewRol != null)
     {
-        if (queryCrewRol == "LEADER")
-        {
             Layout = "~/Views/Shared/_LayoutCrewJneCommSites.cshtml";
-        }
     }
     else
     {

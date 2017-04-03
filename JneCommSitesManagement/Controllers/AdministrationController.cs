@@ -14,6 +14,24 @@ using System.IO;
 
 namespace JneCommSitesManagement.Controllers
 {
+    public class ExpensesnBySite
+    {
+        public string datePurchase;
+        public string purchaseDescription;
+        public string purchaseType;
+        public string valuePurchase;
+        public decimal totalExpenses;
+    }
+
+    public class ActivityLogBySite
+    {
+        public string dateActivity;
+        public string leaderCrew;
+        public string notes;
+        public string progress;
+        public List<string> activitiesDone;
+    }
+
     public class contact
     {
         public string contactName { get; set; }
@@ -25,7 +43,7 @@ namespace JneCommSitesManagement.Controllers
     public class CrewUserData
     {
         public string crewName { get; set; }
-        public string crewRole{ get; set; }
+        public string crewRole { get; set; }
     }
 
     public class AdministrationController : Controller
@@ -160,10 +178,10 @@ namespace JneCommSitesManagement.Controllers
                                          select p).FirstOrDefault();
 
                     model._StatesList = Helper.Helper.GetUSAStates();
-                    model.custumerName = model.custumerName;
-                    model.customerAddress = model.customerAddress;
-                    model.states = model.states;
-                    model.customerCity = model.customerCity;
+                    //queryCustomer.custumerName = model.custumerName;
+                    queryCustomer.vCustomerAddress = model.customerAddress;
+                    queryCustomer.vStateCode = model.states;
+                    queryCustomer.vCustomerCity = model.customerCity;
 
                     _dbContext.SaveChanges();
 
@@ -428,9 +446,9 @@ namespace JneCommSitesManagement.Controllers
                                    select p).FirstOrDefault();
 
             var rolQUery = (from p in _dbContext.T_CrewRoles
-                            from d in _dbContext.AspNetUsers
+                            from d in p.AspNetUsers
                             where d.Id == aspNetUserQuery.Id
-                            select p).First();
+                            select p).FirstOrDefault();
 
             var userInf = (from p in _dbContext.vwUserData
                            where p.UserID == aspNetUserQuery.Id
@@ -681,12 +699,12 @@ namespace JneCommSitesManagement.Controllers
             model._TechnologyList = Helper.Helper.GetTechEvolutionCodes();
             model._CrewUserNameList = Helper.Helper.GetCrewUser();
 
-            model.siteName = querySite.vSiteName ;
-            model.siteAddress = querySite.vAddress ;
-            model.siteCity = querySite.vCity ;
-            model.states = querySite.vStateCode ;
-            model.customerName = querySite.vCustomerName ;
-            model.technology = querySite.vTechEvolutionCodeName ;
+            model.siteName = querySite.vSiteName;
+            model.siteAddress = querySite.vAddress;
+            model.siteCity = querySite.vCity;
+            model.states = querySite.vStateCode;
+            model.customerName = querySite.vCustomerName;
+            model.technology = querySite.vTechEvolutionCodeName;
 
             return View(model);
         }
@@ -722,21 +740,21 @@ namespace JneCommSitesManagement.Controllers
                     fileContent.SaveAs(path);
                 }
 
-                if(model._ListCrew != null )
-                { 
-                foreach (var item in model._ListCrew)
+                if (model._ListCrew != null)
                 {
-                    var queryCrewuser = (from p in _dbContext.AspNetUsers
-                                         where p.UserName == item
-                                         select p).FirstOrDefault();
-                    querySite.AspNetUsers.Add(queryCrewuser);
-                }
+                    foreach (var item in model._ListCrew)
+                    {
+                        var queryCrewuser = (from p in _dbContext.AspNetUsers
+                                             where p.UserName == item
+                                             select p).FirstOrDefault();
+                        querySite.AspNetUsers.Add(queryCrewuser);
+                    }
                 }
                 _dbContext.SaveChanges();
 
                 return Json(true);
             }
-                return Json("An error ocurred, please try again.");
+            return Json("An error ocurred, please try again.");
         }
 
 
@@ -745,9 +763,9 @@ namespace JneCommSitesManagement.Controllers
             JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
 
             var queryCrewUsersBySite = (from p in _dbContext.AspNetUsers
-                                       from d in p.T_Sites
-                                       where d.vSiteName == siteName
-                                       select p);
+                                        from d in p.T_Sites
+                                        where d.vSiteName == siteName
+                                        select p);
             List<CrewUserData> crewUsers = new List<CrewUserData>();
             foreach (var item in queryCrewUsersBySite)
             {
@@ -756,13 +774,105 @@ namespace JneCommSitesManagement.Controllers
                                     where d.Id == item.Id
                                     select p.vCrewRoleName).FirstOrDefault();
 
-                crewUsers.Add(new CrewUserData {
+                crewUsers.Add(new CrewUserData
+                {
                     crewName = item.UserName,
                     crewRole = item.T_UsersData.UserFirstName + " " + item.T_UsersData.UserLastName + "-" + roleQuery
                 });
             }
 
             return Json(crewUsers, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult SiteExpenses(string siteName)
+        {
+            SiteModel model = new SiteModel();
+            model.siteName = siteName;
+            return View(model);
+        }
+
+        public JsonResult GetExpensesBySite(string siteName)
+        {
+            JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
+
+            decimal totalExpenses = 0;
+            List<ExpensesnBySite> expensesBySite = new List<ExpensesnBySite>();
+
+            var queryActivityLogBySite = (from p in _dbContext.T_ActivityLog
+                                          where p.vSiteName == siteName
+                                          select p);
+
+            foreach (var item in queryActivityLogBySite)
+            {
+                var queryExpensesByLogActivity = (from p in _dbContext.T_Purchase
+                                                  where p.iActivityLogID == item.iActivityLogID
+                                                  select p);
+                foreach (var itemExpense in queryExpensesByLogActivity)
+                {
+                    totalExpenses = (totalExpenses + Convert.ToDecimal(itemExpense.dPrice));
+                    expensesBySite.Add(new ExpensesnBySite
+                    {
+                        datePurchase = itemExpense.dtPurchaseStartDate.ToString(),
+                        purchaseDescription = itemExpense.Description,
+                        purchaseType = itemExpense.T_PurchaseType.vPurchaseTypeName,
+                        valuePurchase = itemExpense.dPrice.ToString(),
+                        totalExpenses = totalExpenses
+                    });
+                }
+            }
+
+            return Json(expensesBySite, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult SiteProgress(string siteName)
+        {
+            SiteModel model = new SiteModel();
+            model.siteName = siteName;
+            return View(model);
+        }
+
+
+        public JsonResult GetActivityLogsBySite(string siteName)
+        {
+            JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
+
+            List<ActivityLogBySite> activityLogBySite = new List<ActivityLogBySite>();
+
+            var queryActivityLogBySite = (from p in _dbContext.T_ActivityLog
+                                          where p.vSiteName == siteName
+                                          select p);
+
+            foreach (var item in queryActivityLogBySite)
+            {
+                List<string> activities = new List<string>();
+
+                var crewRoleName = (from p in _dbContext.T_CrewRoles
+                                    from d in p.AspNetUsers
+                                    where d.Id == item.Id
+                                    select p.vCrewRoleName).FirstOrDefault();
+
+                if (crewRoleName == "LEADER")
+                {
+                    var activitiesByLog = (from p in _dbContext.T_TaskProgress
+                                           from d in p.T_ActivityLog
+                                           where d.iActivityLogID == item.iActivityLogID
+                                           select p);
+                    foreach (var itemActivity in activitiesByLog)
+                    {
+                        activities.Add(itemActivity.vTaskProgressName);
+                    }
+                    activityLogBySite.Add(new ActivityLogBySite
+                    {
+                        dateActivity = item.dtStartWorkingDay.ToString(),
+                        leaderCrew = item.AspNetUsers.T_UsersData.UserFirstName + " " + item.AspNetUsers.T_UsersData.UserLastName,
+                        notes = item.vNotes,
+                        progress = item.iProgress.ToString() + "%",
+                        activitiesDone = activities
+                    });
+                }
+            }
+
+            return Json(activityLogBySite, JsonRequestBehavior.AllowGet);
         }
         #endregion
     }

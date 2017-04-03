@@ -7,10 +7,6 @@ using System.Web;
 
 namespace JneCommSitesManagement.Models
 {
-    public class ActivityLogsProgress
-    {
-
-    }
 
     public class ActivityLogsOptions
     {
@@ -20,8 +16,9 @@ namespace JneCommSitesManagement.Models
         public IEnumerable<Entry> _ActivityLogoption { get; set; }
 
         [Display(Name = "*Check Point")]
-        public DateTime checkPoint { get; set; }
+        public string checkPoint { get; set; }
 
+        [Required]
         [Display(Name = "*Sites Assigned")]
         public string site { get; set; }
         public IEnumerable<Entry> _SitesList { get; set; }
@@ -44,16 +41,21 @@ namespace JneCommSitesManagement.Models
 
         [Required]
         [Display(Name = "*Date Purchase")]
-        public DateTime startPurchaseCheckPoint { get; set; }
+        public string startPurchaseCheckPoint { get; set; }
 
-        [Required]
+        //[Required]
         [Display(Name = "*End Purchase Chec Point")]
-        public DateTime endPurchaseCheckPoint { get; set; }
+        public string endPurchaseCheckPoint { get; set; }
 
         [Required(ErrorMessage = "Document Name is Required")]
         [Display(Name = "Document Name")]
         public HttpPostedFileBase documentToUpload { get; set; }
-        
+
+        [Required(ErrorMessage = "Price is Required")]
+        [Range(0.01, 200.00, ErrorMessage = "Price must be between 0.01 and 200.00")]
+        [Display(Name = "Price - Valor")]
+        public double price { get; set; }
+
     }
 
     public class EndWorkingDayModel
@@ -61,11 +63,11 @@ namespace JneCommSitesManagement.Models
 
         [Required]
         [Display(Name = "*Site")]
-        public string sitePurchase { get; set; }
+        public string siteID { get; set; }
 
         [Required]
         [Display(Name = "*Checkpoint")]
-        public DateTime endWorkingDayCheckPoint { get; set; }
+        public string endWorkingDayCheckPoint { get; set; }
 
         [StringLength(150, ErrorMessage = "{0} should have between {2} and {1} characters.", MinimumLength = 5)]
         [Display(Name = "*Notes")]
