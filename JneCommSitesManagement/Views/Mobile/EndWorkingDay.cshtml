@@ -15,7 +15,7 @@
     <div class="form-horizontal">
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        
+
         <div class="row">
 
             <div class="col-md-6">
@@ -58,12 +58,26 @@
                 </div>
             </div>
 
+            <div class="col-md-6">
+                <iframe id="MapPosition" width="460" height="170" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src=""></iframe>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group" style="visibility:hidden">
+                    @Html.LabelFor(model => model.position, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.position, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @style = "visibility:hidden" } })
+                        @Html.ValidationMessageFor(model => model.position, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         <div class="row">
             @foreach (var item in Model._ProgressList)
             {
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="form-group">
                         @Html.Label(item.Text, htmlAttributes: new { @class = "control-label col-md-6" })
                         <div class="col-md-6">
@@ -71,15 +85,30 @@
                                 @Html.CheckBoxSimple("tbl_" + item.Value, item.Selected, new { @Name = "taskProgressList", @Value = item.Value, @style = "visibility:hidden" })
                                 <label for="tbl_@item.Value"></label>
                             </div>
+                            <br />
+                            @if (item.isChildren)
+                            {
+                                <label class="btn btn-primary">
+                                    Upload File<input type="file" name="filesList" id="@item.Value" ng-show="False" ng-file-model="file_@item.Value" multiple />
+                                </label>
+                                
+                                <p></p>
+
+                                <ul class="list-inline" ng-repeat="file in file_@item.Value">
+                                    
+                                    <li class="list-group-item list-group-item-success">{{file.name}}
+                                        <input type="text" value="{{file.name}}" id="filesName" name="filesName" ng-show="False" />
+                                    </li>
+                                </ul>
+                            }
                         </div>
                     </div>
                 </div>
             }
         </div>
-
         <div class="form-group">
             <div class="col-md-offset-0 col-md-12">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="End Working Day" class="btn btn-primary" />
             </div>
         </div>
     </div>
@@ -93,7 +122,73 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/angular.js")
+    @Scripts.Render("~/Scripts/Json.js")
+    <script src="~/Scripts/jquery-ui.js"></script>
+    <link href="~/Content/images/jquery-ui.css" rel="stylesheet" />
+    <link href="~/Content/images/theme.css" rel="stylesheet" />
 
+    <script>
+    $(document).ready(function () {
+            
+            navigator.geolocation.getCurrentPosition(showPosition);
+
+            function showPosition(position) {
+                $("#position").val(position.coords.latitude + ";" + position.coords.longitude);
+                initMap(position.coords.latitude, position.coords.longitude)
+            }
+
+
+            function initMap(lat, lng) {
+                document.getElementById('MapPosition').src = 'https://maps.google.com/maps?q='+lat+','+lng +'&hl=es;z=14&output=embed';
+            }
+
+
+        });
+</script>
+
+    <script>
+        var helloApp = angular.module("JeCommAPP", []);
+        helloApp.controller("JeCommController", function ($scope, $http) {
+
+
+        });
+
+        helloApp.directive('ngFileModel', ['$parse', function ($parse) {
+            return {
+                restrict: 'A',
+                link: function (scope, element, attrs) {
+                    var elementId = element.context.id;
+                    var model = $parse(attrs.ngFileModel);
+                    var isMultiple = attrs.multiple;
+                    var modelSetter = model.assign;
+                    element.bind('change', function () {
+                        var values = [];
+                        angular.forEach(element[0].files, function (item) {
+                            var value = {
+                                // File Name 
+                                name: elementId + item.name,
+                                //File Size 
+                                size: item.size,
+                                //File URL to view 
+                                url: URL.createObjectURL(item),
+                                // File Input Value 
+                                _file: item
+                            };
+                            values.push(value);
+                        });
+                        scope.$apply(function () {
+                            if (isMultiple) {
+                                modelSetter(scope, values);
+                            } else {
+                                modelSetter(scope, values[0]);
+                            }
+                        });
+                    });
+                }
+            };
+        }]);
+    </script>
 
     <script>
 
@@ -104,48 +199,48 @@
             window.setInterval(updateCheckPoint, 500000);
         });
 
-    
-    function updateCheckPoint() {
-        var d = new Date;
-        var actualDate = formatDate(d, 3);
-        $("#endWorkingDayCheckPoint").val(actualDate);
-    }
 
-    function formatDate(dateObj, format) {
-        var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        var curr_date = dateObj.getDate();
-        var curr_month = dateObj.getMonth();
-        curr_month = curr_month + 1;
-        var curr_year = dateObj.getFullYear();
-        var curr_min = dateObj.getMinutes();
-        var curr_hr = dateObj.getHours();
-        var curr_sc = dateObj.getSeconds();
-        if (curr_month.toString().length == 1)
-            curr_month = '0' + curr_month;
-        if (curr_date.toString().length == 1)
-            curr_date = '0' + curr_date;
-        if (curr_hr.toString().length == 1)
-            curr_hr = '0' + curr_hr;
-        if (curr_min.toString().length == 1)
-            curr_min = '0' + curr_min;
+        function updateCheckPoint() {
+            var d = new Date;
+            var actualDate = formatDate(d, 3);
+            $("#endWorkingDayCheckPoint").val(actualDate);
+        }
 
-        if (format == 1)//dd-mm-yyyy
-        {
-            return curr_date + "-" + curr_month + "-" + curr_year;
+        function formatDate(dateObj, format) {
+            var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            var curr_date = dateObj.getDate();
+            var curr_month = dateObj.getMonth();
+            curr_month = curr_month + 1;
+            var curr_year = dateObj.getFullYear();
+            var curr_min = dateObj.getMinutes();
+            var curr_hr = dateObj.getHours();
+            var curr_sc = dateObj.getSeconds();
+            if (curr_month.toString().length == 1)
+                curr_month = '0' + curr_month;
+            if (curr_date.toString().length == 1)
+                curr_date = '0' + curr_date;
+            if (curr_hr.toString().length == 1)
+                curr_hr = '0' + curr_hr;
+            if (curr_min.toString().length == 1)
+                curr_min = '0' + curr_min;
+
+            if (format == 1)//dd-mm-yyyy
+            {
+                return curr_date + "-" + curr_month + "-" + curr_year;
+            }
+            else if (format == 2)//yyyy-mm-dd
+            {
+                return curr_year + "-" + curr_month + "-" + curr_date;
+            }
+            else if (format == 3)//dd/mm/yyyy
+            {
+                return curr_date + "/" + curr_month + "/" + curr_year;
+            }
+            else if (format == 4)// MM/dd/yyyy HH:mm:ss
+            {
+                return curr_month + "/" + curr_date + "/" + curr_year + " " + curr_hr + ":" + curr_min + ":" + curr_sc;
+            }
         }
-        else if (format == 2)//yyyy-mm-dd
-        {
-            return curr_year + "-" + curr_month + "-" + curr_date;
-        }
-        else if (format == 3)//dd/mm/yyyy
-        {
-            return curr_date + "/" + curr_month + "/" + curr_year;
-        }
-        else if (format == 4)// MM/dd/yyyy HH:mm:ss
-        {
-            return curr_month + "/" + curr_date + "/" + curr_year + " " + curr_hr + ":" + curr_min + ":" + curr_sc;
-        }
-    }
     </script>
 
 }

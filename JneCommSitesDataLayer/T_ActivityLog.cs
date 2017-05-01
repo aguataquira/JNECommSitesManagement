@@ -17,6 +17,7 @@ namespace JneCommSitesDataLayer
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public T_ActivityLog()
         {
+            this.T_FilesUploadedBySiteTaskProgress = new HashSet<T_FilesUploadedBySiteTaskProgress>();
             this.T_Purchase = new HashSet<T_Purchase>();
             this.T_TaskProgress = new HashSet<T_TaskProgress>();
         }
@@ -25,14 +26,20 @@ namespace JneCommSitesDataLayer
         public string Id { get; set; }
         public string vSiteName { get; set; }
         public System.DateTime dtStartWorkingDay { get; set; }
+        public string vStartWorkingDayPosition { get; set; }
         public Nullable<System.DateTime> dtArrivingToWareHouse { get; set; }
+        public string vArrivingToWareHousePosition { get; set; }
         public Nullable<System.DateTime> dtDepartureFromWereHouse { get; set; }
+        public string vDepartureFromWereHousePosition { get; set; }
         public Nullable<System.DateTime> dtEndWorkingDay { get; set; }
+        public string vEndWorkingDayPosition { get; set; }
         public Nullable<int> iProgress { get; set; }
         public string vNotes { get; set; }
     
         public virtual AspNetUsers AspNetUsers { get; set; }
         public virtual T_Sites T_Sites { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<T_FilesUploadedBySiteTaskProgress> T_FilesUploadedBySiteTaskProgress { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<T_Purchase> T_Purchase { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

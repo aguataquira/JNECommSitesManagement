@@ -75,6 +75,17 @@ namespace JneCommSitesManagement.Controllers
 
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
+
+            var queryCrewRol = Helper.Helper.GetCrewRoleByUser(model.Email);
+            if (queryCrewRol != null)
+            {
+                if (queryCrewRol != "LEADER")
+                {
+                    ModelState.AddModelError(string.Empty, "You don't have permission to login into application.");
+                    return View(model);
+                }
+            }
+
             var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
             switch (result)
             {

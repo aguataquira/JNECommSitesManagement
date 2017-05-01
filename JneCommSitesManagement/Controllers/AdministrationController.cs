@@ -84,8 +84,6 @@ namespace JneCommSitesManagement.Controllers
 
         //Post method to create a customer
         [HttpPost]
-        [Authorize]
-        [AuthorizeFilter]
         public ActionResult CreateCustomer(Models.CustomerModels model)
         {
             if (ModelState.IsValid)
@@ -248,8 +246,8 @@ namespace JneCommSitesManagement.Controllers
         #endregion
 
         #region Crew Employees
-        //[Authorize]
-        //[AuthorizeFilter]
+        [Authorize]
+        [AuthorizeFilter]
         public ActionResult CrewEmployeeIndex(string userID)
         {
             if (string.IsNullOrEmpty(userID))
@@ -265,8 +263,8 @@ namespace JneCommSitesManagement.Controllers
         }
 
 
-        //[Authorize]
-        //[AuthorizeFilter]
+        [Authorize]
+        [AuthorizeFilter]
         public ActionResult CreateEmployee()
         {
             JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbConetxt = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
@@ -293,8 +291,7 @@ namespace JneCommSitesManagement.Controllers
         }
 
 
-        //[Authorize]
-        //[AuthorizeFilter]
+
         [HttpPost]
         public async Task<ActionResult> CreateEmployee(Models.EmployeeModel model)
         {
@@ -433,8 +430,8 @@ namespace JneCommSitesManagement.Controllers
         }
 
 
-        //[Authorize]
-        //[AuthorizeFilter]
+        [Authorize]
+        [AuthorizeFilter]
         public ActionResult EditEmployee(string employeeName)
         {
             if (string.IsNullOrEmpty(employeeName))
@@ -589,6 +586,8 @@ namespace JneCommSitesManagement.Controllers
         #endregion
 
         #region Sites
+        [Authorize]
+        [AuthorizeFilter]
         public ActionResult SitesIndex()
         {
 
@@ -607,7 +606,8 @@ namespace JneCommSitesManagement.Controllers
             return View(querySites);
         }
 
-
+        [Authorize]
+        [AuthorizeFilter]
         public ActionResult CreateSite()
         {
             Models.SiteModel model = new SiteModel();
@@ -619,10 +619,14 @@ namespace JneCommSitesManagement.Controllers
         }
 
         [HttpPost]
+        [Authorize]
+        [AuthorizeFilter]
         public ActionResult CreateSite(Models.SiteModel model)
         {
             if (ModelState.IsValid)
             {
+                if (model._ListCrew == null)
+                    return Json("You need add a Crew for the Site.");
 
                 try
                 {
@@ -683,7 +687,8 @@ namespace JneCommSitesManagement.Controllers
             return Json("There is a error please try again");
         }
 
-
+        [Authorize]
+        [AuthorizeFilter]
         public ActionResult EditSite(string siteName)
         {
 
@@ -710,6 +715,8 @@ namespace JneCommSitesManagement.Controllers
         }
 
         [HttpPost]
+        [Authorize]
+        [AuthorizeFilter]
         public ActionResult EditSite(Models.SiteModel model)
         {
             if (ModelState.IsValid)
@@ -784,12 +791,15 @@ namespace JneCommSitesManagement.Controllers
             return Json(crewUsers, JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize]
+        [AuthorizeFilter]
         public ActionResult SiteExpenses(string siteName)
         {
             SiteModel model = new SiteModel();
             model.siteName = siteName;
             return View(model);
         }
+
 
         public JsonResult GetExpensesBySite(string siteName)
         {
@@ -824,6 +834,8 @@ namespace JneCommSitesManagement.Controllers
             return Json(expensesBySite, JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize]
+        [AuthorizeFilter]
         public ActionResult SiteProgress(string siteName)
         {
             SiteModel model = new SiteModel();

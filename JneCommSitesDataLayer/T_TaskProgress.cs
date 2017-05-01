@@ -17,13 +17,18 @@ namespace JneCommSitesDataLayer
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public T_TaskProgress()
         {
+            this.T_FilesUploadedBySiteTaskProgress = new HashSet<T_FilesUploadedBySiteTaskProgress>();
             this.T_ActivityLog = new HashSet<T_ActivityLog>();
         }
     
         public int iTaskProgressID { get; set; }
         public string vTaskProgressName { get; set; }
         public string vTaskDescription { get; set; }
+        public bool bCanLoadFile { get; set; }
+        public bool bIsActive { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<T_FilesUploadedBySiteTaskProgress> T_FilesUploadedBySiteTaskProgress { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<T_ActivityLog> T_ActivityLog { get; set; }
     }

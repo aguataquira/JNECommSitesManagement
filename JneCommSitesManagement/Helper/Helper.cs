@@ -238,7 +238,8 @@ namespace JneCommSitesManagement.Helper
         {
             JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
             List<JneCommSitesDataLayer.T_Operations> itemList = (from p in _dbContext.T_Operations
-                                                                select p).ToList();
+                                                                 where p.vControllerName != "Mobile"
+                                                                 select p).ToList();
             
             List<ListBoxHelper> listPermission = new List<ListBoxHelper>();
 
@@ -264,11 +265,46 @@ namespace JneCommSitesManagement.Helper
             }
             return listPermission;
         }
-        
+
+
+        public static List<ListBoxHelper> GetCrewUsers()
+        {
+            JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
+
+            List<JneCommSitesDataLayer.AspNetUsers> itemList = (from p in _dbContext.AspNetUsers
+                                                                 from d in p.AspNetRoles
+                                                                 where d.Name == "CrewRole"
+                                                                select p).ToList();
+
+            List<ListBoxHelper> listUsers = new List<ListBoxHelper>();
+            listUsers.Add(new ListBoxHelper
+            {
+                Selected = true,
+                isChildren = false,
+                Text = "All Users",
+                Value = "AllUsers",
+            });
+
+            foreach (JneCommSitesDataLayer.AspNetUsers item in itemList)
+            {
+               
+                listUsers.Add(new ListBoxHelper
+                {
+                    Selected = false,
+                    isChildren = false,
+                    Text = item.T_UsersData.UserFirstName + " " + item.T_UsersData.UserLastName,
+                    Value = item.UserName,
+                });
+            }
+            return listUsers;
+        }
+
+
         public static List<ListBoxHelper> GetActivityLogOptions(int activityLogID)
         {
             JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
             List<JneCommSitesDataLayer.T_TaskProgress> itemList = (from p in _dbContext.T_TaskProgress
+                                                                   where p.bIsActive == true
                                                                  select p).ToList();
 
             List<ListBoxHelper> listTaskProgress = new List<ListBoxHelper>();
@@ -276,6 +312,9 @@ namespace JneCommSitesManagement.Helper
             foreach (JneCommSitesDataLayer.T_TaskProgress item in itemList)
             {
                 bool selected = false;
+                bool updateFile = false;
+                if (item.bCanLoadFile)
+                    updateFile = item.bCanLoadFile;
                 var taskByActivityLog = (from p in _dbContext.T_TaskProgress
                                          from d in p.T_ActivityLog
                                           where d.iActivityLogID == activityLogID
@@ -288,7 +327,7 @@ namespace JneCommSitesManagement.Helper
                 listTaskProgress.Add(new ListBoxHelper
                 {
                     Selected = selected,
-                    isChildren = false,
+                    isChildren = updateFile,
                     Text = item.vTaskProgressName,
                     Value = item.iTaskProgressID.ToString(),
                 });

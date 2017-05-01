@@ -156,9 +156,9 @@ namespace JneCommSitesManagement.Controllers
                                    select p).FirstOrDefault();
 
             var rolQUery = (from p in _dbContext.AspNetRoles
-                         from d in _dbContext.AspNetUsers
+                         from d in p.AspNetUsers
                          where d.Id  == aspNetUserQuery.Id
-                         select p).First();
+                         select p).FirstOrDefault();
 
             var userInf = (from p in _dbContext.T_UsersData
                            where p.Id == aspNetUserQuery.Id
@@ -685,6 +685,132 @@ namespace JneCommSitesManagement.Controllers
         }
 
         #endregion
+
+        #region PaymentPeriod
+        public ActionResult PaymentPeriod()
+        {
+
+            JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
+
+            var paymentPeriodQuery = (from p in _dbContext.T_PaymentPeriod
+                                           select p).FirstOrDefault();
+            if (paymentPeriodQuery == null)
+            {
+                paymentPeriodQuery = new JneCommSitesDataLayer.T_PaymentPeriod();
+                paymentPeriodQuery.dStartCutOffDate = DateTime.Now;
+            }
+
+            return View(paymentPeriodQuery);
+        }
+
+        [HttpPost]
+        public ActionResult PaymentPeriod(JneCommSitesDataLayer.T_PaymentPeriod model)
+        {
+
+            JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
+
+            var paymentPeriodQuery = (from p in _dbContext.T_PaymentPeriod
+                                      select p).FirstOrDefault();
+
+            if (paymentPeriodQuery != null)
+            {
+                paymentPeriodQuery.dStartCutOffDate = model.dStartCutOffDate;
+            }
+
+            else
+            {
+                JneCommSitesDataLayer.T_PaymentPeriod newPaymentPeriod = new JneCommSitesDataLayer.T_PaymentPeriod();
+                newPaymentPeriod.dStartCutOffDate = DateTime.Now;
+                newPaymentPeriod.siDaysForPaymentPeriod = 15;
+                _dbContext.T_PaymentPeriod.Add(newPaymentPeriod);
+            }
+
+            _dbContext.SaveChanges();
+
+            return View(paymentPeriodQuery);
+        }
+        #endregion
+
+        #region 
+        public ActionResult TaskProgressList()
+        {
+            JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
+            var queryTaskActivity = from p in _dbContext.T_TaskProgress
+                                    select p;
+            return View(queryTaskActivity);
+        }
+
+
+        public ActionResult CreateTaskProgress()
+        {
+
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult CreateTaskProgress(Models.TaskProgress model)
+        {
+            if (ModelState.IsValid)
+            { 
+                JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
+                JneCommSitesDataLayer.T_TaskProgress newTaskProgress = new JneCommSitesDataLayer.T_TaskProgress();
+                newTaskProgress.vTaskProgressName = model.taskName;
+                newTaskProgress.vTaskDescription = model.taskDescription;
+                newTaskProgress.bCanLoadFile = model.canUploadFile;
+                newTaskProgress.bIsActive = model.isActive;
+                _dbContext.T_TaskProgress.Add(newTaskProgress);
+                _dbContext.SaveChanges();
+                return RedirectToAction("TaskProgressList");
+            }
+            ModelState.AddModelError(string.Empty, "There is an error, Try again.");
+            return View();
+        }
+
+        public ActionResult EditTaskProgress(int taskProgressID)
+        {
+            JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
+            Models.TaskProgress newTaskProgressModel = new TaskProgress();
+
+            var queryTaskProgress = (from p in _dbContext.T_TaskProgress
+                                     where p.iTaskProgressID == taskProgressID
+                                     select p).FirstOrDefault();
+
+            newTaskProgressModel.taskName = queryTaskProgress.vTaskProgressName;
+            newTaskProgressModel.taskDescription = queryTaskProgress.vTaskDescription;
+            newTaskProgressModel.canUploadFile = queryTaskProgress.bCanLoadFile;
+            newTaskProgressModel.isActive = Convert.ToBoolean(queryTaskProgress.bIsActive);
+
+            return View(newTaskProgressModel);
+        }
+
+        [HttpPost]
+        public ActionResult EditTaskProgress(Models.TaskProgress model, int taskProgressID)
+        {
+            if (ModelState.IsValid)
+            {
+                JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
+
+                var queryTaskProgress = (from p in _dbContext.T_TaskProgress
+                                         where p.iTaskProgressID == taskProgressID
+                                         select p).FirstOrDefault();
+
+                queryTaskProgress.vTaskProgressName = model.taskName;
+                queryTaskProgress.vTaskDescription = model.taskDescription;
+                queryTaskProgress.bCanLoadFile = model.canUploadFile;
+                queryTaskProgress.bIsActive = model.isActive;
+
+                _dbContext.SaveChanges();
+                return RedirectToAction("TaskProgressList");
+            }
+            ModelState.AddModelError(string.Empty, "There is an error, Try again.");
+            return View();
+        }
+
+        #endregion
+
+        //Method for the list of the Tech Evolution Codes
+        //[Authorize]
+        //[AuthorizeFilter]
 
 
         public ApplicationUserManager UserManager

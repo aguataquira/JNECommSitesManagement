@@ -74,6 +74,7 @@ namespace JneCommSitesManagement.Controllers
         }
 
         //Post option selected and redirect to the option selected by the user
+
         [HttpPost]
         public ActionResult CreateActivityLogOptions(Models.ActivityLogsOptions model)
         {
@@ -99,15 +100,15 @@ namespace JneCommSitesManagement.Controllers
                 {
                     case "StartWorkingDay":
                         //Lamar metodo para CheckPoint
-                        CheckPoint(model.site, null, "StartWorkingDay", model.checkPoint);
+                        CheckPoint(model.site, null, "StartWorkingDay", model.checkPoint, model.position);
                         break;
                     case "ArrivingWareHouse":
                         //llamar metodo checkPoint
-                        CheckPoint(model.site, queryExistLogActivity, "ArrivingWareHouse", model.checkPoint);
+                        CheckPoint(model.site, queryExistLogActivity, "ArrivingWareHouse", model.checkPoint, model.position);
                         break;
                     case "DepartureWareHouse":
                         //llamar metodo checkPoint
-                        CheckPoint(model.site, queryExistLogActivity, "DepartureWareHouse", model.checkPoint);
+                        CheckPoint(model.site, queryExistLogActivity, "DepartureWareHouse", model.checkPoint, model.position);
                         break;
                     case "EndWorkingDay":
                         if (queryExistLogActivity != null)
@@ -208,7 +209,7 @@ namespace JneCommSitesManagement.Controllers
             else
                 return RedirectToAction("CreateActivityLogOptions");
         }
-
+        
         [HttpPost]
         public ActionResult Purchase(Models.ActivityLogsPurchase model)
         {
@@ -238,6 +239,7 @@ namespace JneCommSitesManagement.Controllers
                 newPurchase.dtPurchaseEndDate = Convert.ToDateTime(DateTime.Now);
                 newPurchase.dtPurchaseStartDate = Convert.ToDateTime(model.startPurchaseCheckPoint, culture);
                 newPurchase.dPrice = Convert.ToDecimal(model.price);
+                newPurchase.vPosition = model.position;
                 _dbContext.T_Purchase.Add(newPurchase);
 
 
@@ -307,14 +309,16 @@ namespace JneCommSitesManagement.Controllers
                 return RedirectToAction("CreateActivityLogOptions");
         }
 
+
         [HttpPost]
-        public ActionResult EndWorkingDay(Models.EndWorkingDayModel model, string[] taskProgressList)
+        public ActionResult EndWorkingDay(Models.EndWorkingDayModel model, string[] taskProgressList, HttpPostedFileBase[] filesList, string[] filesName)
         {
             if (ModelState.IsValid)
             {
                 CultureInfo culture = new CultureInfo("en-US");
 
                 JneCommSitesDataLayer.JneCommSitesDataBaseEntities _dbContext = new JneCommSitesDataLayer.JneCommSitesDataBaseEntities();
+                Random getrandom = new Random();
 
                 string userName = HttpContext.User.Identity.Name;
 
@@ -322,6 +326,33 @@ namespace JneCommSitesManagement.Controllers
                                                where p.AspNetUsers.UserName == userName
                                                && (p.dtEndWorkingDay == null)
                                                select p).FirstOrDefault();
+
+                string fileName = "";
+                if (filesName != null)
+                { 
+                for (int x = 0; x < filesName.Length; x++)
+                {
+                    JneCommSitesDataLayer.T_FilesUploadedBySiteTaskProgress newFile = new JneCommSitesDataLayer.T_FilesUploadedBySiteTaskProgress();
+
+                    int taskID = Convert.ToInt32(filesName[x].Replace(filesList[x].FileName, ""));
+
+
+                    var queryTask = (from p in _dbContext.T_TaskProgress
+                                     where p.iTaskProgressID == taskID
+                                     select p).FirstOrDefault();
+
+                    fileName = getrandom.Next(999) +"_"+ queryTask.vTaskProgressName + "_" + filesList[x].FileName.Replace(" ", "").Replace("_", "");
+
+                    newFile.iActivityLogID = queryCurrentActivityLog.iActivityLogID;
+                    newFile.iTaskProgressID = queryTask.iTaskProgressID;
+                    newFile.vFileName = fileName;
+                    _dbContext.T_FilesUploadedBySiteTaskProgress.Add(newFile);
+                    string path = System.IO.Path.Combine(Server.MapPath("~/Documents/PrePictures/"), fileName);
+                    // file is uploaded
+                    filesList[x].SaveAs(path);
+                    _dbContext.SaveChanges();
+                }
+                }
 
                 if (taskProgressList != null)
                 {
@@ -342,6 +373,8 @@ namespace JneCommSitesManagement.Controllers
                                         where d.vSiteName == model.siteID
                                         select p);
 
+
+
                 foreach (var item in queryUsersBySite)
                 {
                     queryCurrentActivityLog = (from p in _dbContext.T_ActivityLog
@@ -352,6 +385,7 @@ namespace JneCommSitesManagement.Controllers
                     queryCurrentActivityLog.dtEndWorkingDay = Convert.ToDateTime(model.endWorkingDayCheckPoint, culture);
                     queryCurrentActivityLog.iProgress = Convert.ToInt32(model.progress);
                     queryCurrentActivityLog.vNotes = model.notes;
+                    queryCurrentActivityLog.vEndWorkingDayPosition = model.position;
                 }
                 _dbContext.SaveChanges();
 
@@ -363,7 +397,7 @@ namespace JneCommSitesManagement.Controllers
             return View(model);
         }
 
-        public bool CheckPoint(string siteID, JneCommSitesDataLayer.T_ActivityLog activityLogID, string checkPointFor, string checkPoint)
+        public bool CheckPoint(string siteID, JneCommSitesDataLayer.T_ActivityLog activityLogID, string checkPointFor, string checkPoint, string position)
         {
             CultureInfo culture = new CultureInfo("en-US");
 
@@ -384,6 +418,7 @@ namespace JneCommSitesManagement.Controllers
                     newLogActivity.Id = item.Id;
                     newLogActivity.dtStartWorkingDay = Convert.ToDateTime(checkPoint, culture);
                     newLogActivity.vSiteName = siteID;
+                    newLogActivity.vStartWorkingDayPosition = position;
                     _dbContext.T_ActivityLog.Add(newLogActivity);
                 }
                 _dbContext.SaveChanges();
@@ -409,15 +444,20 @@ namespace JneCommSitesManagement.Controllers
                         break;
                     }
                     if (checkPointFor == "ArrivingWareHouse" && queryExistLogActivity.dtArrivingToWareHouse == null)
+                    { 
                         queryExistLogActivity.dtArrivingToWareHouse = Convert.ToDateTime(checkPoint, culture);
+                        queryExistLogActivity.vArrivingToWareHousePosition = position;
+                    }
                     if (checkPointFor == "DepartureWareHouse" && queryExistLogActivity.dtDepartureFromWereHouse != null)
                     {
                         ModelState.AddModelError(string.Empty, "The Departure WareHouse have a Date assigned. / Usted ya ingreso una fecha para Salida de bodega.");
                         break;
                     }
                     if (checkPointFor == "DepartureWareHouse" && queryExistLogActivity.dtDepartureFromWereHouse == null)
+                    { 
                         queryExistLogActivity.dtDepartureFromWereHouse = Convert.ToDateTime(checkPoint, culture);
-
+                        queryExistLogActivity.vDepartureFromWereHousePosition = position;
+                    }
 
                 }
                 _dbContext.SaveChanges();
@@ -475,7 +515,7 @@ namespace JneCommSitesManagement.Controllers
                                           orderby p.dtStartWorkingDay descending
                                           select p);
 
-                if (activityLogsByUser != null)
+                if (activityLogsByUser.FirstOrDefault() != null)
                 {
                     var userInformation = (from p in _dbContext.AspNetUsers
                                            where p.UserName == item.UserName

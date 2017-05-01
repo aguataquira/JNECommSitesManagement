@@ -1,0 +1,60 @@
+﻿@model IEnumerable<JneCommSitesDataLayer.T_TaskProgress>
+@using JneCommSitesManagement.Helper
+
+@{
+    ViewBag.Title = "Task Progress List";
+}
+
+@{
+    var queryCrewRol = Helper.GetCrewRoleByUser(User.Identity.Name);
+    if (queryCrewRol != null)
+    {
+        Layout = "~/Views/Shared/_LayoutCrewJneCommSites.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_LayoutJneCommSites.cshtml";
+    }
+
+}
+
+<h3 class="text-info">Task Progress List</h3>
+
+<p>
+    <a href='@Url.Action("CreateTaskProgress", "Maintenance")'>
+        <img src="~/Content/Jne Icons/AddTaskProgressIcon.png" />  Add Task Progress
+    </a>
+</p>
+
+<table class="table table-striped">
+    <tr>
+        <th>
+            @Html.DisplayName("Task Progress Name")
+        </th>
+        <th>
+            @Html.DisplayName("Upload File")
+        </th>
+        <th>
+            @Html.DisplayName("Is Active")
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.vTaskProgressName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.bCanLoadFile)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.bIsActive)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "EditTaskProgress", new { taskProgressID = item.iTaskProgressID }) 
+        </td>
+    </tr>
+}
+
+</table>

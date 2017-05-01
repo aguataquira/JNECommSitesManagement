@@ -101,6 +101,9 @@
     <Compile Include="T_Customer.cs">
       <DependentUpon>JneCommSitesModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="T_FilesUploadedBySiteTaskProgress.cs">
+      <DependentUpon>JneCommSitesModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="T_Operations.cs">
       <DependentUpon>JneCommSitesModel.tt</DependentUpon>
     </Compile>

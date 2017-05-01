@@ -21,6 +21,8 @@ namespace JneCommSitesDataLayer
         public Nullable<System.DateTime> dtPurchaseEndDate { get; set; }
         public string InvoiceName { get; set; }
         public string Description { get; set; }
+        public Nullable<decimal> dPrice { get; set; }
+        public string vPosition { get; set; }
     
         public virtual T_ActivityLog T_ActivityLog { get; set; }
         public virtual T_PurchaseType T_PurchaseType { get; set; }

@@ -55,8 +55,16 @@
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Analytic<span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li>@Html.ActionLink("TimeSheet", "Index", "Home")</li>
-                            <li>@Html.ActionLink("Pay Roll Totales", "Index", "Home")</li>
+                            <li>
+                                <a href='@Url.Action("TimeSheet", "Analytic")'>
+                                    <img src="~/Content/Jne Icons/JeCommTimeSheetIcon.png" />TimeSheet
+                                </a>
+                            </li>
+                            <li>
+                                <a href='@Url.Action("TimeSheet", "Analytic")'>
+                                    <img src="~/Content/Jne Icons/JeCommTimeSheetIcon.png" />TimeSheet
+                                </a>
+                            </li>
                         </ul>
                     </li>
 
@@ -88,7 +96,12 @@
                                 </a>
                             </li>
                             <li>
-                                <a href='@Url.Action("Index", "Home")'>
+                                <a href='@Url.Action("TaskProgressList", "Maintenance")'>
+                                    <img src="~/Content/Jne Icons/JeCommTaskProgressIcon.png" />Task Progress
+                                </a>
+                            </li>
+                            <li>
+                                <a href='@Url.Action("PaymentPeriod", "Maintenance")'>
                                     <img src="~/Content/Jne Icons/JeCommRolesIcon.png" />Payment Period
                                 </a>
                             </li>

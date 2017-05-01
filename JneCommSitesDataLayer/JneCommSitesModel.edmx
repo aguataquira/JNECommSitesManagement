@@ -91,9 +91,13 @@
           <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="vSiteName" Type="varchar" MaxLength="50" />
           <Property Name="dtStartWorkingDay" Type="datetime" Nullable="false" />
+          <Property Name="vStartWorkingDayPosition" Type="varchar" MaxLength="250" />
           <Property Name="dtArrivingToWareHouse" Type="datetime" />
+          <Property Name="vArrivingToWareHousePosition" Type="varchar" MaxLength="250" />
           <Property Name="dtDepartureFromWereHouse" Type="datetime" />
+          <Property Name="vDepartureFromWereHousePosition" Type="varchar" MaxLength="250" />
           <Property Name="dtEndWorkingDay" Type="datetime" />
+          <Property Name="vEndWorkingDayPosition" Type="varchar" MaxLength="250" />
           <Property Name="iProgress" Type="int" />
           <Property Name="vNotes" Type="varchar" MaxLength="250" />
         </EntityType>
@@ -142,6 +146,15 @@
           <Property Name="vCustomerAddress" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="vCustomerCity" Type="nchar" MaxLength="10" Nullable="false" />
         </EntityType>
+        <EntityType Name="T_FilesUploadedBySiteTaskProgress">
+          <Key>
+            <PropertyRef Name="iFileID" />
+          </Key>
+          <Property Name="iFileID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="iActivityLogID" Type="int" Nullable="false" />
+          <Property Name="iTaskProgressID" Type="int" Nullable="false" />
+          <Property Name="vFileName" Type="varchar" MaxLength="70" Nullable="false" />
+        </EntityType>
         <EntityType Name="T_Operations">
           <Key>
             <PropertyRef Name="biOperationsId" />
@@ -155,13 +168,9 @@
           <Property Name="bIsActive" Type="bit" Nullable="false" />
           <Property Name="bRequieresPermission" Type="bit" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'JneCommSitesManagementDB.dbo.T_PaymentPeriod' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="T_PaymentPeriod">
           <Key>
             <PropertyRef Name="siPaymentPeriodId" />
-            <PropertyRef Name="dStartCutOffDate" />
-            <PropertyRef Name="siDaysForPaymentPeriod" />
           </Key>
           <Property Name="siPaymentPeriodId" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="dStartCutOffDate" Type="date" Nullable="false" />
@@ -178,6 +187,8 @@ warning 6002: The table/view 'JneCommSitesManagementDB.dbo.T_PaymentPeriod' does
           <Property Name="dtPurchaseEndDate" Type="datetime" />
           <Property Name="InvoiceName" Type="varchar" MaxLength="50" />
           <Property Name="Description" Type="varchar" MaxLength="150" />
+          <Property Name="dPrice" Type="decimal" Precision="6" Scale="2" />
+          <Property Name="vPosition" Type="varchar" MaxLength="250" />
         </EntityType>
         <EntityType Name="T_PurchaseType">
           <Key>
@@ -214,6 +225,8 @@ warning 6002: The table/view 'JneCommSitesManagementDB.dbo.T_PaymentPeriod' does
           <Property Name="iTaskProgressID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="vTaskProgressName" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="vTaskDescription" Type="varchar" MaxLength="150" />
+          <Property Name="bCanLoadFile" Type="bit" Nullable="false" />
+          <Property Name="bIsActive" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="T_TaskProgressByActivityLog">
           <Key>
@@ -474,6 +487,30 @@ warning 6002: The table/view 'JneCommSitesManagementDB.dbo.vwUserData' does not 
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_T_FilesUploadedBySiteTaskProgress_T_ActivityLog">
+          <End Role="T_ActivityLog" Type="Self.T_ActivityLog" Multiplicity="1" />
+          <End Role="T_FilesUploadedBySiteTaskProgress" Type="Self.T_FilesUploadedBySiteTaskProgress" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_ActivityLog">
+              <PropertyRef Name="iActivityLogID" />
+            </Principal>
+            <Dependent Role="T_FilesUploadedBySiteTaskProgress">
+              <PropertyRef Name="iActivityLogID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_T_FilesUploadedBySiteTaskProgress_T_TaskProgress">
+          <End Role="T_TaskProgress" Type="Self.T_TaskProgress" Multiplicity="1" />
+          <End Role="T_FilesUploadedBySiteTaskProgress" Type="Self.T_FilesUploadedBySiteTaskProgress" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_TaskProgress">
+              <PropertyRef Name="iTaskProgressID" />
+            </Principal>
+            <Dependent Role="T_FilesUploadedBySiteTaskProgress">
+              <PropertyRef Name="iTaskProgressID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_T_Purchase_T_ActivityLog">
           <End Role="T_ActivityLog" Type="Self.T_ActivityLog" Multiplicity="1" />
           <End Role="T_Purchase" Type="Self.T_Purchase" Multiplicity="*" />
@@ -621,7 +658,9 @@ warning 6002: The table/view 'JneCommSitesManagementDB.dbo.vwUserData' does not 
           <EntitySet Name="T_ContactsByCustomer" EntityType="Self.T_ContactsByCustomer" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_CrewRoles" EntityType="Self.T_CrewRoles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_Customer" EntityType="Self.T_Customer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_FilesUploadedBySiteTaskProgress" EntityType="Self.T_FilesUploadedBySiteTaskProgress" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_Operations" EntityType="Self.T_Operations" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_PaymentPeriod" EntityType="Self.T_PaymentPeriod" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_Purchase" EntityType="Self.T_Purchase" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_PurchaseType" EntityType="Self.T_PurchaseType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_Rol_Operations" EntityType="Self.T_Rol_Operations" Schema="dbo" store:Type="Tables" />
@@ -631,13 +670,6 @@ warning 6002: The table/view 'JneCommSitesManagementDB.dbo.vwUserData' does not 
           <EntitySet Name="T_TechEvolutionCodes" EntityType="Self.T_TechEvolutionCodes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_USAStates" EntityType="Self.T_USAStates" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_UsersData" EntityType="Self.T_UsersData" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="T_PaymentPeriod" EntityType="Self.T_PaymentPeriod" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [T_PaymentPeriod].[siPaymentPeriodId] AS [siPaymentPeriodId], 
-    [T_PaymentPeriod].[dStartCutOffDate] AS [dStartCutOffDate], 
-    [T_PaymentPeriod].[siDaysForPaymentPeriod] AS [siDaysForPaymentPeriod]
-    FROM [dbo].[T_PaymentPeriod] AS [T_PaymentPeriod]</DefiningQuery>
-          </EntitySet>
           <EntitySet Name="vwUserData" EntityType="Self.vwUserData" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [vwUserData].[UserID] AS [UserID], 
@@ -720,6 +752,14 @@ warning 6002: The table/view 'JneCommSitesManagementDB.dbo.vwUserData' does not 
           <AssociationSet Name="FK_T_Customer_T_USAStates" Association="Self.FK_T_Customer_T_USAStates">
             <End Role="T_USAStates" EntitySet="T_USAStates" />
             <End Role="T_Customer" EntitySet="T_Customer" />
+          </AssociationSet>
+          <AssociationSet Name="FK_T_FilesUploadedBySiteTaskProgress_T_ActivityLog" Association="Self.FK_T_FilesUploadedBySiteTaskProgress_T_ActivityLog">
+            <End Role="T_ActivityLog" EntitySet="T_ActivityLog" />
+            <End Role="T_FilesUploadedBySiteTaskProgress" EntitySet="T_FilesUploadedBySiteTaskProgress" />
+          </AssociationSet>
+          <AssociationSet Name="FK_T_FilesUploadedBySiteTaskProgress_T_TaskProgress" Association="Self.FK_T_FilesUploadedBySiteTaskProgress_T_TaskProgress">
+            <End Role="T_TaskProgress" EntitySet="T_TaskProgress" />
+            <End Role="T_FilesUploadedBySiteTaskProgress" EntitySet="T_FilesUploadedBySiteTaskProgress" />
           </AssociationSet>
           <AssociationSet Name="FK_T_Purchase_T_ActivityLog" Association="Self.FK_T_Purchase_T_ActivityLog">
             <End Role="T_ActivityLog" EntitySet="T_ActivityLog" />
@@ -823,7 +863,6 @@ warning 6002: The table/view 'JneCommSitesManagementDB.dbo.vwUserData' does not 
             <End Role="T_Operations" EntitySet="T_Operations" />
           </AssociationSet>
           <EntitySet Name="T_CrewRoles" EntityType="JneCommSitesDataBaseModel.T_CrewRoles" />
-          <EntitySet Name="T_PaymentPeriod" EntityType="JneCommSitesDataBaseModel.T_PaymentPeriod" />
           <EntitySet Name="T_TechEvolutionCodes" EntityType="JneCommSitesDataBaseModel.T_TechEvolutionCodes" />
           <EntitySet Name="T_ContactsByCustomer" EntityType="JneCommSitesDataBaseModel.T_ContactsByCustomer" />
           <EntitySet Name="T_Customer" EntityType="JneCommSitesDataBaseModel.T_Customer" />
@@ -885,30 +924,7 @@ warning 6002: The table/view 'JneCommSitesManagementDB.dbo.vwUserData' does not 
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="T_Sites" EntitySet="T_Sites" />
           </AssociationSet>
-          <EntitySet Name="T_ActivityLog" EntityType="JneCommSitesDataBaseModel.T_ActivityLog" />
-          <EntitySet Name="T_Purchase" EntityType="JneCommSitesDataBaseModel.T_Purchase" />
           <EntitySet Name="T_PurchaseType" EntityType="JneCommSitesDataBaseModel.T_PurchaseType" />
-          <EntitySet Name="T_TaskProgress" EntityType="JneCommSitesDataBaseModel.T_TaskProgress" />
-          <AssociationSet Name="FK_T_ActivityLog_AspNetUsers" Association="JneCommSitesDataBaseModel.FK_T_ActivityLog_AspNetUsers">
-            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
-            <End Role="T_ActivityLog" EntitySet="T_ActivityLog" />
-          </AssociationSet>
-          <AssociationSet Name="FK_T_ActivityLog_T_Sites" Association="JneCommSitesDataBaseModel.FK_T_ActivityLog_T_Sites">
-            <End Role="T_Sites" EntitySet="T_Sites" />
-            <End Role="T_ActivityLog" EntitySet="T_ActivityLog" />
-          </AssociationSet>
-          <AssociationSet Name="FK_T_Purchase_T_ActivityLog" Association="JneCommSitesDataBaseModel.FK_T_Purchase_T_ActivityLog">
-            <End Role="T_ActivityLog" EntitySet="T_ActivityLog" />
-            <End Role="T_Purchase" EntitySet="T_Purchase" />
-          </AssociationSet>
-          <AssociationSet Name="FK_T_Purchase_T_PurchaseType" Association="JneCommSitesDataBaseModel.FK_T_Purchase_T_PurchaseType">
-            <End Role="T_PurchaseType" EntitySet="T_PurchaseType" />
-            <End Role="T_Purchase" EntitySet="T_Purchase" />
-          </AssociationSet>
-          <AssociationSet Name="T_TaskProgressByActivityLog" Association="JneCommSitesDataBaseModel.T_TaskProgressByActivityLog">
-            <End Role="T_ActivityLog" EntitySet="T_ActivityLog" />
-            <End Role="T_TaskProgress" EntitySet="T_TaskProgress" />
-          </AssociationSet>
           <EntitySet Name="T_UsersData" EntityType="JneCommSitesDataBaseModel.T_UsersData" />
           <AssociationSet Name="FK_T_UsersData_AspNetUsers" Association="JneCommSitesDataBaseModel.FK_T_UsersData_AspNetUsers">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
@@ -917,6 +933,39 @@ warning 6002: The table/view 'JneCommSitesManagementDB.dbo.vwUserData' does not 
           <AssociationSet Name="FK_T_UsersData_T_USAStates" Association="JneCommSitesDataBaseModel.FK_T_UsersData_T_USAStates">
             <End Role="T_USAStates" EntitySet="T_USAStates" />
             <End Role="T_UsersData" EntitySet="T_UsersData" />
+          </AssociationSet>
+          <EntitySet Name="T_ActivityLog" EntityType="JneCommSitesDataBaseModel.T_ActivityLog" />
+          <EntitySet Name="T_FilesUploadedBySiteTaskProgress" EntityType="JneCommSitesDataBaseModel.T_FilesUploadedBySiteTaskProgress" />
+          <AssociationSet Name="FK_T_ActivityLog_AspNetUsers" Association="JneCommSitesDataBaseModel.FK_T_ActivityLog_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="T_ActivityLog" EntitySet="T_ActivityLog" />
+          </AssociationSet>
+          <AssociationSet Name="FK_T_ActivityLog_T_Sites" Association="JneCommSitesDataBaseModel.FK_T_ActivityLog_T_Sites">
+            <End Role="T_Sites" EntitySet="T_Sites" />
+            <End Role="T_ActivityLog" EntitySet="T_ActivityLog" />
+          </AssociationSet>
+          <AssociationSet Name="FK_T_FilesUploadedBySiteTaskProgress_T_ActivityLog" Association="JneCommSitesDataBaseModel.FK_T_FilesUploadedBySiteTaskProgress_T_ActivityLog">
+            <End Role="T_ActivityLog" EntitySet="T_ActivityLog" />
+            <End Role="T_FilesUploadedBySiteTaskProgress" EntitySet="T_FilesUploadedBySiteTaskProgress" />
+          </AssociationSet>
+          <EntitySet Name="T_Purchase" EntityType="JneCommSitesDataBaseModel.T_Purchase" />
+          <AssociationSet Name="FK_T_Purchase_T_ActivityLog" Association="JneCommSitesDataBaseModel.FK_T_Purchase_T_ActivityLog">
+            <End Role="T_ActivityLog" EntitySet="T_ActivityLog" />
+            <End Role="T_Purchase" EntitySet="T_Purchase" />
+          </AssociationSet>
+          <AssociationSet Name="FK_T_Purchase_T_PurchaseType" Association="JneCommSitesDataBaseModel.FK_T_Purchase_T_PurchaseType">
+            <End Role="T_PurchaseType" EntitySet="T_PurchaseType" />
+            <End Role="T_Purchase" EntitySet="T_Purchase" />
+          </AssociationSet>
+          <EntitySet Name="T_PaymentPeriod" EntityType="JneCommSitesDataBaseModel.T_PaymentPeriod" />
+          <EntitySet Name="T_TaskProgress" EntityType="JneCommSitesDataBaseModel.T_TaskProgress" />
+          <AssociationSet Name="FK_T_FilesUploadedBySiteTaskProgress_T_TaskProgress" Association="JneCommSitesDataBaseModel.FK_T_FilesUploadedBySiteTaskProgress_T_TaskProgress">
+            <End Role="T_TaskProgress" EntitySet="T_TaskProgress" />
+            <End Role="T_FilesUploadedBySiteTaskProgress" EntitySet="T_FilesUploadedBySiteTaskProgress" />
+          </AssociationSet>
+          <AssociationSet Name="T_TaskProgressByActivityLog" Association="JneCommSitesDataBaseModel.T_TaskProgressByActivityLog">
+            <End Role="T_ActivityLog" EntitySet="T_ActivityLog" />
+            <End Role="T_TaskProgress" EntitySet="T_TaskProgress" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="T_Operations">
@@ -946,16 +995,6 @@ warning 6002: The table/view 'JneCommSitesManagementDB.dbo.vwUserData' does not 
           <Property Name="Id" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="AspNetRoles" Relationship="JneCommSitesDataBaseModel.FK_T_CrewRoles_AspNetRoles" FromRole="T_CrewRoles" ToRole="AspNetRoles" />
           <NavigationProperty Name="AspNetUsers" Relationship="JneCommSitesDataBaseModel.AspNetUserCrewRoles" FromRole="T_CrewRoles" ToRole="AspNetUsers" />
-        </EntityType>
-        <EntityType Name="T_PaymentPeriod">
-          <Key>
-            <PropertyRef Name="siPaymentPeriodId" />
-            <PropertyRef Name="dStartCutOffDate" />
-            <PropertyRef Name="siDaysForPaymentPeriod" />
-          </Key>
-          <Property Name="siPaymentPeriodId" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="dStartCutOffDate" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="siDaysForPaymentPeriod" Type="Int16" Nullable="false" />
         </EntityType>
         <EntityType Name="T_TechEvolutionCodes">
           <Key>
@@ -1057,8 +1096,8 @@ warning 6002: The table/view 'JneCommSitesManagementDB.dbo.vwUserData' does not 
           <NavigationProperty Name="AspNetRoles" Relationship="JneCommSitesDataBaseModel.AspNetUserRoles" FromRole="AspNetUsers" ToRole="AspNetRoles" />
           <NavigationProperty Name="T_CrewRoles" Relationship="JneCommSitesDataBaseModel.AspNetUserCrewRoles" FromRole="AspNetUsers" ToRole="T_CrewRoles" />
           <NavigationProperty Name="T_Sites" Relationship="JneCommSitesDataBaseModel.CrewUsersBySite" FromRole="AspNetUsers" ToRole="T_Sites" />
-          <NavigationProperty Name="T_ActivityLog" Relationship="JneCommSitesDataBaseModel.FK_T_ActivityLog_AspNetUsers" FromRole="AspNetUsers" ToRole="T_ActivityLog" />
           <NavigationProperty Name="T_UsersData" Relationship="JneCommSitesDataBaseModel.FK_T_UsersData_AspNetUsers" FromRole="AspNetUsers" ToRole="T_UsersData" />
+          <NavigationProperty Name="T_ActivityLog" Relationship="JneCommSitesDataBaseModel.FK_T_ActivityLog_AspNetUsers" FromRole="AspNetUsers" ToRole="T_ActivityLog" />
         </EntityType>
         <EntityType Name="T_Certifications">
           <Key>
@@ -1227,38 +1266,6 @@ warning 6002: The table/view 'JneCommSitesManagementDB.dbo.vwUserData' does not 
           <End Type="JneCommSitesDataBaseModel.AspNetUsers" Role="AspNetUsers" Multiplicity="*" />
           <End Type="JneCommSitesDataBaseModel.T_Sites" Role="T_Sites" Multiplicity="*" />
         </Association>
-        <EntityType Name="T_ActivityLog">
-          <Key>
-            <PropertyRef Name="iActivityLogID" />
-          </Key>
-          <Property Name="iActivityLogID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="vSiteName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="dtStartWorkingDay" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="dtArrivingToWareHouse" Type="DateTime" Precision="3" />
-          <Property Name="dtDepartureFromWereHouse" Type="DateTime" Precision="3" />
-          <Property Name="dtEndWorkingDay" Type="DateTime" Precision="3" />
-          <Property Name="iProgress" Type="Int32" />
-          <Property Name="vNotes" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="AspNetUsers" Relationship="JneCommSitesDataBaseModel.FK_T_ActivityLog_AspNetUsers" FromRole="T_ActivityLog" ToRole="AspNetUsers" />
-          <NavigationProperty Name="T_Sites" Relationship="JneCommSitesDataBaseModel.FK_T_ActivityLog_T_Sites" FromRole="T_ActivityLog" ToRole="T_Sites" />
-          <NavigationProperty Name="T_Purchase" Relationship="JneCommSitesDataBaseModel.FK_T_Purchase_T_ActivityLog" FromRole="T_ActivityLog" ToRole="T_Purchase" />
-          <NavigationProperty Name="T_TaskProgress" Relationship="JneCommSitesDataBaseModel.T_TaskProgressByActivityLog" FromRole="T_ActivityLog" ToRole="T_TaskProgress" />
-        </EntityType>
-        <EntityType Name="T_Purchase">
-          <Key>
-            <PropertyRef Name="iPurchaseID" />
-          </Key>
-          <Property Name="iPurchaseID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="iActivityLogID" Type="Int32" Nullable="false" />
-          <Property Name="iPuchaseTypeID" Type="Int16" Nullable="false" />
-          <Property Name="dtPurchaseStartDate" Type="DateTime" Precision="3" />
-          <Property Name="dtPurchaseEndDate" Type="DateTime" Precision="3" />
-          <Property Name="InvoiceName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Description" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="T_ActivityLog" Relationship="JneCommSitesDataBaseModel.FK_T_Purchase_T_ActivityLog" FromRole="T_Purchase" ToRole="T_ActivityLog" />
-          <NavigationProperty Name="T_PurchaseType" Relationship="JneCommSitesDataBaseModel.FK_T_Purchase_T_PurchaseType" FromRole="T_Purchase" ToRole="T_PurchaseType" />
-        </EntityType>
         <EntityType Name="T_PurchaseType">
           <Key>
             <PropertyRef Name="iPuchaseTypeID" />
@@ -1268,67 +1275,6 @@ warning 6002: The table/view 'JneCommSitesManagementDB.dbo.vwUserData' does not 
           <Property Name="vPurchaseDescription" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="T_Purchase" Relationship="JneCommSitesDataBaseModel.FK_T_Purchase_T_PurchaseType" FromRole="T_PurchaseType" ToRole="T_Purchase" />
         </EntityType>
-        <EntityType Name="T_TaskProgress">
-          <Key>
-            <PropertyRef Name="iTaskProgressID" />
-          </Key>
-          <Property Name="iTaskProgressID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="vTaskProgressName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="vTaskDescription" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="T_ActivityLog" Relationship="JneCommSitesDataBaseModel.T_TaskProgressByActivityLog" FromRole="T_TaskProgress" ToRole="T_ActivityLog" />
-        </EntityType>
-        <Association Name="FK_T_ActivityLog_AspNetUsers">
-          <End Type="JneCommSitesDataBaseModel.AspNetUsers" Role="AspNetUsers" Multiplicity="1" />
-          <End Type="JneCommSitesDataBaseModel.T_ActivityLog" Role="T_ActivityLog" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AspNetUsers">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="T_ActivityLog">
-              <PropertyRef Name="Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_T_ActivityLog_T_Sites">
-          <End Type="JneCommSitesDataBaseModel.T_Sites" Role="T_Sites" Multiplicity="0..1" />
-          <End Type="JneCommSitesDataBaseModel.T_ActivityLog" Role="T_ActivityLog" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="T_Sites">
-              <PropertyRef Name="vSiteName" />
-            </Principal>
-            <Dependent Role="T_ActivityLog">
-              <PropertyRef Name="vSiteName" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_T_Purchase_T_ActivityLog">
-          <End Type="JneCommSitesDataBaseModel.T_ActivityLog" Role="T_ActivityLog" Multiplicity="1" />
-          <End Type="JneCommSitesDataBaseModel.T_Purchase" Role="T_Purchase" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="T_ActivityLog">
-              <PropertyRef Name="iActivityLogID" />
-            </Principal>
-            <Dependent Role="T_Purchase">
-              <PropertyRef Name="iActivityLogID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_T_Purchase_T_PurchaseType">
-          <End Type="JneCommSitesDataBaseModel.T_PurchaseType" Role="T_PurchaseType" Multiplicity="1" />
-          <End Type="JneCommSitesDataBaseModel.T_Purchase" Role="T_Purchase" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="T_PurchaseType">
-              <PropertyRef Name="iPuchaseTypeID" />
-            </Principal>
-            <Dependent Role="T_Purchase">
-              <PropertyRef Name="iPuchaseTypeID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="T_TaskProgressByActivityLog">
-          <End Type="JneCommSitesDataBaseModel.T_ActivityLog" Role="T_ActivityLog" Multiplicity="*" />
-          <End Type="JneCommSitesDataBaseModel.T_TaskProgress" Role="T_TaskProgress" Multiplicity="*" />
-        </Association>
         <EntityType Name="T_UsersData">
           <Key>
             <PropertyRef Name="Id" />
@@ -1371,6 +1317,152 @@ warning 6002: The table/view 'JneCommSitesManagementDB.dbo.vwUserData' does not 
               <PropertyRef Name="vStateCode" />
             </Dependent>
           </ReferentialConstraint>
+        </Association>
+        <EntityType Name="T_ActivityLog">
+          <Key>
+            <PropertyRef Name="iActivityLogID" />
+          </Key>
+          <Property Name="iActivityLogID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="vSiteName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="dtStartWorkingDay" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="vStartWorkingDayPosition" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="dtArrivingToWareHouse" Type="DateTime" Precision="3" />
+          <Property Name="vArrivingToWareHousePosition" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="dtDepartureFromWereHouse" Type="DateTime" Precision="3" />
+          <Property Name="vDepartureFromWereHousePosition" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="dtEndWorkingDay" Type="DateTime" Precision="3" />
+          <Property Name="vEndWorkingDayPosition" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="iProgress" Type="Int32" />
+          <Property Name="vNotes" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="AspNetUsers" Relationship="JneCommSitesDataBaseModel.FK_T_ActivityLog_AspNetUsers" FromRole="T_ActivityLog" ToRole="AspNetUsers" />
+          <NavigationProperty Name="T_Sites" Relationship="JneCommSitesDataBaseModel.FK_T_ActivityLog_T_Sites" FromRole="T_ActivityLog" ToRole="T_Sites" />
+          <NavigationProperty Name="T_FilesUploadedBySiteTaskProgress" Relationship="JneCommSitesDataBaseModel.FK_T_FilesUploadedBySiteTaskProgress_T_ActivityLog" FromRole="T_ActivityLog" ToRole="T_FilesUploadedBySiteTaskProgress" />
+          <NavigationProperty Name="T_Purchase" Relationship="JneCommSitesDataBaseModel.FK_T_Purchase_T_ActivityLog" FromRole="T_ActivityLog" ToRole="T_Purchase" />
+          <NavigationProperty Name="T_TaskProgress" Relationship="JneCommSitesDataBaseModel.T_TaskProgressByActivityLog" FromRole="T_ActivityLog" ToRole="T_TaskProgress" />
+        </EntityType>
+        <EntityType Name="T_FilesUploadedBySiteTaskProgress">
+          <Key>
+            <PropertyRef Name="iFileID" />
+          </Key>
+          <Property Name="iFileID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="iActivityLogID" Type="Int32" Nullable="false" />
+          <Property Name="iTaskProgressID" Type="Int32" Nullable="false" />
+          <Property Name="vFileName" Type="String" Nullable="false" MaxLength="70" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="T_ActivityLog" Relationship="JneCommSitesDataBaseModel.FK_T_FilesUploadedBySiteTaskProgress_T_ActivityLog" FromRole="T_FilesUploadedBySiteTaskProgress" ToRole="T_ActivityLog" />
+          <NavigationProperty Name="T_TaskProgress" Relationship="JneCommSitesDataBaseModel.FK_T_FilesUploadedBySiteTaskProgress_T_TaskProgress" FromRole="T_FilesUploadedBySiteTaskProgress" ToRole="T_TaskProgress" />
+        </EntityType>
+        <Association Name="FK_T_ActivityLog_AspNetUsers">
+          <End Type="JneCommSitesDataBaseModel.AspNetUsers" Role="AspNetUsers" Multiplicity="1" />
+          <End Type="JneCommSitesDataBaseModel.T_ActivityLog" Role="T_ActivityLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="T_ActivityLog">
+              <PropertyRef Name="Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_T_ActivityLog_T_Sites">
+          <End Type="JneCommSitesDataBaseModel.T_Sites" Role="T_Sites" Multiplicity="0..1" />
+          <End Type="JneCommSitesDataBaseModel.T_ActivityLog" Role="T_ActivityLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_Sites">
+              <PropertyRef Name="vSiteName" />
+            </Principal>
+            <Dependent Role="T_ActivityLog">
+              <PropertyRef Name="vSiteName" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_T_FilesUploadedBySiteTaskProgress_T_ActivityLog">
+          <End Type="JneCommSitesDataBaseModel.T_ActivityLog" Role="T_ActivityLog" Multiplicity="1" />
+          <End Type="JneCommSitesDataBaseModel.T_FilesUploadedBySiteTaskProgress" Role="T_FilesUploadedBySiteTaskProgress" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_ActivityLog">
+              <PropertyRef Name="iActivityLogID" />
+            </Principal>
+            <Dependent Role="T_FilesUploadedBySiteTaskProgress">
+              <PropertyRef Name="iActivityLogID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="T_Purchase">
+          <Key>
+            <PropertyRef Name="iPurchaseID" />
+          </Key>
+          <Property Name="iPurchaseID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="iActivityLogID" Type="Int32" Nullable="false" />
+          <Property Name="iPuchaseTypeID" Type="Int16" Nullable="false" />
+          <Property Name="dtPurchaseStartDate" Type="DateTime" Precision="3" />
+          <Property Name="dtPurchaseEndDate" Type="DateTime" Precision="3" />
+          <Property Name="InvoiceName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="dPrice" Type="Decimal" Precision="6" Scale="2" />
+          <Property Name="vPosition" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="T_ActivityLog" Relationship="JneCommSitesDataBaseModel.FK_T_Purchase_T_ActivityLog" FromRole="T_Purchase" ToRole="T_ActivityLog" />
+          <NavigationProperty Name="T_PurchaseType" Relationship="JneCommSitesDataBaseModel.FK_T_Purchase_T_PurchaseType" FromRole="T_Purchase" ToRole="T_PurchaseType" />
+        </EntityType>
+        <Association Name="FK_T_Purchase_T_ActivityLog">
+          <End Type="JneCommSitesDataBaseModel.T_ActivityLog" Role="T_ActivityLog" Multiplicity="1" />
+          <End Type="JneCommSitesDataBaseModel.T_Purchase" Role="T_Purchase" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_ActivityLog">
+              <PropertyRef Name="iActivityLogID" />
+            </Principal>
+            <Dependent Role="T_Purchase">
+              <PropertyRef Name="iActivityLogID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_T_Purchase_T_PurchaseType">
+          <End Type="JneCommSitesDataBaseModel.T_PurchaseType" Role="T_PurchaseType" Multiplicity="1" />
+          <End Type="JneCommSitesDataBaseModel.T_Purchase" Role="T_Purchase" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_PurchaseType">
+              <PropertyRef Name="iPuchaseTypeID" />
+            </Principal>
+            <Dependent Role="T_Purchase">
+              <PropertyRef Name="iPuchaseTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="T_PaymentPeriod">
+          <Key>
+            <PropertyRef Name="siPaymentPeriodId" />
+          </Key>
+          <Property Name="siPaymentPeriodId" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="dStartCutOffDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="siDaysForPaymentPeriod" Type="Int16" Nullable="false" />
+        </EntityType>
+        <EntityType Name="T_TaskProgress">
+          <Key>
+            <PropertyRef Name="iTaskProgressID" />
+          </Key>
+          <Property Name="iTaskProgressID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="vTaskProgressName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="vTaskDescription" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="bCanLoadFile" Type="Boolean" Nullable="false" />
+          <Property Name="bIsActive" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="T_FilesUploadedBySiteTaskProgress" Relationship="JneCommSitesDataBaseModel.FK_T_FilesUploadedBySiteTaskProgress_T_TaskProgress" FromRole="T_TaskProgress" ToRole="T_FilesUploadedBySiteTaskProgress" />
+          <NavigationProperty Name="T_ActivityLog" Relationship="JneCommSitesDataBaseModel.T_TaskProgressByActivityLog" FromRole="T_TaskProgress" ToRole="T_ActivityLog" />
+        </EntityType>
+        <Association Name="FK_T_FilesUploadedBySiteTaskProgress_T_TaskProgress">
+          <End Type="JneCommSitesDataBaseModel.T_TaskProgress" Role="T_TaskProgress" Multiplicity="1" />
+          <End Type="JneCommSitesDataBaseModel.T_FilesUploadedBySiteTaskProgress" Role="T_FilesUploadedBySiteTaskProgress" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_TaskProgress">
+              <PropertyRef Name="iTaskProgressID" />
+            </Principal>
+            <Dependent Role="T_FilesUploadedBySiteTaskProgress">
+              <PropertyRef Name="iTaskProgressID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="T_TaskProgressByActivityLog">
+          <End Type="JneCommSitesDataBaseModel.T_ActivityLog" Role="T_ActivityLog" Multiplicity="*" />
+          <End Type="JneCommSitesDataBaseModel.T_TaskProgress" Role="T_TaskProgress" Multiplicity="*" />
         </Association>
         </Schema>
     </edmx:ConceptualModels>
@@ -1444,15 +1536,6 @@ warning 6002: The table/view 'JneCommSitesManagementDB.dbo.vwUserData' does not 
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="vCrewRoleDescription" ColumnName="vCrewRoleDescription" />
                 <ScalarProperty Name="vCrewRoleName" ColumnName="vCrewRoleName" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="T_PaymentPeriod">
-            <EntityTypeMapping TypeName="JneCommSitesDataBaseModel.T_PaymentPeriod">
-              <MappingFragment StoreEntitySet="T_PaymentPeriod">
-                <ScalarProperty Name="siDaysForPaymentPeriod" ColumnName="siDaysForPaymentPeriod" />
-                <ScalarProperty Name="dStartCutOffDate" ColumnName="dStartCutOffDate" />
-                <ScalarProperty Name="siPaymentPeriodId" ColumnName="siPaymentPeriodId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1592,34 +1675,6 @@ warning 6002: The table/view 'JneCommSitesManagementDB.dbo.vwUserData' does not 
               <ScalarProperty Name="Id" ColumnName="Id" />
             </EndProperty>
           </AssociationSetMapping>
-          <EntitySetMapping Name="T_ActivityLog">
-            <EntityTypeMapping TypeName="JneCommSitesDataBaseModel.T_ActivityLog">
-              <MappingFragment StoreEntitySet="T_ActivityLog">
-                <ScalarProperty Name="vNotes" ColumnName="vNotes" />
-                <ScalarProperty Name="iProgress" ColumnName="iProgress" />
-                <ScalarProperty Name="dtEndWorkingDay" ColumnName="dtEndWorkingDay" />
-                <ScalarProperty Name="dtDepartureFromWereHouse" ColumnName="dtDepartureFromWereHouse" />
-                <ScalarProperty Name="dtArrivingToWareHouse" ColumnName="dtArrivingToWareHouse" />
-                <ScalarProperty Name="dtStartWorkingDay" ColumnName="dtStartWorkingDay" />
-                <ScalarProperty Name="vSiteName" ColumnName="vSiteName" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="iActivityLogID" ColumnName="iActivityLogID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="T_Purchase">
-            <EntityTypeMapping TypeName="JneCommSitesDataBaseModel.T_Purchase">
-              <MappingFragment StoreEntitySet="T_Purchase">
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="InvoiceName" ColumnName="InvoiceName" />
-                <ScalarProperty Name="dtPurchaseEndDate" ColumnName="dtPurchaseEndDate" />
-                <ScalarProperty Name="dtPurchaseStartDate" ColumnName="dtPurchaseStartDate" />
-                <ScalarProperty Name="iPuchaseTypeID" ColumnName="iPuchaseTypeID" />
-                <ScalarProperty Name="iActivityLogID" ColumnName="iActivityLogID" />
-                <ScalarProperty Name="iPurchaseID" ColumnName="iPurchaseID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="T_PurchaseType">
             <EntityTypeMapping TypeName="JneCommSitesDataBaseModel.T_PurchaseType">
               <MappingFragment StoreEntitySet="T_PurchaseType">
@@ -1629,23 +1684,6 @@ warning 6002: The table/view 'JneCommSitesManagementDB.dbo.vwUserData' does not 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="T_TaskProgress">
-            <EntityTypeMapping TypeName="JneCommSitesDataBaseModel.T_TaskProgress">
-              <MappingFragment StoreEntitySet="T_TaskProgress">
-                <ScalarProperty Name="vTaskDescription" ColumnName="vTaskDescription" />
-                <ScalarProperty Name="vTaskProgressName" ColumnName="vTaskProgressName" />
-                <ScalarProperty Name="iTaskProgressID" ColumnName="iTaskProgressID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <AssociationSetMapping Name="T_TaskProgressByActivityLog" TypeName="JneCommSitesDataBaseModel.T_TaskProgressByActivityLog" StoreEntitySet="T_TaskProgressByActivityLog">
-            <EndProperty Name="T_TaskProgress">
-              <ScalarProperty Name="iTaskProgressID" ColumnName="iTaskProgressID" />
-            </EndProperty>
-            <EndProperty Name="T_ActivityLog">
-              <ScalarProperty Name="iActivityLogID" ColumnName="iActivityLogID" />
-            </EndProperty>
-          </AssociationSetMapping>
           <EntitySetMapping Name="T_UsersData">
             <EntityTypeMapping TypeName="JneCommSitesDataBaseModel.T_UsersData">
               <MappingFragment StoreEntitySet="T_UsersData">
@@ -1664,6 +1702,78 @@ warning 6002: The table/view 'JneCommSitesManagementDB.dbo.vwUserData' does not 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="T_ActivityLog">
+            <EntityTypeMapping TypeName="JneCommSitesDataBaseModel.T_ActivityLog">
+              <MappingFragment StoreEntitySet="T_ActivityLog">
+                <ScalarProperty Name="vNotes" ColumnName="vNotes" />
+                <ScalarProperty Name="iProgress" ColumnName="iProgress" />
+                <ScalarProperty Name="vEndWorkingDayPosition" ColumnName="vEndWorkingDayPosition" />
+                <ScalarProperty Name="dtEndWorkingDay" ColumnName="dtEndWorkingDay" />
+                <ScalarProperty Name="vDepartureFromWereHousePosition" ColumnName="vDepartureFromWereHousePosition" />
+                <ScalarProperty Name="dtDepartureFromWereHouse" ColumnName="dtDepartureFromWereHouse" />
+                <ScalarProperty Name="vArrivingToWareHousePosition" ColumnName="vArrivingToWareHousePosition" />
+                <ScalarProperty Name="dtArrivingToWareHouse" ColumnName="dtArrivingToWareHouse" />
+                <ScalarProperty Name="vStartWorkingDayPosition" ColumnName="vStartWorkingDayPosition" />
+                <ScalarProperty Name="dtStartWorkingDay" ColumnName="dtStartWorkingDay" />
+                <ScalarProperty Name="vSiteName" ColumnName="vSiteName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="iActivityLogID" ColumnName="iActivityLogID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_FilesUploadedBySiteTaskProgress">
+            <EntityTypeMapping TypeName="JneCommSitesDataBaseModel.T_FilesUploadedBySiteTaskProgress">
+              <MappingFragment StoreEntitySet="T_FilesUploadedBySiteTaskProgress">
+                <ScalarProperty Name="vFileName" ColumnName="vFileName" />
+                <ScalarProperty Name="iTaskProgressID" ColumnName="iTaskProgressID" />
+                <ScalarProperty Name="iActivityLogID" ColumnName="iActivityLogID" />
+                <ScalarProperty Name="iFileID" ColumnName="iFileID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_Purchase">
+            <EntityTypeMapping TypeName="JneCommSitesDataBaseModel.T_Purchase">
+              <MappingFragment StoreEntitySet="T_Purchase">
+                <ScalarProperty Name="vPosition" ColumnName="vPosition" />
+                <ScalarProperty Name="dPrice" ColumnName="dPrice" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="InvoiceName" ColumnName="InvoiceName" />
+                <ScalarProperty Name="dtPurchaseEndDate" ColumnName="dtPurchaseEndDate" />
+                <ScalarProperty Name="dtPurchaseStartDate" ColumnName="dtPurchaseStartDate" />
+                <ScalarProperty Name="iPuchaseTypeID" ColumnName="iPuchaseTypeID" />
+                <ScalarProperty Name="iActivityLogID" ColumnName="iActivityLogID" />
+                <ScalarProperty Name="iPurchaseID" ColumnName="iPurchaseID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_PaymentPeriod">
+            <EntityTypeMapping TypeName="JneCommSitesDataBaseModel.T_PaymentPeriod">
+              <MappingFragment StoreEntitySet="T_PaymentPeriod">
+                <ScalarProperty Name="siDaysForPaymentPeriod" ColumnName="siDaysForPaymentPeriod" />
+                <ScalarProperty Name="dStartCutOffDate" ColumnName="dStartCutOffDate" />
+                <ScalarProperty Name="siPaymentPeriodId" ColumnName="siPaymentPeriodId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_TaskProgress">
+            <EntityTypeMapping TypeName="JneCommSitesDataBaseModel.T_TaskProgress">
+              <MappingFragment StoreEntitySet="T_TaskProgress">
+                <ScalarProperty Name="bIsActive" ColumnName="bIsActive" />
+                <ScalarProperty Name="bCanLoadFile" ColumnName="bCanLoadFile" />
+                <ScalarProperty Name="vTaskDescription" ColumnName="vTaskDescription" />
+                <ScalarProperty Name="vTaskProgressName" ColumnName="vTaskProgressName" />
+                <ScalarProperty Name="iTaskProgressID" ColumnName="iTaskProgressID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="T_TaskProgressByActivityLog" TypeName="JneCommSitesDataBaseModel.T_TaskProgressByActivityLog" StoreEntitySet="T_TaskProgressByActivityLog">
+            <EndProperty Name="T_TaskProgress">
+              <ScalarProperty Name="iTaskProgressID" ColumnName="iTaskProgressID" />
+            </EndProperty>
+            <EndProperty Name="T_ActivityLog">
+              <ScalarProperty Name="iActivityLogID" ColumnName="iActivityLogID" />
+            </EndProperty>
+          </AssociationSetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

@@ -18,6 +18,9 @@ namespace JneCommSitesManagement.Models
         [Display(Name = "*Check Point")]
         public string checkPoint { get; set; }
 
+        [Display(Name = "*Position")]
+        public string position { get; set; }
+
         [Required]
         [Display(Name = "*Sites Assigned")]
         public string site { get; set; }
@@ -30,6 +33,9 @@ namespace JneCommSitesManagement.Models
         [StringLength(20, ErrorMessage = "{0} should have between {2} and {1} characters.", MinimumLength = 4)]
         [Display(Name = "*Description")]
         public string description { get; set; }
+        
+        [Display(Name = "*Position")]
+        public string position { get; set; }
 
         [Required]
         [Display(Name = "*Site Purchase")]
@@ -64,6 +70,9 @@ namespace JneCommSitesManagement.Models
         [Required]
         [Display(Name = "*Site")]
         public string siteID { get; set; }
+        
+        [Display(Name = "*Position")]
+        public string position { get; set; }
 
         [Required]
         [Display(Name = "*Checkpoint")]

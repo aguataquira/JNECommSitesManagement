@@ -51,8 +51,8 @@ namespace JneCommSitesDataLayer
         public virtual ICollection<T_CrewRoles> T_CrewRoles { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<T_Sites> T_Sites { get; set; }
+        public virtual T_UsersData T_UsersData { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<T_ActivityLog> T_ActivityLog { get; set; }
-        public virtual T_UsersData T_UsersData { get; set; }
     }
 }

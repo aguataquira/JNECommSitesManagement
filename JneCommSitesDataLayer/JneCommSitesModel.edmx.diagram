@@ -12,7 +12,6 @@
         <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_Operations" Width="1.5" PointX="3" PointY="9" />
         <AssociationConnector Association="JneCommSitesDataBaseModel.T_Rol_Operations" />
         <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_CrewRoles" Width="1.5" PointX="5.375" PointY="6" />
-        <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_PaymentPeriod" Width="1.5" PointX="5.375" PointY="9.125" />
         <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_TechEvolutionCodes" Width="1.5" PointX="7.625" PointY="3.125" />
         <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_ContactsByCustomer" Width="1.5" PointX="11.875" PointY="8" />
         <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_Customer" Width="1.5" PointX="9.625" PointY="8" />
@@ -20,7 +19,7 @@
         <AssociationConnector Association="JneCommSitesDataBaseModel.FK_T_ContactsByCustomer_T_ContactsByCustomer" />
         <AssociationConnector Association="JneCommSitesDataBaseModel.FK_T_Customer_T_USAStates" />
         <AssociationConnector Association="JneCommSitesDataBaseModel.FK_T_CrewRoles_AspNetRoles" />
-        <EntityTypeShape EntityType="JneCommSitesDataBaseModel.AspNetUsers" Width="1.5" PointX="3" PointY="4.75" />
+        <EntityTypeShape EntityType="JneCommSitesDataBaseModel.AspNetUsers" Width="1.5" PointX="3" PointY="3.625" />
         <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_Certifications" Width="1.5" PointX="7.75" PointY="0.75" />
         <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_CertificationsByUserCrew" Width="2.125" PointX="5.125" PointY="0.75" />
         <AssociationConnector Association="JneCommSitesDataBaseModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" />
@@ -35,18 +34,22 @@
         <AssociationConnector Association="JneCommSitesDataBaseModel.FK_T_Sites_T_TechEvolutionCodes" />
         <AssociationConnector Association="JneCommSitesDataBaseModel.FK_T_Sites_T_USAStates" />
         <AssociationConnector Association="JneCommSitesDataBaseModel.CrewUsersBySite" />
-        <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_ActivityLog" Width="1.5" PointX="15.125" PointY="5.125" />
-        <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_Purchase" Width="1.5" PointX="17.375" PointY="5.5" />
         <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_PurchaseType" Width="1.5" PointX="15.125" PointY="2" />
-        <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_TaskProgress" Width="1.5" PointX="17.375" PointY="9.5" />
-        <AssociationConnector Association="JneCommSitesDataBaseModel.FK_T_ActivityLog_AspNetUsers" />
-        <AssociationConnector Association="JneCommSitesDataBaseModel.FK_T_ActivityLog_T_Sites" />
-        <AssociationConnector Association="JneCommSitesDataBaseModel.FK_T_Purchase_T_ActivityLog" />
-        <AssociationConnector Association="JneCommSitesDataBaseModel.FK_T_Purchase_T_PurchaseType" />
-        <AssociationConnector Association="JneCommSitesDataBaseModel.T_TaskProgressByActivityLog" />
         <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_UsersData" Width="1.5" PointX="14.625" PointY="9.75" />
         <AssociationConnector Association="JneCommSitesDataBaseModel.FK_T_UsersData_AspNetUsers" />
         <AssociationConnector Association="JneCommSitesDataBaseModel.FK_T_UsersData_T_USAStates" />
+        <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_ActivityLog" Width="1.875" PointX="21.125" PointY="4.5" />
+        <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_FilesUploadedBySiteTaskProgress" Width="1.5" PointX="23.75" PointY="6.5" />
+        <AssociationConnector Association="JneCommSitesDataBaseModel.FK_T_ActivityLog_AspNetUsers" />
+        <AssociationConnector Association="JneCommSitesDataBaseModel.FK_T_ActivityLog_T_Sites" />
+        <AssociationConnector Association="JneCommSitesDataBaseModel.FK_T_FilesUploadedBySiteTaskProgress_T_ActivityLog" />
+        <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_Purchase" Width="1.5" PointX="18.125" PointY="4" />
+        <AssociationConnector Association="JneCommSitesDataBaseModel.FK_T_Purchase_T_ActivityLog" />
+        <AssociationConnector Association="JneCommSitesDataBaseModel.FK_T_Purchase_T_PurchaseType" />
+        <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_PaymentPeriod" Width="1.5" PointX="5.375" PointY="11.75" />
+        <EntityTypeShape EntityType="JneCommSitesDataBaseModel.T_TaskProgress" Width="1.5" PointX="23.75" PointY="2.5" />
+        <AssociationConnector Association="JneCommSitesDataBaseModel.FK_T_FilesUploadedBySiteTaskProgress_T_TaskProgress" />
+        <AssociationConnector Association="JneCommSitesDataBaseModel.T_TaskProgressByActivityLog" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

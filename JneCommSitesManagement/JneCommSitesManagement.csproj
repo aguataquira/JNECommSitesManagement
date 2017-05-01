@@ -183,6 +183,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdministrationController.cs" />
+    <Compile Include="Controllers\AnalyticController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MaintenanceController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -194,6 +195,7 @@
     <Compile Include="Helper\HelperUI.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ActivityLogsModels.cs" />
+    <Compile Include="Models\AnalyticModel.cs" />
     <Compile Include="Models\CertificationModel.cs" />
     <Compile Include="Models\CrewRolModel.cs" />
     <Compile Include="Models\CustomerModels.cs" />
@@ -202,6 +204,7 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\RolModel.cs" />
     <Compile Include="Models\SiteModel.cs" />
+    <Compile Include="Models\TaskProgress.cs" />
     <Compile Include="Models\TechEvolutionCodesModel.cs" />
     <Compile Include="Models\UserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -219,15 +222,19 @@
     <Content Include="Content\Jne Icons\AddSiteIcon.png" />
     <Content Include="Content\Jne Icons\AddTechEvolutionCodeIcon.png" />
     <Content Include="Content\Jne Icons\AddUserIcon.png" />
+    <Content Include="Content\Jne Icons\AddTaskProgressIcon.png" />
     <Content Include="Content\Jne Icons\JeCommCrewIcon.png" />
     <Content Include="Content\Jne Icons\JeCommCertificationsIcon.png" />
     <Content Include="Content\Jne Icons\JeCommCustomerIcon.png" />
     <Content Include="Content\Jne Icons\JeCommMaintenanceIcon.png" />
     <Content Include="Content\Jne Icons\JeCommPaymentPeriodIcon.png" />
     <Content Include="Content\Jne Icons\JeCommRolesIcon.png" />
+    <Content Include="Content\Jne Icons\JeCommTaskProgressIcon.png" />
     <Content Include="Content\Jne Icons\JeCommTechEvolutionCodesIcon.png" />
+    <Content Include="Content\Jne Icons\JeCommTimeSheetIcon.png" />
     <Content Include="Content\Jne Icons\JeCommUserIcon.png" />
     <Content Include="Content\Jne Icons\JeCommMobileIcon.png" />
+    <Content Include="Content\Jne Icons\JeCommUserLoginIcon.png" />
     <Content Include="Content\Jne Icons\SitesIcon.png" />
     <Content Include="Content\JNet Images\AccessDenied.png" />
     <Content Include="Content\JNet Images\JeCommSitesLogo.png" />
@@ -341,10 +348,16 @@
     <Content Include="Views\Mobile\ProgressByActivityLog.cshtml" />
     <Content Include="Views\Administration\SiteExpenses.cshtml" />
     <Content Include="Views\Administration\SiteProgress.cshtml" />
+    <Content Include="Views\Maintenance\PaymentPeriod.cshtml" />
+    <Content Include="Views\Analytic\TimeSheet.cshtml" />
+    <Content Include="Views\Maintenance\TaskProgressList.cshtml" />
+    <Content Include="Views\Maintenance\CreateTaskProgress.cshtml" />
+    <Content Include="Views\Maintenance\EditTaskProgress.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Documents\Invoices\" />
+    <Folder Include="Documents\PrePictures\" />
     <Folder Include="Documents\ReferalOrder\" />
   </ItemGroup>
   <ItemGroup>
